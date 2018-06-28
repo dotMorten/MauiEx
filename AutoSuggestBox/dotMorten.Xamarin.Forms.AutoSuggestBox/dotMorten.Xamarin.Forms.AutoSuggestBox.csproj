@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;uap10.0.16299;xamarinios10;MonoAndroid60</TargetFrameworks>
+    <RootNamespace>dotMorten.Xamarin.Forms</RootNamespace>
+    <AssemblyName>dotMorten.Xamarin.Forms.AutoSuggestBox</AssemblyName>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Copyright>Morten Nielsen</Copyright>
+    <RepositoryUrl>https://github.com/dotMorten/XamarinFormsControls</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/dotMorten/XamarinFormsControls</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/dotMorten/XamarinFormsControls/LICENSE.MD</PackageLicenseUrl>
+    <Version>0.5.0</Version>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'uap10.0.16299'">
+    <TargetPlatformVersion>10.0.16299.0</TargetPlatformVersion>
+    <TargetPlatformMinVersion>10.0.16299.0</TargetPlatformMinVersion>
+  </PropertyGroup>
+   
+  <ItemGroup Condition="'$(TargetFramework)' == 'uap10.0.16299'">
+    <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.1.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MSBuild.Sdk.Extras" Version="1.5.4" PrivateAssets="all" />
+    <PackageReference Include="Xamarin.Forms" Version="3.0.0.446417" />
+  </ItemGroup>
+
+  <Import Project="$(MSBuildSDKExtrasTargets)" Condition="Exists('$(MSBuildSDKExtrasTargets)')" />
+
+</Project>
