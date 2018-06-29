@@ -7,8 +7,8 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Copyright>Morten Nielsen</Copyright>
     <RepositoryUrl>https://github.com/dotMorten/XamarinFormsControls</RepositoryUrl>
-    <PackageProjectUrl>https://github.com/dotMorten/XamarinFormsControls</PackageProjectUrl>
-    <PackageLicenseUrl>https://github.com/dotMorten/XamarinFormsControls/LICENSE.MD</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/dotMorten/XamarinFormsControls/tree/master/AutoSuggestBox</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/dotMorten/XamarinFormsControls/blob/master/LICENSE</PackageLicenseUrl>
     <Version>0.1.0</Version>
     <DocumentationFile>$(MSBuildThisFileDirectory)bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
   </PropertyGroup>
