@@ -1,7 +1,6 @@
 # AutoSuggestBox
 
-![image](https://user-images.githubusercontent.com/1378165/42106364-a65da5ae-7b88-11e8-81ce-e189ee4cdc8e.png)
-
+![image](https://user-images.githubusercontent.com/1378165/42106364-a65da5ae-7b88-11e8-81ce-e189ee4cdc8e.png) ![image](https://user-images.githubusercontent.com/1378165/42108971-edaa4914-7b90-11e8-95d8-063f1f857d5f.png)
 
 Represents a text control that makes suggestions to users as they type. The app is notified when text has been changed by the user and is responsible for providing relevant suggestions for this control to display.
 
