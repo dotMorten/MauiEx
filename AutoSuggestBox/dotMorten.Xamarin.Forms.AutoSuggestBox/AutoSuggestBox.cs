@@ -1,10 +1,10 @@
 ﻿using System;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using Xamarin.Forms;
 #if !NETSTANDARD2_0
 #if __ANDROID__
 using Xamarin.Forms.Platform.Android;
-using NativeAutoSuggestBox = Android.Widget.AutoCompleteTextView;
 #elif __IOS__
 using CoreGraphics;
 using Xamarin.Forms.Platform.iOS;
@@ -42,7 +42,7 @@ namespace dotMorten.Xamarin.Forms
 #endif
                 );
 #endif
-#if NETFX_CORE
+#if NETFX_CORE || __ANDROID__
             NativeAutoSuggestBox.SuggestionChosen += (s, e) => { SuggestionChosen?.Invoke(this, new AutoSuggestBoxSuggestionChosenEventArgs(e.SelectedItem)); };
             NativeAutoSuggestBox.TextChanged += (s, e) => { 
                 suppressTextChangedEvent = true;
@@ -52,15 +52,9 @@ namespace dotMorten.Xamarin.Forms
             };
             NativeAutoSuggestBox.QuerySubmitted += (s, e) => { QuerySubmitted?.Invoke(this, new AutoSuggestBoxQuerySubmittedEventArgs(e.QueryText, e.ChosenSuggestion)); };
 #elif __ANDROID__
+            NativeAutoSuggestBox.SuggestionChosen += (s, e) => { SuggestionChosen?.Invoke(this, e); };
             NativeAutoSuggestBox.TextChanged += AutocompleteTextView_TextChanged;
-            NativeAutoSuggestBox.ItemClick += AutocompleteTextView_ItemClick;
-            NativeAutoSuggestBox.Threshold = 0;
-            NativeAutoSuggestBox.InputType = Android.Text.InputTypes.ClassText;
-            NativeAutoSuggestBox.SetMaxLines(1);
-            var autoCompleteAdapter = new SuggestCompleteAdapter(NativeAutoSuggestBox.Context, Android.Resource.Layout.SimpleDropDownItem1Line);
-            NativeAutoSuggestBox.SetOnEditorActionListener(new OnKeyListener(AutocompleteView_OnSubmit));
-            
-            NativeAutoSuggestBox.Adapter = autoCompleteAdapter;
+            NativeAutoSuggestBox.QuerySubmitted += (s, e) => { QuerySubmitted?.Invoke(this, e); };
 #elif __IOS__
             inputText = new UIKit.UITextField()
             {
@@ -207,7 +201,9 @@ namespace dotMorten.Xamarin.Forms
             var box = (AutoSuggestBox)bindable;
 #if NETFX_CORE
             box.NativeAutoSuggestBox.DisplayMemberPath = newValue as string;
-#elif __ANDROID__ || __IOS__
+#elif __ANDROID__
+            box.NativeAutoSuggestBox.SetItems(box.ItemsSource?.OfType<object>(), (o) => FormatType(o, box.DisplayMemberPath), (o) => FormatType(o, box.TextMemberPath));
+#elif __IOS__
             box.UpdateItems();
 #endif
         }
@@ -275,7 +271,9 @@ namespace dotMorten.Xamarin.Forms
             var box = (AutoSuggestBox)bindable;
 #if NETFX_CORE
             box.NativeAutoSuggestBox.ItemsSource = newValue;
-#elif __ANDROID__ || __IOS__
+#elif __ANDROID__
+            box.NativeAutoSuggestBox.SetItems(box.ItemsSource?.OfType<object>(), (o) => FormatType(o, box.DisplayMemberPath), (o) => FormatType(o, box.TextMemberPath));
+#elif __IOS__
             box.UpdateItems();
 #endif
         }
@@ -294,5 +292,16 @@ namespace dotMorten.Xamarin.Forms
         /// Occurs when the user submits a search query.
         /// </summary>
         public event EventHandler<AutoSuggestBoxQuerySubmittedEventArgs> QuerySubmitted;
+
+#if __ANDROID__ || __IOS__
+
+        private static string FormatType(object instance, string memberPath)
+        {
+            if (!string.IsNullOrEmpty(memberPath))
+                return instance?.GetType().GetProperty(memberPath)?.GetValue(instance)?.ToString() ?? "";
+            else
+                return instance?.ToString() ?? "";
+        }
+#endif
     }
 }
