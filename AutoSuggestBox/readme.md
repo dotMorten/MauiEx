@@ -1,7 +1,5 @@
 # AutoSuggestBox
 
-![image](https://user-images.githubusercontent.com/1378165/42106364-a65da5ae-7b88-11e8-81ce-e189ee4cdc8e.png) ![image](https://user-images.githubusercontent.com/1378165/42108971-edaa4914-7b90-11e8-95d8-063f1f857d5f.png)
-
 Represents a text control that makes suggestions to users as they type. The app is notified when text has been changed by the user and is responsible for providing relevant suggestions for this control to display.
 
 The control is based on UWP's AutoSuggestBox behavior, with UI adapted for native look on each platform.
@@ -87,3 +85,17 @@ private void AutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBox
     }
 }
 ```
+
+UWP:
+
+![image](https://user-images.githubusercontent.com/1378165/42106364-a65da5ae-7b88-11e8-81ce-e189ee4cdc8e.png)
+
+Android:
+
+![image](https://user-images.githubusercontent.com/1378165/42108971-edaa4914-7b90-11e8-95d8-063f1f857d5f.png)
+
+iOS:
+
+![image](https://user-images.githubusercontent.com/1378165/42109635-31d3ef44-7b93-11e8-8f65-2e1c9ec07f44.png)
+
+
