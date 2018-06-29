@@ -2,18 +2,17 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Android.App;
 using Android.Content;
-using Android.OS;
 using Android.Runtime;
-using Android.Views;
 using Android.Views.InputMethods;
 using Android.Widget;
 using Java.Lang;
 
 namespace dotMorten.Xamarin.Forms
 {
+    /// <summary>
+    ///  Extends AutoCompleteTextView to have similar APIs and behavior to UWP's AutoSuggestBox, which greatly simplifies wrapping it
+    /// </summary>
     internal class NativeAutoSuggestBox : AutoCompleteTextView
     {
         private bool suppressTextChangedEvent;
@@ -100,13 +99,16 @@ namespace dotMorten.Xamarin.Forms
 
         private class SuggestCompleteAdapter : ArrayAdapter, IFilterable
         {
+            private SuggestFilter filter = new SuggestFilter();
             private List<object> resultList;
             private Func<object, string> labelFunc;
+
             public SuggestCompleteAdapter(Context context, int textViewResourceId) : base(context, textViewResourceId)
             {
                 resultList = new List<object>();
                 SetNotifyOnChange(true);
             }
+
             public void UpdateList(IEnumerable<object> list, Func<object, string> labelFunc)
             {
                 this.labelFunc = labelFunc;
@@ -122,7 +124,7 @@ namespace dotMorten.Xamarin.Forms
                     return resultList.Count;
                 }
             }
-            private SuggestFilter filter = new SuggestFilter();
+
             public override Filter Filter => filter;
 
             public override Java.Lang.Object GetItem(int position)

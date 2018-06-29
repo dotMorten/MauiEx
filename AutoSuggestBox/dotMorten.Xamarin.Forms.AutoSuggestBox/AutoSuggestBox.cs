@@ -95,6 +95,9 @@ namespace dotMorten.Xamarin.Forms
             base.OnPropertyChanged(propertyName);
         }
 
+        /// <summary>
+        /// Gets or sets the Text property
+        /// </summary>
         public string Text
         {
             get { return (string)GetValue(TextProperty); }
@@ -124,7 +127,9 @@ namespace dotMorten.Xamarin.Forms
                 box.TextChanged?.Invoke(box, new AutoSuggestBoxTextChangedEventArgs(AutoSuggestionBoxTextChangeReason.ProgrammaticChange));
         }
 
-
+        /// <summary>
+        /// Gets or sets the PlaceholderText
+        /// </summary>
         public string PlaceholderText
         {
             get { return (string)GetValue(PlaceholderTextProperty); }
@@ -217,6 +222,7 @@ namespace dotMorten.Xamarin.Forms
             get { return (bool)GetValue(IsSuggestionListOpenProperty); }
             set { SetValue(IsSuggestionListOpenProperty, value); }
         }
+
         /// <summary>
         /// Identifies the <see cref="IsSuggestionListOpen"/> bindable property.
         /// </summary>
@@ -294,7 +300,6 @@ namespace dotMorten.Xamarin.Forms
         public event EventHandler<AutoSuggestBoxQuerySubmittedEventArgs> QuerySubmitted;
 
 #if __ANDROID__ || __IOS__
-
         private static string FormatType(object instance, string memberPath)
         {
             if (!string.IsNullOrEmpty(memberPath))

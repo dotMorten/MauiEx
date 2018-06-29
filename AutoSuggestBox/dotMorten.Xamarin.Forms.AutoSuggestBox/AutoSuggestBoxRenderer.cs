@@ -1,7 +1,6 @@
 ﻿#if !NETSTANDARD2_0
 #if __ANDROID__
 using Xamarin.Forms.Platform.Android;
-using NativeAutoSuggestBox = Android.Widget.AutoCompleteTextView;
 #elif __IOS__
 using System;
 using System.Drawing;
@@ -18,6 +17,10 @@ namespace dotMorten.Xamarin.Forms
 {
     internal class AutoSuggestBoxRenderer : ViewRenderer<AutoSuggestBox, NativeAutoSuggestBox>
     {
+#if __ANDROID__
+        public AutoSuggestBoxRenderer(Android.Content.Context context) : base(context) { }
+#endif
+
         protected override void OnElementChanged(ElementChangedEventArgs<dotMorten.Xamarin.Forms.AutoSuggestBox> e)
         {
             base.OnElementChanged(e);

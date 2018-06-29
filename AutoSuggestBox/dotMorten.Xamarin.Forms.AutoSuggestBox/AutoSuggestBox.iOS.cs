@@ -10,6 +10,9 @@ namespace dotMorten.Xamarin.Forms
 {
     public partial class AutoSuggestBox
     {
+        private nfloat keyboardHeight;
+        private NSLayoutConstraint bottomConstraint;
+
         internal UIKit.UITextField inputText { get; }
         internal UIKit.UITableView selectionList { get; }
 
@@ -41,8 +44,6 @@ namespace dotMorten.Xamarin.Forms
                 IsSuggestionListOpen = false;
             }
         }
-        private nfloat keyboardHeight;
-        NSLayoutConstraint bottomConstraint;
 
         private void OnKeyboardHide(object sender, UIKeyboardEventArgs e)
         {
@@ -73,6 +74,7 @@ namespace dotMorten.Xamarin.Forms
             QuerySubmitted?.Invoke(this, new AutoSuggestBoxQuerySubmittedEventArgs(inputText.Text, null));
             return true;
         }
+
         private void InputText_EndedWithReason(object sender, UIKit.UITextFieldEditingEndedEventArgs e)
         {
             if(e.Reason == UITextFieldDidEndEditingReason.Committed)

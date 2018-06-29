@@ -4,7 +4,6 @@ using System.Text;
 
 namespace dotMorten.Xamarin.Forms
 {
-
     /// <summary>
     /// Provides data for the <see cref="AutoSuggestBox.TextChanged"/> event.
     /// </summary>

@@ -4,7 +4,6 @@ using System.Text;
 
 namespace dotMorten.Xamarin.Forms
 {
-
     /// <summary>
     /// Provides event data for the AutoSuggestBox.QuerySubmitted event.
     /// </summary>
