@@ -8,7 +8,6 @@ using Xamarin.Forms.Platform.Android;
 #elif __IOS__
 using CoreGraphics;
 using Xamarin.Forms.Platform.iOS;
-//using NativeAutoSuggestBox = UIKit.UIView;
 #elif NETFX_CORE
 using Xamarin.Forms.Platform.UWP;
 using NativeAutoSuggestBox = Windows.UI.Xaml.Controls.AutoSuggestBox;
@@ -24,7 +23,7 @@ namespace dotMorten.Xamarin.Forms
     /// <summary>
     /// Represents a text control that makes suggestions to users as they type. The app is notified when text 
     /// has been changed by the user and is responsible for providing relevant suggestions for this control to display.
-    /// Use the UWP Reference doc for more information: <see cref="https://msdn.microsoft.com/en-us/library/windows/apps/mt280217.aspx?f=255&MSPPError=-2147217396">Link</see>
+    /// Use the UWP Reference doc for more information: <a href="https://msdn.microsoft.com/en-us/library/windows/apps/mt280217.aspx">Link</a>
     /// </summary>
 	public partial class AutoSuggestBox : View
     {
@@ -33,6 +32,9 @@ namespace dotMorten.Xamarin.Forms
 #endif
         private bool suppressTextChangedEvent;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AutoSuggestBox"/> class
+        /// </summary>
         public AutoSuggestBox() 
         {
 #if !NETSTANDARD2_0
@@ -48,11 +50,13 @@ namespace dotMorten.Xamarin.Forms
                 suppressTextChangedEvent = false;
                 TextChanged?.Invoke(this, new AutoSuggestBoxTextChangedEventArgs((AutoSuggestionBoxTextChangeReason) e.Reason)); 
             };
+            NativeAutoSuggestBox.QuerySubmitted += (s, e) => QuerySubmitted?.Invoke(this, new AutoSuggestBoxQuerySubmittedEventArgs(e.QueryText, e.ChosenSuggestion));
 #else
             throw new PlatformNotSupportedException();
 #endif
         }
 
+        /// <inheritdoc />
         protected override void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             if(propertyName == nameof(IsEnabled))
@@ -210,7 +214,7 @@ namespace dotMorten.Xamarin.Forms
         }
 
         /// <summary>
-        /// Identifies the <see cref="Header"/> bindable property.
+        /// Identifies the <see cref="ItemsSource"/> bindable property.
         /// </summary>
         public static readonly BindableProperty ItemsSourceProperty =
             BindableProperty.Create(nameof(ItemsSource), typeof(System.Collections.IList), typeof(AutoSuggestBox), null, BindingMode.OneWay, null, OnItemsSourcePropertyChanged);

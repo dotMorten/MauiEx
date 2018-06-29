@@ -32,7 +32,6 @@ namespace dotMorten.Xamarin.Forms
             };
             inputText.ShouldReturn = InputText_OnShouldReturn;
             inputText.EditingChanged += InputText_EditingChanged;
-            inputText.Started += InputText_Started;
             inputText.EndedWithReason += InputText_EndedWithReason;
             inputText.ReturnKeyType = UIKit.UIReturnKeyType.Search;
 
@@ -152,12 +151,6 @@ namespace dotMorten.Xamarin.Forms
             SuggestionChosen?.Invoke(this, new AutoSuggestBoxSuggestionChosenEventArgs(selection));
             QuerySubmitted?.Invoke(this, new AutoSuggestBoxQuerySubmittedEventArgs(Text, selection));
             IsSuggestionListOpen = false;
-        }
-
-        private void InputText_Started(object sender, EventArgs e)
-        {
-            //if (selectionList.Source != null && selectionList.Source.RowsInSection(selectionList, 0) > 0)
-            //    IsSuggestionListOpen = true;
         }
 
         private void InputText_EditingChanged(object sender, EventArgs e)

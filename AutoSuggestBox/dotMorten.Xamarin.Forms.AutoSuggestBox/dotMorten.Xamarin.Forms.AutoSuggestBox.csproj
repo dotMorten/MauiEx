@@ -9,14 +9,15 @@
     <RepositoryUrl>https://github.com/dotMorten/XamarinFormsControls</RepositoryUrl>
     <PackageProjectUrl>https://github.com/dotMorten/XamarinFormsControls</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/dotMorten/XamarinFormsControls/LICENSE.MD</PackageLicenseUrl>
-    <Version>0.5.0</Version>
+    <Version>0.1.0</Version>
+    <DocumentationFile>$(MSBuildThisFileDirectory)bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'uap10.0.16299'">
     <TargetPlatformVersion>10.0.16299.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.16299.0</TargetPlatformMinVersion>
   </PropertyGroup>
-   
+
   <ItemGroup Condition="'$(TargetFramework)' == 'uap10.0.16299'">
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.1.5" />
   </ItemGroup>

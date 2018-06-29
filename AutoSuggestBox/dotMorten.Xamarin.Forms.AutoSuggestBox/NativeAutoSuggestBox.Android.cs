@@ -161,7 +161,6 @@ namespace dotMorten.Xamarin.Forms
             private class SuggestFilter : Filter
             {
                 private IEnumerable<string> resultList;
-                private FilterResults results;
 
                 public SuggestFilter()
                 {
