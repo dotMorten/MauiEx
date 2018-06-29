@@ -7,7 +7,6 @@ using System.Drawing;
 using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
-using NativeAutoSuggestBox = UIKit.UIView;
 #elif NETFX_CORE
 using Xamarin.Forms.Platform.UWP;
 using NativeAutoSuggestBox = Windows.UI.Xaml.Controls.AutoSuggestBox;
@@ -42,7 +41,7 @@ namespace dotMorten.Xamarin.Forms
         {
             var baseResult = base.GetDesiredSize(widthConstraint, heightConstraint);
             var testString = new Foundation.NSString("Tj");
-            var testSize = testString.GetSizeUsingAttributes(new UIStringAttributes { Font = Element.inputText.Font });
+            var testSize = testString.GetSizeUsingAttributes(new UIStringAttributes { Font = Control.Font });
             double height = baseHeight + testSize.Height;
             height = Math.Round(height);
 

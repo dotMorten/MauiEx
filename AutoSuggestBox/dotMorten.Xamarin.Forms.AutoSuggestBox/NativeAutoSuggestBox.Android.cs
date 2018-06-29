@@ -49,6 +49,22 @@ namespace dotMorten.Xamarin.Forms
             }
         }
 
+        public string PlaceholderText
+        {
+            set => HintFormatted = new Java.Lang.String(value as string ?? "");
+        }
+
+        public bool IsSuggestionListOpen
+        {
+            set
+            {
+                if (value)
+                    ShowDropDown();
+                else
+                    DismissDropDown();
+            }
+        }
+
         protected override void OnTextChanged(ICharSequence text, int start, int lengthBefore, int lengthAfter)
         {
             if (!suppressTextChangedEvent)

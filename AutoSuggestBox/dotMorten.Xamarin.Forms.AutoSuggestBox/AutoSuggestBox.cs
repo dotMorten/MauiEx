@@ -8,7 +8,7 @@ using Xamarin.Forms.Platform.Android;
 #elif __IOS__
 using CoreGraphics;
 using Xamarin.Forms.Platform.iOS;
-using NativeAutoSuggestBox = UIKit.UIView;
+//using NativeAutoSuggestBox = UIKit.UIView;
 #elif NETFX_CORE
 using Xamarin.Forms.Platform.UWP;
 using NativeAutoSuggestBox = Windows.UI.Xaml.Controls.AutoSuggestBox;
@@ -41,8 +41,6 @@ namespace dotMorten.Xamarin.Forms
                 Android.App.Application.Context
 #endif
                 );
-#endif
-#if NETFX_CORE || __ANDROID__
             NativeAutoSuggestBox.SuggestionChosen += (s, e) => { SuggestionChosen?.Invoke(this, new AutoSuggestBoxSuggestionChosenEventArgs(e.SelectedItem)); };
             NativeAutoSuggestBox.TextChanged += (s, e) => { 
                 suppressTextChangedEvent = true;
@@ -50,31 +48,6 @@ namespace dotMorten.Xamarin.Forms
                 suppressTextChangedEvent = false;
                 TextChanged?.Invoke(this, new AutoSuggestBoxTextChangedEventArgs((AutoSuggestionBoxTextChangeReason) e.Reason)); 
             };
-            NativeAutoSuggestBox.QuerySubmitted += (s, e) => { QuerySubmitted?.Invoke(this, new AutoSuggestBoxQuerySubmittedEventArgs(e.QueryText, e.ChosenSuggestion)); };
-#elif __ANDROID__
-            NativeAutoSuggestBox.SuggestionChosen += (s, e) => { SuggestionChosen?.Invoke(this, e); };
-            NativeAutoSuggestBox.TextChanged += AutocompleteTextView_TextChanged;
-            NativeAutoSuggestBox.QuerySubmitted += (s, e) => { QuerySubmitted?.Invoke(this, e); };
-#elif __IOS__
-            inputText = new UIKit.UITextField()
-            {
-                TranslatesAutoresizingMaskIntoConstraints = false,
-                BorderStyle = UIKit.UITextBorderStyle.RoundedRect
-            };
-            inputText.ShouldReturn = InputText_OnShouldReturn;
-            inputText.EditingChanged += InputText_EditingChanged;
-            inputText.Started += InputText_Started;
-            inputText.EndedWithReason += InputText_EndedWithReason;
-            inputText.ReturnKeyType = UIKit.UIReturnKeyType.Search;
-            UIKit.UIKeyboard.Notifications.ObserveWillShow(OnKeyboardShow);
-            UIKit.UIKeyboard.Notifications.ObserveWillHide(OnKeyboardHide);
-
-            NativeAutoSuggestBox.AddSubview(inputText);
-            inputText.TopAnchor.ConstraintEqualTo(NativeAutoSuggestBox.TopAnchor).Active = true;
-            inputText.LeftAnchor.ConstraintEqualTo(NativeAutoSuggestBox.LeftAnchor).Active = true;
-            inputText.WidthAnchor.ConstraintEqualTo(NativeAutoSuggestBox.WidthAnchor).Active = true;
-            inputText.HeightAnchor.ConstraintEqualTo(NativeAutoSuggestBox.HeightAnchor).Active = true;
-            selectionList = new UIKit.UITableView() { TranslatesAutoresizingMaskIntoConstraints = false };
 #else
             throw new PlatformNotSupportedException();
 #endif
@@ -113,15 +86,9 @@ namespace dotMorten.Xamarin.Forms
         private static void OnTextPropertyChanged(BindableObject bindable, object oldValue, object newValue)
         {
             var box = (AutoSuggestBox)bindable;
-#if NETFX_CORE
+#if !NETSTANDARD2_0
             if(box.NativeAutoSuggestBox.Text != newValue as string)
                 box.NativeAutoSuggestBox.Text = newValue as string;
-#elif __ANDROID__
-            if (box.NativeAutoSuggestBox.Text != newValue as string)
-                box.NativeAutoSuggestBox.Text = newValue as string;
-#elif __IOS__
-            if (box.inputText.Text != newValue as string)
-                box.inputText.Text = newValue as string;
 #endif
             if (!box.suppressTextChangedEvent)
                 box.TextChanged?.Invoke(box, new AutoSuggestBoxTextChangedEventArgs(AutoSuggestionBoxTextChangeReason.ProgrammaticChange));
@@ -145,12 +112,8 @@ namespace dotMorten.Xamarin.Forms
         private static void OnPlaceholderTextPropertyChanged(BindableObject bindable, object oldValue, object newValue)
         {
             var box = (AutoSuggestBox)bindable;
-#if NETFX_CORE
+#if !NETSTANDARD2_0
             box.NativeAutoSuggestBox.PlaceholderText = newValue as string;
-#elif __ANDROID__
-            box.NativeAutoSuggestBox.HintFormatted = new Java.Lang.String(newValue as string ?? "");
-#elif __IOS__
-            box.inputText.Placeholder = newValue as string;
 #endif
         }
 
@@ -206,10 +169,8 @@ namespace dotMorten.Xamarin.Forms
             var box = (AutoSuggestBox)bindable;
 #if NETFX_CORE
             box.NativeAutoSuggestBox.DisplayMemberPath = newValue as string;
-#elif __ANDROID__
+#elif __ANDROID__ || __IOS__
             box.NativeAutoSuggestBox.SetItems(box.ItemsSource?.OfType<object>(), (o) => FormatType(o, box.DisplayMemberPath), (o) => FormatType(o, box.TextMemberPath));
-#elif __IOS__
-            box.UpdateItems();
 #endif
         }
 
@@ -231,28 +192,10 @@ namespace dotMorten.Xamarin.Forms
 
         private static void OnIsSuggestionListOpenPropertyChanged(BindableObject bindable, object oldValue, object newValue)
         {
+#if !NETSTANDARD2_0
             var box = (AutoSuggestBox)bindable;
             bool isOpen = (bool)newValue;
-#if NETFX_CORE
             box.NativeAutoSuggestBox.IsSuggestionListOpen = isOpen;
-#elif __ANDROID__
-            if (isOpen)
-                box.NativeAutoSuggestBox.ShowDropDown();
-            else
-                box.NativeAutoSuggestBox.DismissDropDown();
-#elif __IOS__
-            if (isOpen && box.selectionList.Superview == null)
-            {
-                UIKit.UIApplication.SharedApplication.Windows[0].AddSubview(box.selectionList);
-                box.selectionList.TopAnchor.ConstraintEqualTo(box.inputText.BottomAnchor).Active = true;
-                box.selectionList.LeftAnchor.ConstraintEqualTo(box.inputText.LeftAnchor).Active = true;
-                box.selectionList.WidthAnchor.ConstraintEqualTo(box.inputText.WidthAnchor).Active = true;
-                box.bottomConstraint = box.selectionList.BottomAnchor.ConstraintGreaterThanOrEqualTo(box.selectionList.Superview.BottomAnchor, -box.keyboardHeight);
-                box.bottomConstraint.Active = true;
-                box.selectionList.UpdateConstraints();
-            }
-            else if (!isOpen && box.selectionList.Superview != null)
-                box.selectionList.RemoveFromSuperview();
 #endif
         }
 
@@ -277,10 +220,8 @@ namespace dotMorten.Xamarin.Forms
             var box = (AutoSuggestBox)bindable;
 #if NETFX_CORE
             box.NativeAutoSuggestBox.ItemsSource = newValue;
-#elif __ANDROID__
+#elif __ANDROID__ || __IOS__
             box.NativeAutoSuggestBox.SetItems(box.ItemsSource?.OfType<object>(), (o) => FormatType(o, box.DisplayMemberPath), (o) => FormatType(o, box.TextMemberPath));
-#elif __IOS__
-            box.UpdateItems();
 #endif
         }
 
