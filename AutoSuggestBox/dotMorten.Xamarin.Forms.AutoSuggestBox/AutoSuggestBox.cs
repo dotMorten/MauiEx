@@ -75,6 +75,7 @@ namespace dotMorten.Xamarin.Forms
         /// <summary>
         /// Gets or sets the Text property
         /// </summary>
+        /// <seealso cref="TextColor"/>
         public string Text
         {
             get { return (string)GetValue(TextProperty); }
@@ -97,6 +98,35 @@ namespace dotMorten.Xamarin.Forms
             if (!box.suppressTextChangedEvent)
                 box.TextChanged?.Invoke(box, new AutoSuggestBoxTextChangedEventArgs(AutoSuggestionBoxTextChangeReason.ProgrammaticChange));
         }
+
+        /// <summary>
+        /// Gets or sets the foreground color of the control
+        /// </summary>
+        /// <seealso cref="Text"/>
+        public global::Xamarin.Forms.Color TextColor
+        {
+            get { return (global::Xamarin.Forms.Color )GetValue(TextColorProperty); }
+            set { SetValue(TextColorProperty, value); }
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="TextColor"/> bindable property.
+        /// </summary>
+        public static readonly BindableProperty TextColorProperty =
+            BindableProperty.Create(nameof(TextColor), typeof(global::Xamarin.Forms.Color ), typeof(AutoSuggestBox), global::Xamarin.Forms.Color.Gray, BindingMode.OneWay, null, OnTextColorPropertyChanged);
+
+        private static void OnTextColorPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            var box = (AutoSuggestBox)bindable;
+            var color = (global::Xamarin.Forms.Color)newValue;
+#if NETFX_CORE
+            box.NativeAutoSuggestBox.Foreground = new Windows.UI.Xaml.Media.SolidColorBrush(Windows.UI.Color.FromArgb((byte)(color.A * 255), (byte)(color.R * 255), (byte)(color.G * 255), (byte)(color.B * 255)));
+#elif __ANDROID__ || __IOS__
+            box.NativeAutoSuggestBox.SetTextColor(color);
+#endif
+        }
+
+
 
         /// <summary>
         /// Gets or sets the PlaceholderText

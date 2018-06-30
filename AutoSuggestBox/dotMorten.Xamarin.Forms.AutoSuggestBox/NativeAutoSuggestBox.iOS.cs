@@ -171,6 +171,11 @@ namespace dotMorten.Xamarin.Forms
             }
         }
 
+        public void SetTextColor(global::Xamarin.Forms.Color color)
+        {
+            inputText.TextColor = global::Xamarin.Forms.Platform.iOS.ColorExtensions.ToUIColor(color);
+        }
+
         public event EventHandler<AutoSuggestBoxTextChangedEventArgs> TextChanged;
 
         public event EventHandler<AutoSuggestBoxQuerySubmittedEventArgs> QuerySubmitted;

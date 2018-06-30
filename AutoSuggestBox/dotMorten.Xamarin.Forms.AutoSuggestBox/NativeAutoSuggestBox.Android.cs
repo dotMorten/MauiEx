@@ -49,6 +49,11 @@ namespace dotMorten.Xamarin.Forms
             }
         }
 
+        public void SetTextColor(global::Xamarin.Forms.Color color)
+        {
+            this.SetTextColor(global::Xamarin.Forms.Platform.Android.ColorExtensions.ToAndroid(color));
+        }
+
         public string PlaceholderText
         {
             set => HintFormatted = new Java.Lang.String(value as string ?? "");
