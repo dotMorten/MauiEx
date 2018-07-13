@@ -43,7 +43,7 @@ namespace dotMorten.Xamarin.Forms
             set
             {
                 suppressTextChangedEvent = true;
-                base.Text = Text;
+                base.Text = value;
                 suppressTextChangedEvent = false;
                 this.TextChanged?.Invoke(this, new AutoSuggestBoxTextChangedEventArgs(AutoSuggestionBoxTextChangeReason.ProgrammaticChange));
             }
