@@ -1,7 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;uap10.0.16299;xamarinios10;MonoAndroid60</TargetFrameworks>
+    <TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">netstandard2.0;uap10.0.16299;xamarinios10;MonoAndroid60</TargetFrameworks>
+    <TargetFrameworks Condition=" '$(OS)' != 'Windows_NT' ">netstandard2.0;xamarinios10;MonoAndroid60</TargetFrameworks>
     <RootNamespace>dotMorten.Xamarin.Forms</RootNamespace>
     <AssemblyName>dotMorten.Xamarin.Forms.AutoSuggestBox</AssemblyName>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -13,12 +14,12 @@
     <DocumentationFile>$(MSBuildThisFileDirectory)bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' == 'uap10.0.16299'">
+  <PropertyGroup Condition="'$(TargetFramework)' == 'uap10.0.16299' AND '$(OS)' == 'Windows_NT'">
     <TargetPlatformVersion>10.0.16299.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.16299.0</TargetPlatformMinVersion>
   </PropertyGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'uap10.0.16299'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'uap10.0.16299' AND '$(OS)' == 'Windows_NT'">
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.1.5" />
   </ItemGroup>
    
