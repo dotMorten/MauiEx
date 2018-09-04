@@ -25,7 +25,7 @@ namespace dotMorten.Xamarin.Forms
     /// has been changed by the user and is responsible for providing relevant suggestions for this control to display.
     /// Use the UWP Reference doc for more information: <a href="https://msdn.microsoft.com/en-us/library/windows/apps/mt280217.aspx">Link</a>
     /// </summary>
-	public partial class AutoSuggestBox : View
+    public partial class AutoSuggestBox : View
     {
 #if !NETSTANDARD2_0
         internal NativeAutoSuggestBox NativeAutoSuggestBox { get; }
@@ -35,7 +35,7 @@ namespace dotMorten.Xamarin.Forms
         /// <summary>
         /// Initializes a new instance of the <see cref="AutoSuggestBox"/> class
         /// </summary>
-        public AutoSuggestBox() 
+        public AutoSuggestBox()
         {
 #if !NETSTANDARD2_0
             NativeAutoSuggestBox = new NativeAutoSuggestBox(
@@ -59,7 +59,7 @@ namespace dotMorten.Xamarin.Forms
         /// <inheritdoc />
         protected override void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            if(propertyName == nameof(IsEnabled))
+            if (propertyName == nameof(IsEnabled))
             {
 #if NETFX_CORE
                 NativeAutoSuggestBox.IsEnabled = IsEnabled;
@@ -105,7 +105,7 @@ namespace dotMorten.Xamarin.Forms
         /// <seealso cref="Text"/>
         public global::Xamarin.Forms.Color TextColor
         {
-            get { return (global::Xamarin.Forms.Color )GetValue(TextColorProperty); }
+            get { return (global::Xamarin.Forms.Color)GetValue(TextColorProperty); }
             set { SetValue(TextColorProperty, value); }
         }
 
@@ -113,7 +113,7 @@ namespace dotMorten.Xamarin.Forms
         /// Identifies the <see cref="TextColor"/> bindable property.
         /// </summary>
         public static readonly BindableProperty TextColorProperty =
-            BindableProperty.Create(nameof(TextColor), typeof(global::Xamarin.Forms.Color ), typeof(AutoSuggestBox), global::Xamarin.Forms.Color.Gray, BindingMode.OneWay, null, OnTextColorPropertyChanged);
+            BindableProperty.Create(nameof(TextColor), typeof(global::Xamarin.Forms.Color), typeof(AutoSuggestBox), global::Xamarin.Forms.Color.Gray, BindingMode.OneWay, null, OnTextColorPropertyChanged);
 
         private static void OnTextColorPropertyChanged(BindableObject bindable, object oldValue, object newValue)
         {
@@ -125,8 +125,6 @@ namespace dotMorten.Xamarin.Forms
             box.NativeAutoSuggestBox.SetTextColor(color);
 #endif
         }
-
-
 
         /// <summary>
         /// Gets or sets the PlaceholderText
@@ -148,6 +146,114 @@ namespace dotMorten.Xamarin.Forms
             var box = (AutoSuggestBox)bindable;
 #if !NETSTANDARD2_0
             box.NativeAutoSuggestBox.PlaceholderText = newValue as string;
+#endif
+        }
+
+        /// <summary>
+        /// Gets or sets the color of the place holder text.
+        /// </summary>
+        /// <value>
+        /// The color of the place holder text.
+        /// </value>
+        public global::Xamarin.Forms.Color PlaceHolderTextColor
+        {
+            get { return (global::Xamarin.Forms.Color)GetValue(PlaceHolderColorProperty); }
+            set { SetValue(PlaceHolderColorProperty, value); }
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="PlaceHolderTextColor"/> bindable property.
+        /// </summary>
+        public static readonly BindableProperty PlaceHolderColorProperty =
+            BindableProperty.Create(nameof(PlaceHolderTextColor), typeof(global::Xamarin.Forms.Color), typeof(AutoSuggestBox), global::Xamarin.Forms.Color.Gray, BindingMode.OneWay, null, OnPlaceHolderTextColorPropertyChanged);
+
+        private static void OnPlaceHolderTextColorPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            var box = (AutoSuggestBox)bindable;
+            var color = (global::Xamarin.Forms.Color)newValue;
+#if NETFX_CORE
+            box.NativeAutoSuggestBox.Foreground = new Windows.UI.Xaml.Media.SolidColorBrush(Windows.UI.Color.FromArgb((byte)(color.A * 255), (byte)(color.R * 255), (byte)(color.G * 255), (byte)(color.B * 255)));
+#elif __ANDROID__ || __IOS__
+            box.NativeAutoSuggestBox.SetPlaceHolderTextColor(color);
+#endif
+        }
+
+        /// <summary>
+        /// Gets or sets the PlaceholderText
+        /// </summary>
+        public string PlaceholderText
+        {
+            get { return (string)GetValue(PlaceholderTextProperty); }
+            set { SetValue(PlaceholderTextProperty, value); }
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="PlaceholderText"/> bindable property.
+        /// </summary>
+        public static readonly BindableProperty PlaceholderTextProperty =
+            BindableProperty.Create(nameof(PlaceholderText), typeof(string), typeof(AutoSuggestBox), "", BindingMode.OneWay, null, OnPlaceholderTextPropertyChanged);
+
+        private static void OnPlaceholderTextPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            AutoSuggestBox box = (AutoSuggestBox)bindable;
+#if !NETSTANDARD2_0
+            box.NativeAutoSuggestBox.PlaceholderText = newValue as string;
+#endif
+        }
+
+        /// <summary>
+        /// Gets or sets the PlaceholderText
+        /// </summary>
+        public global::Xamarin.Forms.Color BackgroundTintList
+        {
+            get { return (global::Xamarin.Forms.Color)GetValue(BackgroundTintListProperty); }
+            set { SetValue(BackgroundTintListProperty, value); }
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="BackgroundTintList"/> bindable property.
+        /// </summary>
+        public static readonly BindableProperty BackgroundTintListProperty =
+            BindableProperty.Create(nameof(BackgroundTintList), typeof(Color), typeof(AutoSuggestBox), global::Xamarin.Forms.Color.Gray, BindingMode.OneWay, null, OnBackgroundTintListPropertyChanged);
+
+        private static void OnBackgroundTintListPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            AutoSuggestBox box = (AutoSuggestBox)bindable;
+            Color color = (global::Xamarin.Forms.Color)newValue;
+
+            // TODO NETFX_CORE if required
+#if NETFX_CORE
+           
+#elif __ANDROID__
+            box.NativeAutoSuggestBox.SetBackgroundTintList(color);
+#endif
+        }
+
+        /// <summary>
+        /// Gets or sets the PlaceholderTexts
+        /// </summary>
+        private global::Xamarin.Forms.Color FocusOnBackgroundTintList
+        {
+            get { return (global::Xamarin.Forms.Color)GetValue(FocusOnBackgroundTintListProperty); }
+            set { SetValue(FocusOnBackgroundTintListProperty, value); }
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="FocusOnBackgroundTintList"/> bindable property.
+        /// </summary>
+        public static readonly BindableProperty FocusOnBackgroundTintListProperty =
+            BindableProperty.Create(nameof(FocusOnBackgroundTintList), typeof(Color), typeof(AutoSuggestBox), global::Xamarin.Forms.Color.Gray, BindingMode.OneWay, null, OnFocusOnBackgroundTintListPropertyChanged);
+
+        private static void OnFocusOnBackgroundTintListPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            AutoSuggestBox box = (AutoSuggestBox)bindable;
+            var color = (global::Xamarin.Forms.Color)newValue;
+
+            // TODO NETFX_CORE if required
+#if NETFX_CORE
+           
+#elif __ANDROID__
+            box.NativeAutoSuggestBox.SetOnFocusTintBackgroundColor(color);
 #endif
         }
 

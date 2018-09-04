@@ -82,10 +82,10 @@ namespace dotMorten.Xamarin.Forms
             set => inputText.Placeholder = value;
         }
 
-		public bool IsSuggestionListOpen
+        public bool IsSuggestionListOpen
         {
             get => selectionList.Superview != null;
-			set
+            set
             {
                 if (value && selectionList.Superview == null && selectionList.Source != null && selectionList.Source.RowsInSection(selectionList, 0) > 0)
                 {
@@ -159,10 +159,10 @@ namespace dotMorten.Xamarin.Forms
             IsSuggestionListOpen = true;
         }
 
-		public string Text
+        public string Text
         {
             get => inputText.Text;
-			set
+            set
             {
                 suppressTextChangedEvent = true;
                 inputText.Text = value;
@@ -174,6 +174,11 @@ namespace dotMorten.Xamarin.Forms
         public void SetTextColor(global::Xamarin.Forms.Color color)
         {
             inputText.TextColor = global::Xamarin.Forms.Platform.iOS.ColorExtensions.ToUIColor(color);
+        }
+
+        public void SetPlaceHolderTextColor(global::Xamarin.Forms.Color color)
+        {
+            inputText.SetValueForKey(global::Xamarin.Forms.Platform.iOS.ColorExtensions.ToUIColor(color), new NSString("_placeholderLabel.textColor"));
         }
 
         public event EventHandler<AutoSuggestBoxTextChangedEventArgs> TextChanged;

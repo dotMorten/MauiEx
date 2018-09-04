@@ -59,6 +59,40 @@ namespace dotMorten.Xamarin.Forms
             set => HintFormatted = new Java.Lang.String(value as string ?? "");
         }
 
+        private Android.Graphics.Color tintBackgroundColor;
+
+        public void SetBackgroundTintList(global::Xamarin.Forms.Color color)
+        {
+            tintBackgroundColor = global::Xamarin.Forms.Platform.Android.ColorExtensions.ToAndroid(color);
+
+               if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.Lollipop)
+                this.BackgroundTintList = Android.Content.Res.ColorStateList.ValueOf(global::Xamarin.Forms.Platform.Android.ColorExtensions.ToAndroid(color));
+            else
+                this.Background.SetColorFilter(global::Xamarin.Forms.Platform.Android.ColorExtensions.ToAndroid(color), Android.Graphics.PorterDuff.Mode.SrcAtop);
+        }
+
+        public Android.Graphics.Color onFocusTintBackgroundColor { get; private set; }
+
+        public void SetOnFocusTintBackgroundColor(global::Xamarin.Forms.Color color)
+        {
+           onFocusTintBackgroundColor = global::Xamarin.Forms.Platform.Android.ColorExtensions.ToAndroid(color);
+
+            this.FocusChange += Control_FocusChange;
+        }
+
+        private void Control_FocusChange(object sender, Android.Views.View.FocusChangeEventArgs e)
+        {
+                if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.Lollipop)
+                    this.BackgroundTintList = Android.Content.Res.ColorStateList.ValueOf(e.HasFocus != null ? onFocusTintBackgroundColor : Android.Graphics.Color.Green);
+                else
+                    this.Background.SetColorFilter(e.HasFocus ? onFocusTintBackgroundColor : Android.Graphics.Color.Green, Android.Graphics.PorterDuff.Mode.SrcAtop); 
+        }
+
+        public void SetPlaceHolderTextColor(global::Xamarin.Forms.Color color)
+        {
+            this.SetHintTextColor(global::Xamarin.Forms.Platform.Android.ColorExtensions.ToAndroid(color));
+        }
+
         public bool IsSuggestionListOpen
         {
             set
