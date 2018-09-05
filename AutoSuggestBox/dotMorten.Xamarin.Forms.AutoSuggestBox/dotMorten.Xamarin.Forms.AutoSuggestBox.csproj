@@ -10,7 +10,7 @@
     <RepositoryUrl>https://github.com/dotMorten/XamarinFormsControls</RepositoryUrl>
     <PackageProjectUrl>https://github.com/dotMorten/XamarinFormsControls/tree/master/AutoSuggestBox</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/dotMorten/XamarinFormsControls/blob/master/LICENSE</PackageLicenseUrl>
-    <Version>0.1.0</Version>
+    <Version>0.1.1</Version>
     <DocumentationFile>$(MSBuildThisFileDirectory)bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
   </PropertyGroup>
 
