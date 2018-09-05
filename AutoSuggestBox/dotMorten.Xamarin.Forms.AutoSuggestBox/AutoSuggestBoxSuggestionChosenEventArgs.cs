@@ -13,7 +13,7 @@ namespace dotMorten.Xamarin.Forms
         /// Initializes a new instance of the <see cref="AutoSuggestBoxSuggestionChosenEventArgs"/> class.
         /// </summary>
         /// <param name="selectedItem"></param>
-        internal AutoSuggestBoxSuggestionChosenEventArgs(object selectedItem)
+        public AutoSuggestBoxSuggestionChosenEventArgs(object selectedItem)
         {
             SelectedItem = selectedItem;
         }

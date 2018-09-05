@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using CoreAnimation;
 using CoreGraphics;
 using Foundation;
 using UIKit;
@@ -12,9 +12,8 @@ namespace dotMorten.Xamarin.Forms
     /// <summary>
     ///  Extends AutoCompleteTextView to have similar APIs and behavior to UWP's AutoSuggestBox, which greatly simplifies wrapping it
     /// </summary>
-    internal class NativeAutoSuggestBox : UIKit.UIView
+    public class NativeAutoSuggestBox : UIKit.UIView
     {
-        private bool suppressTextChangedEvent;
         private nfloat keyboardHeight;
         private NSLayoutConstraint bottomConstraint;
         private Func<object, string> textFunc;
@@ -28,7 +27,7 @@ namespace dotMorten.Xamarin.Forms
             inputText = new UIKit.UITextField()
             {
                 TranslatesAutoresizingMaskIntoConstraints = false,
-                BorderStyle = UIKit.UITextBorderStyle.RoundedRect
+                BorderStyle = UIKit.UITextBorderStyle.None
             };
             inputText.ShouldReturn = InputText_OnShouldReturn;
             inputText.EditingChanged += InputText_EditingChanged;
@@ -144,9 +143,7 @@ namespace dotMorten.Xamarin.Forms
         {
             selectionList.DeselectRow(e.SelectedItemIndexPath, false);
             var selection = e.SelectedItem;
-            suppressTextChangedEvent = true;
             inputText.Text = textFunc(selection);
-            suppressTextChangedEvent = true;
             TextChanged?.Invoke(this, new AutoSuggestBoxTextChangedEventArgs(AutoSuggestionBoxTextChangeReason.SuggestionChosen));
             SuggestionChosen?.Invoke(this, new AutoSuggestBoxSuggestionChosenEventArgs(selection));
             QuerySubmitted?.Invoke(this, new AutoSuggestBoxQuerySubmittedEventArgs(Text, selection));
@@ -164,9 +161,7 @@ namespace dotMorten.Xamarin.Forms
             get => inputText.Text;
 			set
             {
-                suppressTextChangedEvent = true;
                 inputText.Text = value;
-                suppressTextChangedEvent = true;
                 this.TextChanged?.Invoke(this, new AutoSuggestBoxTextChangedEventArgs(AutoSuggestionBoxTextChangeReason.ProgrammaticChange));
             }
         }
@@ -181,6 +176,26 @@ namespace dotMorten.Xamarin.Forms
         public event EventHandler<AutoSuggestBoxQuerySubmittedEventArgs> QuerySubmitted;
 
         public event EventHandler<AutoSuggestBoxSuggestionChosenEventArgs> SuggestionChosen;
+
+        public override void LayoutSubviews()
+        {
+            base.LayoutSubviews();
+
+            AddBottomBorder();
+        }
+
+        // TODO refactor with CustomEntryRenderer.DrawBorder() through UIViewExtensions
+        private void AddBottomBorder()
+        {
+            var border = new CALayer();
+            var width = 1f;
+            border.BorderColor = UIColor.LightGray.CGColor;
+            border.Frame = new CGRect(0, Frame.Size.Height - width, Frame.Size.Width, Frame.Size.Height);
+
+            border.BorderWidth = width;
+            Layer.AddSublayer(border);
+            Layer.MasksToBounds = true;
+        }
 
         private class TableSource<T> : UITableViewSource
         {

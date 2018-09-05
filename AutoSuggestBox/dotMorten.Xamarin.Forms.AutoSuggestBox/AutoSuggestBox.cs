@@ -1,22 +1,5 @@
 ﻿using System;
-using System.Linq;
-using System.Runtime.CompilerServices;
 using Xamarin.Forms;
-#if !NETSTANDARD2_0
-#if __ANDROID__
-using Xamarin.Forms.Platform.Android;
-#elif __IOS__
-using CoreGraphics;
-using Xamarin.Forms.Platform.iOS;
-#elif NETFX_CORE
-using Xamarin.Forms.Platform.UWP;
-using NativeAutoSuggestBox = Windows.UI.Xaml.Controls.AutoSuggestBox;
-#endif
-#endif
-
-#if !NETSTANDARD2_0
-[assembly: ExportRenderer(typeof(dotMorten.Xamarin.Forms.AutoSuggestBox), typeof(dotMorten.Xamarin.Forms.AutoSuggestBoxRenderer))]
-#endif
 
 namespace dotMorten.Xamarin.Forms
 {
@@ -25,52 +8,9 @@ namespace dotMorten.Xamarin.Forms
     /// has been changed by the user and is responsible for providing relevant suggestions for this control to display.
     /// Use the UWP Reference doc for more information: <a href="https://msdn.microsoft.com/en-us/library/windows/apps/mt280217.aspx">Link</a>
     /// </summary>
-	public partial class AutoSuggestBox : View
+	public class AutoSuggestBox : View
     {
-#if !NETSTANDARD2_0
-        internal NativeAutoSuggestBox NativeAutoSuggestBox { get; }
-#endif
         private bool suppressTextChangedEvent;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AutoSuggestBox"/> class
-        /// </summary>
-        public AutoSuggestBox() 
-        {
-#if !NETSTANDARD2_0
-            NativeAutoSuggestBox = new NativeAutoSuggestBox(
-#if __ANDROID__
-                Android.App.Application.Context
-#endif
-                );
-            NativeAutoSuggestBox.SuggestionChosen += (s, e) => { SuggestionChosen?.Invoke(this, new AutoSuggestBoxSuggestionChosenEventArgs(e.SelectedItem)); };
-            NativeAutoSuggestBox.TextChanged += (s, e) => { 
-                suppressTextChangedEvent = true;
-                Text = NativeAutoSuggestBox.Text; 
-                suppressTextChangedEvent = false;
-                TextChanged?.Invoke(this, new AutoSuggestBoxTextChangedEventArgs((AutoSuggestionBoxTextChangeReason) e.Reason)); 
-            };
-            NativeAutoSuggestBox.QuerySubmitted += (s, e) => QuerySubmitted?.Invoke(this, new AutoSuggestBoxQuerySubmittedEventArgs(e.QueryText, e.ChosenSuggestion));
-#else
-            throw new PlatformNotSupportedException();
-#endif
-        }
-
-        /// <inheritdoc />
-        protected override void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            if(propertyName == nameof(IsEnabled))
-            {
-#if NETFX_CORE
-                NativeAutoSuggestBox.IsEnabled = IsEnabled;
-#elif __ANDROID__
-                NativeAutoSuggestBox.Enabled = IsEnabled;
-#elif __IOS__
-                NativeAutoSuggestBox.UserInteractionEnabled = IsEnabled;
-#endif
-            }
-            base.OnPropertyChanged(propertyName);
-        }
 
         /// <summary>
         /// Gets or sets the Text property
@@ -91,10 +31,7 @@ namespace dotMorten.Xamarin.Forms
         private static void OnTextPropertyChanged(BindableObject bindable, object oldValue, object newValue)
         {
             var box = (AutoSuggestBox)bindable;
-#if !NETSTANDARD2_0
-            if(box.NativeAutoSuggestBox.Text != newValue as string)
-                box.NativeAutoSuggestBox.Text = newValue as string;
-#endif
+
             if (!box.suppressTextChangedEvent)
                 box.TextChanged?.Invoke(box, new AutoSuggestBoxTextChangedEventArgs(AutoSuggestionBoxTextChangeReason.ProgrammaticChange));
         }
@@ -103,9 +40,9 @@ namespace dotMorten.Xamarin.Forms
         /// Gets or sets the foreground color of the control
         /// </summary>
         /// <seealso cref="Text"/>
-        public global::Xamarin.Forms.Color TextColor
+        public Color TextColor
         {
-            get { return (global::Xamarin.Forms.Color )GetValue(TextColorProperty); }
+            get { return (Color)GetValue(TextColorProperty); }
             set { SetValue(TextColorProperty, value); }
         }
 
@@ -113,20 +50,7 @@ namespace dotMorten.Xamarin.Forms
         /// Identifies the <see cref="TextColor"/> bindable property.
         /// </summary>
         public static readonly BindableProperty TextColorProperty =
-            BindableProperty.Create(nameof(TextColor), typeof(global::Xamarin.Forms.Color ), typeof(AutoSuggestBox), global::Xamarin.Forms.Color.Gray, BindingMode.OneWay, null, OnTextColorPropertyChanged);
-
-        private static void OnTextColorPropertyChanged(BindableObject bindable, object oldValue, object newValue)
-        {
-            var box = (AutoSuggestBox)bindable;
-            var color = (global::Xamarin.Forms.Color)newValue;
-#if NETFX_CORE
-            box.NativeAutoSuggestBox.Foreground = new Windows.UI.Xaml.Media.SolidColorBrush(Windows.UI.Color.FromArgb((byte)(color.A * 255), (byte)(color.R * 255), (byte)(color.G * 255), (byte)(color.B * 255)));
-#elif __ANDROID__ || __IOS__
-            box.NativeAutoSuggestBox.SetTextColor(color);
-#endif
-        }
-
-
+            BindableProperty.Create(nameof(TextColor), typeof(Color), typeof(AutoSuggestBox), Color.Gray, BindingMode.OneWay, null);
 
         /// <summary>
         /// Gets or sets the PlaceholderText
@@ -141,15 +65,7 @@ namespace dotMorten.Xamarin.Forms
         /// Identifies the <see cref="PlaceholderText"/> bindable property.
         /// </summary>
         public static readonly BindableProperty PlaceholderTextProperty =
-            BindableProperty.Create(nameof(PlaceholderText), typeof(string), typeof(AutoSuggestBox), "", BindingMode.OneWay, null, OnPlaceholderTextPropertyChanged);
-
-        private static void OnPlaceholderTextPropertyChanged(BindableObject bindable, object oldValue, object newValue)
-        {
-            var box = (AutoSuggestBox)bindable;
-#if !NETSTANDARD2_0
-            box.NativeAutoSuggestBox.PlaceholderText = newValue as string;
-#endif
-        }
+            BindableProperty.Create(nameof(PlaceholderText), typeof(string), typeof(AutoSuggestBox), "", BindingMode.OneWay, null);
 
         /// <summary>
         /// Gets or sets the property path that is used to get the value for display in the
@@ -169,15 +85,7 @@ namespace dotMorten.Xamarin.Forms
         /// Identifies the <see cref="TextMemberPath"/> bindable property.
         /// </summary>
         public static readonly BindableProperty TextMemberPathProperty =
-            BindableProperty.Create(nameof(TextMemberPath), typeof(string), typeof(AutoSuggestBox), null, BindingMode.OneWay, null, OnTextMemberPathPropertyChanged);
-
-        private static void OnTextMemberPathPropertyChanged(BindableObject bindable, object oldValue, object newValue)
-        {
-#if NETFX_CORE
-            var box = (AutoSuggestBox)bindable;
-            box.NativeAutoSuggestBox.TextMemberPath = newValue as string;
-#endif
-        }
+            BindableProperty.Create(nameof(TextMemberPath), typeof(string), typeof(AutoSuggestBox), null, BindingMode.OneWay, null);
 
         /// <summary>
         /// Gets or sets the name or path of the property that is displayed for each data item.
@@ -196,17 +104,7 @@ namespace dotMorten.Xamarin.Forms
         /// Identifies the <see cref="DisplayMemberPath"/> bindable property.
         /// </summary>
         public static readonly BindableProperty DisplayMemberPathProperty =
-            BindableProperty.Create(nameof(DisplayMemberPath), typeof(string), typeof(AutoSuggestBox), "", BindingMode.OneWay, null, OnDisplayMemberPathPropertyChanged);
-
-        private static void OnDisplayMemberPathPropertyChanged(BindableObject bindable, object oldValue, object newValue)
-        {
-            var box = (AutoSuggestBox)bindable;
-#if NETFX_CORE
-            box.NativeAutoSuggestBox.DisplayMemberPath = newValue as string;
-#elif __ANDROID__ || __IOS__
-            box.NativeAutoSuggestBox.SetItems(box.ItemsSource?.OfType<object>(), (o) => FormatType(o, box.DisplayMemberPath), (o) => FormatType(o, box.TextMemberPath));
-#endif
-        }
+            BindableProperty.Create(nameof(DisplayMemberPath), typeof(string), typeof(AutoSuggestBox), "", BindingMode.OneWay, null);
 
         /// <summary>
         /// Gets or sets a Boolean value indicating whether the drop-down portion of the AutoSuggestBox is open.
@@ -222,16 +120,7 @@ namespace dotMorten.Xamarin.Forms
         /// Identifies the <see cref="IsSuggestionListOpen"/> bindable property.
         /// </summary>
         public static readonly BindableProperty IsSuggestionListOpenProperty =
-            BindableProperty.Create(nameof(IsSuggestionListOpen), typeof(bool), typeof(AutoSuggestBox), false, BindingMode.OneWay, null, OnIsSuggestionListOpenPropertyChanged);
-
-        private static void OnIsSuggestionListOpenPropertyChanged(BindableObject bindable, object oldValue, object newValue)
-        {
-#if !NETSTANDARD2_0
-            var box = (AutoSuggestBox)bindable;
-            bool isOpen = (bool)newValue;
-            box.NativeAutoSuggestBox.IsSuggestionListOpen = isOpen;
-#endif
-        }
+            BindableProperty.Create(nameof(IsSuggestionListOpen), typeof(bool), typeof(AutoSuggestBox), false, BindingMode.OneWay, null);
 
         /// <summary>
         /// Gets or sets the header object for the text box portion of this control.
@@ -247,17 +136,7 @@ namespace dotMorten.Xamarin.Forms
         /// Identifies the <see cref="ItemsSource"/> bindable property.
         /// </summary>
         public static readonly BindableProperty ItemsSourceProperty =
-            BindableProperty.Create(nameof(ItemsSource), typeof(System.Collections.IList), typeof(AutoSuggestBox), null, BindingMode.OneWay, null, OnItemsSourcePropertyChanged);
-
-        private static void OnItemsSourcePropertyChanged(BindableObject bindable, object oldValue, object newValue)
-        {
-            var box = (AutoSuggestBox)bindable;
-#if NETFX_CORE
-            box.NativeAutoSuggestBox.ItemsSource = newValue;
-#elif __ANDROID__ || __IOS__
-            box.NativeAutoSuggestBox.SetItems(box.ItemsSource?.OfType<object>(), (o) => FormatType(o, box.DisplayMemberPath), (o) => FormatType(o, box.TextMemberPath));
-#endif
-        }
+            BindableProperty.Create(nameof(ItemsSource), typeof(System.Collections.IList), typeof(AutoSuggestBox), null, BindingMode.OneWay, null);
 
         /// <summary>
         /// Raised before the text content of the editable control component is updated.
@@ -274,14 +153,22 @@ namespace dotMorten.Xamarin.Forms
         /// </summary>
         public event EventHandler<AutoSuggestBoxQuerySubmittedEventArgs> QuerySubmitted;
 
-#if __ANDROID__ || __IOS__
-        private static string FormatType(object instance, string memberPath)
+        public void FireQuerySubmitted(AutoSuggestBoxQuerySubmittedEventArgs args)
         {
-            if (!string.IsNullOrEmpty(memberPath))
-                return instance?.GetType().GetProperty(memberPath)?.GetValue(instance)?.ToString() ?? "";
-            else
-                return instance?.ToString() ?? "";
+            QuerySubmitted?.Invoke(this, args);
         }
-#endif
+
+        public void FireSuggestionChosen(AutoSuggestBoxSuggestionChosenEventArgs args)
+        {
+            SuggestionChosen?.Invoke(this, args);
+        }
+
+        public void FireTextChanged(string text, AutoSuggestBoxTextChangedEventArgs args)
+        {
+            suppressTextChangedEvent = true;
+            Text = text;
+            suppressTextChangedEvent = false;
+            TextChanged?.Invoke(this, args);
+        }
     }
 }

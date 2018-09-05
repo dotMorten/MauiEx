@@ -13,7 +13,7 @@ namespace dotMorten.Xamarin.Forms
         /// Initializes a new instance of the <see cref="AutoSuggestBoxTextChangedEventArgs"/> class.
         /// </summary>
         /// <param name="reason"></param>
-        internal AutoSuggestBoxTextChangedEventArgs(AutoSuggestionBoxTextChangeReason reason)
+        public AutoSuggestBoxTextChangedEventArgs(AutoSuggestionBoxTextChangeReason reason)
         {
             Reason = reason;
         }

@@ -14,7 +14,7 @@ namespace dotMorten.Xamarin.Forms
         /// </summary>
         /// <param name="queryText"></param>
         /// <param name="chosenSuggestion"></param>
-        internal AutoSuggestBoxQuerySubmittedEventArgs(string queryText, object chosenSuggestion)
+        public AutoSuggestBoxQuerySubmittedEventArgs(string queryText, object chosenSuggestion)
         {
             QueryText = queryText;
             ChosenSuggestion = chosenSuggestion;
