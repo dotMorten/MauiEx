@@ -98,4 +98,15 @@ iOS:
 
 ![image](https://user-images.githubusercontent.com/1378165/42109635-31d3ef44-7b93-11e8-8f65-2e1c9ec07f44.png)
 
+## Building on macOS
+
+On September 2018, Visual Studio for Mac doesn't support building multi-targeting projects; however, it can be achieved by jumping into Visual Studio Code. Simply follow these commands to built the entire solution:
+
+1. `$ cd AutoSuggestBox/`
+2. `$ msbuild /t:restore`
+   1. This will restore NuGet packages
+3. `$ msbuild`
+   1. This will build in Debug
+4. `$ msbuild /p:Configuration=Release`
+   1. The same for Release
 
