@@ -1,15 +1,13 @@
 ﻿#if __IOS__
+using Foundation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using CoreGraphics;
-using Foundation;
 using UIKit;
 
 namespace dotMorten.Xamarin.Forms
 {
-    /// <summary>
+     /// <summary>
     ///  Extends AutoCompleteTextView to have similar APIs and behavior to UWP's AutoSuggestBox, which greatly simplifies wrapping it
     /// </summary>
     internal class NativeAutoSuggestBox : UIKit.UIView
@@ -80,6 +78,14 @@ namespace dotMorten.Xamarin.Forms
         {
             get => inputText.Placeholder;
             set => inputText.Placeholder = value;
+        }
+
+        public void SetPlaceHolderTextColor(global::Xamarin.Forms.Color color)
+        {
+            if (!string.IsNullOrEmpty(PlaceholderText))
+            {
+                inputText.AttributedPlaceholder = new NSAttributedString(new NSString(PlaceholderText), null, global::Xamarin.Forms.Platform.iOS.ColorExtensions.ToUIColor(color));
+            }
         }
 
         public bool IsSuggestionListOpen
@@ -174,11 +180,6 @@ namespace dotMorten.Xamarin.Forms
         public void SetTextColor(global::Xamarin.Forms.Color color)
         {
             inputText.TextColor = global::Xamarin.Forms.Platform.iOS.ColorExtensions.ToUIColor(color);
-        }
-
-        public void SetPlaceHolderTextColor(global::Xamarin.Forms.Color color)
-        {
-            inputText.SetValueForKey(global::Xamarin.Forms.Platform.iOS.ColorExtensions.ToUIColor(color), new NSString("_placeholderLabel.textColor"));
         }
 
         public event EventHandler<AutoSuggestBoxTextChangedEventArgs> TextChanged;

@@ -127,29 +127,6 @@ namespace dotMorten.Xamarin.Forms
         }
 
         /// <summary>
-        /// Gets or sets the PlaceholderText
-        /// </summary>
-        public string PlaceholderText
-        {
-            get { return (string)GetValue(PlaceholderTextProperty); }
-            set { SetValue(PlaceholderTextProperty, value); }
-        }
-
-        /// <summary>
-        /// Identifies the <see cref="PlaceholderText"/> bindable property.
-        /// </summary>
-        public static readonly BindableProperty PlaceholderTextProperty =
-            BindableProperty.Create(nameof(PlaceholderText), typeof(string), typeof(AutoSuggestBox), "", BindingMode.OneWay, null, OnPlaceholderTextPropertyChanged);
-
-        private static void OnPlaceholderTextPropertyChanged(BindableObject bindable, object oldValue, object newValue)
-        {
-            var box = (AutoSuggestBox)bindable;
-#if !NETSTANDARD2_0
-            box.NativeAutoSuggestBox.PlaceholderText = newValue as string;
-#endif
-        }
-
-        /// <summary>
         /// Gets or sets the color of the place holder text.
         /// </summary>
         /// <value>
@@ -191,12 +168,14 @@ namespace dotMorten.Xamarin.Forms
         /// Identifies the <see cref="PlaceholderText"/> bindable property.
         /// </summary>
         public static readonly BindableProperty PlaceholderTextProperty =
-            BindableProperty.Create(nameof(PlaceholderText), typeof(string), typeof(AutoSuggestBox), "", BindingMode.OneWay, null, OnPlaceholderTextPropertyChanged);
+            BindableProperty.Create(nameof(PlaceholderText), typeof(string), typeof(AutoSuggestBox), string.Empty, BindingMode.OneWay, null, OnPlaceholderTextPropertyChanged);
 
         private static void OnPlaceholderTextPropertyChanged(BindableObject bindable, object oldValue, object newValue)
         {
             AutoSuggestBox box = (AutoSuggestBox)bindable;
 #if !NETSTANDARD2_0
+            box.NativeAutoSuggestBox.PlaceholderText = newValue as string;
+#elif __ANDROID__ ||  __IOS__
             box.NativeAutoSuggestBox.PlaceholderText = newValue as string;
 #endif
         }
@@ -230,9 +209,9 @@ namespace dotMorten.Xamarin.Forms
         }
 
         /// <summary>
-        /// Gets or sets the PlaceholderTexts
+        /// Gets or sets the PlaceholderText
         /// </summary>
-        private global::Xamarin.Forms.Color FocusOnBackgroundTintList
+        public global::Xamarin.Forms.Color FocusOnBackgroundTintList
         {
             get { return (global::Xamarin.Forms.Color)GetValue(FocusOnBackgroundTintListProperty); }
             set { SetValue(FocusOnBackgroundTintListProperty, value); }

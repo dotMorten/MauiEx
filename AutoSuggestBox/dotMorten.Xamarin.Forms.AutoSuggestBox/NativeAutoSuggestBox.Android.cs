@@ -54,11 +54,6 @@ namespace dotMorten.Xamarin.Forms
             this.SetTextColor(global::Xamarin.Forms.Platform.Android.ColorExtensions.ToAndroid(color));
         }
 
-        public string PlaceholderText
-        {
-            set => HintFormatted = new Java.Lang.String(value as string ?? "");
-        }
-
         private Android.Graphics.Color tintBackgroundColor;
 
         public void SetBackgroundTintList(global::Xamarin.Forms.Color color)
@@ -86,6 +81,12 @@ namespace dotMorten.Xamarin.Forms
                     this.BackgroundTintList = Android.Content.Res.ColorStateList.ValueOf(e.HasFocus != null ? onFocusTintBackgroundColor : Android.Graphics.Color.Green);
                 else
                     this.Background.SetColorFilter(e.HasFocus ? onFocusTintBackgroundColor : Android.Graphics.Color.Green, Android.Graphics.PorterDuff.Mode.SrcAtop); 
+        }
+
+        public string PlaceholderText
+        {
+            get => base.HintFormatted.ToString();
+            set => HintFormatted = new Java.Lang.String(value as string ?? "");
         }
 
         public void SetPlaceHolderTextColor(global::Xamarin.Forms.Color color)
