@@ -47,7 +47,7 @@ In all cases, the event args QueryText property contains the text from the text 
 #### Examples
 **xaml**
 ```xml
-<AutoSuggestBox PlaceholderText="Search" Width="200"
+<AutoSuggestBox PlaceholderText="Search" WidthRequest="200"
                 TextChanged="AutoSuggestBox_TextChanged"
                 QuerySubmitted="AutoSuggestBox_QuerySubmitted"
                 SuggestionChosen="AutoSuggestBox_SuggestionChosen"/>
@@ -81,7 +81,7 @@ private void AutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBox
     }
     else
     {
-        // Use args.QueryText to determine what to do.
+        // User hit Enter from the search box. Use args.QueryText to determine what to do.
     }
 }
 ```
