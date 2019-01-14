@@ -162,6 +162,24 @@ namespace dotMorten.Xamarin.Forms
         public static readonly BindableProperty IsSuggestionListOpenProperty =
             BindableProperty.Create(nameof(IsSuggestionListOpen), typeof(bool), typeof(AutoSuggestBox), false, BindingMode.OneWay, null, null);
 
+
+        /// <summary>
+        /// Used in conjunction with <see cref="TextMemberPath"/>, gets or sets a value indicating whether items in the view will trigger an update 
+        /// of the editable text part of the <see cref="AutoSuggestBox"/> when clicked.
+        /// </summary>
+        /// <value>A value indicating whether items in the view will trigger an update of the editable text part of the <see cref="AutoSuggestBox"/> when clicked.</value>
+        public bool UpdateTextOnSelect
+        {
+            get { return (bool)GetValue(UpdateTextOnSelectProperty); }
+            set { SetValue(UpdateTextOnSelectProperty, value); }
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="UpdateTextOnSelect"/> bindable property.
+        /// </summary>
+        public static readonly BindableProperty UpdateTextOnSelectProperty =
+            BindableProperty.Create(nameof(UpdateTextOnSelect), typeof(bool), typeof(AutoSuggestBox), true, BindingMode.OneWay, null, null);
+
         /// <summary>
         /// Gets or sets the header object for the text box portion of this control.
         /// </summary>
