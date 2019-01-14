@@ -30,12 +30,13 @@ namespace dotMorten.Xamarin.Forms
             inputText = new UIKit.UITextField()
             {
                 TranslatesAutoresizingMaskIntoConstraints = false,
-                BorderStyle = UIKit.UITextBorderStyle.None
+                BorderStyle = UIKit.UITextBorderStyle.None,
+                ReturnKeyType = UIKit.UIReturnKeyType.Search,
+                AutocorrectionType = UITextAutocorrectionType.No
             };
             inputText.ShouldReturn = InputText_OnShouldReturn;
             inputText.EditingChanged += InputText_EditingChanged;
             inputText.EndedWithReason += InputText_EndedWithReason;
-            inputText.ReturnKeyType = UIKit.UIReturnKeyType.Search;
 
             AddSubview(inputText);
             inputText.TopAnchor.ConstraintEqualTo(TopAnchor).Active = true;

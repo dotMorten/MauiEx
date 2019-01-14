@@ -23,7 +23,7 @@ namespace dotMorten.Xamarin.Forms
         {
             SetMaxLines(1);
             Threshold = 0;
-            InputType = Android.Text.InputTypes.ClassText;
+            InputType = Android.Text.InputTypes.TextFlagNoSuggestions | Android.Text.InputTypes.TextVariationVisiblePassword; //Disables text suggestions as the auto-complete view is there to do that
             ItemClick += OnItemClick;
             Adapter = adapter = new SuggestCompleteAdapter(Context, Android.Resource.Layout.SimpleDropDownItem1Line);
         }
