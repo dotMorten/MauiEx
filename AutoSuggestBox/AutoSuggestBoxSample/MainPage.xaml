@@ -23,8 +23,8 @@
         <Label Text="MemberPath Test (Enter at least 3 characters)" HorizontalOptions="Start" />
         <dm:AutoSuggestBox x:Name="dynamicSuggestBox" 
                            PlaceholderText="Enter a US City Name" 
-                           DisplayMemberPath="DisplayName"
-                           TextMemberPath="FullDisplayName"
+                           DisplayMemberPath="FullDisplayName"
+                           TextMemberPath="DisplayName"
                            TextChanged="dynamicSuggestBox_TextChanged"
                            QuerySubmitted="SuggestBox_QuerySubmitted" />
 
