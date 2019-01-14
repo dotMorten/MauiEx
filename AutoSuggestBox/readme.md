@@ -4,7 +4,7 @@ Represents a text control that makes suggestions to users as they type. The app 
 
 The control is based on UWP's AutoSuggestBox behavior, with UI adapted for native look on each platform.
 
-![autosuggestbox](https://user-images.githubusercontent.com/1378165/51137780-42b30b80-17f4-11e9-8ac1-7b129fc3d9ee.gif)
+![autosuggestbox_ios](https://user-images.githubusercontent.com/1378165/51139691-6c226600-17f9-11e9-8f76-48a1128986ca.gif)
 
 ## NuGet
 NuGet ID: `dotMorten.Xamarin.Forms.AutoSuggestBox`
@@ -13,7 +13,7 @@ You can get this from NuGet here: https://www.nuget.org/packages/dotMorten.Xamar
 
 Or use the Package Manager:
 ```
-Install-Package dotMorten.Xamarin.Forms.AutoSuggestBox -Version 0.1.0 
+Install-Package dotMorten.Xamarin.Forms.AutoSuggestBox 
 ```
 
 ## Description
