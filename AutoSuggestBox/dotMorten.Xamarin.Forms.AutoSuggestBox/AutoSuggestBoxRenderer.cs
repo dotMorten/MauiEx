@@ -17,6 +17,7 @@ using XAutoSuggestBoxTextChangedEventArgs = dotMorten.Xamarin.Forms.AutoSuggestB
 using XAutoSuggestBoxQuerySubmittedEventArgs = dotMorten.Xamarin.Forms.AutoSuggestBoxQuerySubmittedEventArgs;
 #elif NETFX_CORE
 using Xamarin.Forms.Platform.UWP;
+using Windows.UI.Xaml.Media;
 using NativeAutoSuggestBox = Windows.UI.Xaml.Controls.AutoSuggestBox;
 using XAutoSuggestBoxSuggestionChosenEventArgs = Windows.UI.Xaml.Controls.AutoSuggestBoxSuggestionChosenEventArgs;
 using XAutoSuggestBoxTextChangedEventArgs = Windows.UI.Xaml.Controls.AutoSuggestBoxTextChangedEventArgs;
@@ -71,6 +72,7 @@ namespace dotMorten.Xamarin.Forms
             Control.Text = Element.Text;
             UpdateTextColor();
             UpdatePlaceholderText();
+            UpdatePlaceholderTextColor();
             UpdateTextMemberPath();
             UpdateDisplayMemberPath();
             UpdateIsEnabled();
@@ -121,6 +123,10 @@ namespace dotMorten.Xamarin.Forms
             {
                 UpdatePlaceholderText();
             }
+            else if (e.PropertyName == nameof(AutoSuggestBox.PlaceholderTextColor))
+            {
+                UpdatePlaceholderTextColor();
+            }
             else if (e.PropertyName == nameof(AutoSuggestBox.TextMemberPath))
             {
                 UpdateTextMemberPath();
@@ -151,6 +157,24 @@ namespace dotMorten.Xamarin.Forms
             Control.Foreground = new Windows.UI.Xaml.Media.SolidColorBrush(Windows.UI.Color.FromArgb((byte)(color.A * 255), (byte)(color.R * 255), (byte)(color.G * 255), (byte)(color.B * 255)));
 #elif __ANDROID__ || __IOS__
             Control.SetTextColor(color);
+#endif
+        }
+
+#if NETFX_CORE
+        // Brush _placeholderDefaultBrush;
+        // Brush _defaultPlaceholderColorFocusBrush;
+#endif
+        private void UpdatePlaceholderTextColor()
+        {
+            var placeholderColor = Element.PlaceholderTextColor;
+#if NETFX_CORE
+            // Not currently supported by UWP's control
+            // UpdateColor(placeholderColor, ref _placeholderDefaultBrush,
+            //     () => Control.PlaceholderForegroundBrush, brush => Control.PlaceholderForegroundBrush = brush);
+            // UpdateColor(placeholderColor, ref _defaultPlaceholderColorFocusBrush,
+            //     () => Control.PlaceholderForegroundFocusBrush, brush => Control.PlaceholderForegroundFocusBrush = brush);
+#elif __ANDROID__ || __IOS__
+            Control.SetPlaceholderTextColor(placeholderColor);
 #endif
         }
 

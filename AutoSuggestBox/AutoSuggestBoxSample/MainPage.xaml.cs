@@ -76,11 +76,11 @@ namespace AutoSuggestBoxSample
                     {
                         while (!sr.EndOfStream && suggestions.Count < 20)
                         {
-                            var line = sr.ReadLine();
-                            if (line.StartsWith(text, StringComparison.InvariantCultureIgnoreCase))
+                            var data = sr.ReadLine().Split('\t');
+                            var city = new City() { Name = data[0], State = data[1] };
+                            if (city.FullDisplayName.StartsWith(text, StringComparison.InvariantCultureIgnoreCase))
                             {
-                                var data = line.Split('\t');
-                                suggestions.Add(new City() { Name = data[0], State = data[1] });
+                                suggestions.Add(city);
                             }
                         }
                     }

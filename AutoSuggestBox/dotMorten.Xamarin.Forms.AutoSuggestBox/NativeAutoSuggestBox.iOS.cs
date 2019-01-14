@@ -6,6 +6,8 @@ using System.Text;
 using CoreGraphics;
 using Foundation;
 using UIKit;
+using Xamarin.Forms;
+using Xamarin.Forms.Platform.iOS;
 
 namespace dotMorten.Xamarin.Forms
 {
@@ -82,10 +84,16 @@ namespace dotMorten.Xamarin.Forms
             set => inputText.Placeholder = value;
         }
 
-		public bool IsSuggestionListOpen
+        public void SetPlaceholderTextColor(global::Xamarin.Forms.Color color)
+        {
+            // See https://github.com/xamarin/Xamarin.Forms/blob/4d9a5bf3706778770026a18ae81a7dd5c4c15db4/Xamarin.Forms.Platform.iOS/Renderers/EntryRenderer.cs#L260
+            inputText.AttributedPlaceholder = new NSAttributedString(inputText.Placeholder, null, ColorExtensions.ToUIColor(color));
+        }
+
+        public bool IsSuggestionListOpen
         {
             get => selectionList.Superview != null;
-			set
+            set
             {
                 if (value && selectionList.Superview == null && selectionList.Source != null && selectionList.Source.RowsInSection(selectionList, 0) > 0)
                 {
@@ -159,10 +167,10 @@ namespace dotMorten.Xamarin.Forms
             IsSuggestionListOpen = true;
         }
 
-		public string Text
+        public string Text
         {
             get => inputText.Text;
-			set
+            set
             {
                 suppressTextChangedEvent = true;
                 inputText.Text = value;
