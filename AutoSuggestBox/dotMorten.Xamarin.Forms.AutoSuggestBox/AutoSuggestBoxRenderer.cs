@@ -72,6 +72,7 @@ namespace dotMorten.Xamarin.Forms
             Control.Text = Element.Text;
             UpdateTextColor();
             UpdatePlaceholderText();
+            UpdatePlaceholderTextColor();
             UpdateTextMemberPath();
             UpdateDisplayMemberPath();
             UpdateIsEnabled();
