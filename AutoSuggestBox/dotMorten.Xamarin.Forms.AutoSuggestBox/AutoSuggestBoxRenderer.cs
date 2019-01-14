@@ -59,17 +59,27 @@ namespace dotMorten.Xamarin.Forms
         {
             base.OnElementChanged(e);
 
-            if (e.OldElement == null)
+            if (Control == null)
             {
                 var box = CreateNativeControl();
-
-                box.SuggestionChosen += AutoSuggestBox_SuggestionChosen;
-                box.TextChanged += AutoSuggestBox_TextChanged;
-                box.QuerySubmitted += AutoSuggestBox_QuerySubmitted;
                 SetNativeControl(box);
             }
 
-            Control.Text = Element.Text;
+            if (e.OldElement != null)
+            {
+                Control.SuggestionChosen -= AutoSuggestBox_SuggestionChosen;
+                Control.TextChanged -= AutoSuggestBox_TextChanged;
+                Control.QuerySubmitted -= AutoSuggestBox_QuerySubmitted;
+            }
+
+            if (e.NewElement != null)
+            {
+                Control.SuggestionChosen += AutoSuggestBox_SuggestionChosen;
+                Control.TextChanged += AutoSuggestBox_TextChanged;
+                Control.QuerySubmitted += AutoSuggestBox_QuerySubmitted;
+            }
+
+            Control.Text = Element?.Text ?? string.Empty;
             UpdateTextColor();
             UpdatePlaceholderText();
             UpdatePlaceholderTextColor();
@@ -82,17 +92,17 @@ namespace dotMorten.Xamarin.Forms
 
         private void AutoSuggestBox_QuerySubmitted(object sender, XAutoSuggestBoxQuerySubmittedEventArgs e)
         {
-            Element.RaiseQuerySubmitted(e.QueryText, e.ChosenSuggestion);
+            Element?.RaiseQuerySubmitted(e.QueryText, e.ChosenSuggestion);
         }
 
         private void AutoSuggestBox_TextChanged(object sender, XAutoSuggestBoxTextChangedEventArgs e)
         {
-            Element.NativeControlTextChanged(Control.Text, (AutoSuggestionBoxTextChangeReason)e.Reason);
+            Element?.NativeControlTextChanged(Control.Text, (AutoSuggestionBoxTextChangeReason)e.Reason);
         }
 
         private void AutoSuggestBox_SuggestionChosen(object sender, XAutoSuggestBoxSuggestionChosenEventArgs e)
         {
-            Element.RaiseSuggestionChosen(e.SelectedItem);
+            Element?.RaiseSuggestionChosen(e.SelectedItem);
         }
 
 #if NETFX_CORE
@@ -216,15 +226,6 @@ namespace dotMorten.Xamarin.Forms
 #endif
 
         }
-
-
-
-
-
-
-
-
-
 
 #if __ANDROID__ || __IOS__
         private static string FormatType(object instance, string memberPath)
