@@ -75,6 +75,8 @@ namespace dotMorten.Xamarin.Forms
             }
         }
 
+        public bool UpdateTextOnSelect { get; set; } = true;
+
         protected override void OnTextChanged(ICharSequence text, int start, int lengthBefore, int lengthAfter)
         {
             if (!suppressTextChangedEvent)
@@ -92,10 +94,13 @@ namespace dotMorten.Xamarin.Forms
         {
             DismissKeyboard();
             var obj = adapter.GetObject(e.Position);
-            suppressTextChangedEvent = true;
-            base.Text = textFunc(obj);
-            suppressTextChangedEvent = false;
-            TextChanged?.Invoke(this, new AutoSuggestBoxTextChangedEventArgs(AutoSuggestionBoxTextChangeReason.SuggestionChosen));
+            if (UpdateTextOnSelect)
+            {
+                suppressTextChangedEvent = true;
+                base.Text = textFunc(obj);
+                suppressTextChangedEvent = false;
+                TextChanged?.Invoke(this, new AutoSuggestBoxTextChangedEventArgs(AutoSuggestionBoxTextChangeReason.SuggestionChosen));
+            }
             SuggestionChosen?.Invoke(this, new AutoSuggestBoxSuggestionChosenEventArgs(obj));
             QuerySubmitted?.Invoke(this, new AutoSuggestBoxQuerySubmittedEventArgs(Text, obj));
         }

@@ -86,7 +86,8 @@ namespace dotMorten.Xamarin.Forms
             UpdateTextMemberPath();
             UpdateDisplayMemberPath();
             UpdateIsEnabled();
-            Control.IsSuggestionListOpen = Element.IsSuggestionListOpen;
+            Control.UpdateTextOnSelect = Element?.UpdateTextOnSelect != false;
+            Control.IsSuggestionListOpen = Element?.IsSuggestionListOpen == true;
             UpdateItemsSource();
         }
 
@@ -122,7 +123,7 @@ namespace dotMorten.Xamarin.Forms
         {
             if (e.PropertyName == nameof(AutoSuggestBox.Text))
             {
-                if(Control.Text != Element.Text)
+                if (Control.Text != Element.Text)
                     Control.Text = Element.Text;
             }
             else if (e.PropertyName == nameof(AutoSuggestBox.TextColor))
@@ -152,6 +153,10 @@ namespace dotMorten.Xamarin.Forms
             else if (e.PropertyName == nameof(AutoSuggestBox.IsSuggestionListOpen))
             {
                 Control.IsSuggestionListOpen = Element.IsSuggestionListOpen;
+            }
+            else if (e.PropertyName == nameof(AutoSuggestBox.UpdateTextOnSelect))
+            {
+                Control.UpdateTextOnSelect = Element.UpdateTextOnSelect;
             }
             else if (e.PropertyName == nameof(AutoSuggestBox.ItemsSource))
             {

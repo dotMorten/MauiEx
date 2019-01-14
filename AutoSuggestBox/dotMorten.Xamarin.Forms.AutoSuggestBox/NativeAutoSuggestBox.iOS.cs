@@ -127,6 +127,8 @@ namespace dotMorten.Xamarin.Forms
             }
         }
 
+        public bool UpdateTextOnSelect { get; set; } = true;
+
         private void OnKeyboardHide(object sender, UIKeyboardEventArgs e)
         {
             keyboardHeight = 0;
@@ -169,10 +171,13 @@ namespace dotMorten.Xamarin.Forms
         {
             selectionList.DeselectRow(e.SelectedItemIndexPath, false);
             var selection = e.SelectedItem;
-            suppressTextChangedEvent = true;
-            inputText.Text = textFunc(selection);
-            suppressTextChangedEvent = true;
-            TextChanged?.Invoke(this, new AutoSuggestBoxTextChangedEventArgs(AutoSuggestionBoxTextChangeReason.SuggestionChosen));
+            if (UpdateTextOnSelect)
+            {
+                suppressTextChangedEvent = true;
+                inputText.Text = textFunc(selection);
+                suppressTextChangedEvent = true;
+                TextChanged?.Invoke(this, new AutoSuggestBoxTextChangedEventArgs(AutoSuggestionBoxTextChangeReason.SuggestionChosen));
+            }
             SuggestionChosen?.Invoke(this, new AutoSuggestBoxSuggestionChosenEventArgs(selection));
             QuerySubmitted?.Invoke(this, new AutoSuggestBoxQuerySubmittedEventArgs(Text, selection));
             IsSuggestionListOpen = false;
