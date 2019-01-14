@@ -59,6 +59,11 @@ namespace dotMorten.Xamarin.Forms
             set => HintFormatted = new Java.Lang.String(value as string ?? "");
         }
 
+        public void SetPlaceholderTextColor(global::Xamarin.Forms.Color color)
+        {
+            this.SetHintTextColor(global::Xamarin.Forms.Platform.Android.ColorExtensions.ToAndroid(color));
+        }
+
         public bool IsSuggestionListOpen
         {
             set

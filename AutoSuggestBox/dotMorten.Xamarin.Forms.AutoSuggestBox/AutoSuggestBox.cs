@@ -78,6 +78,7 @@ namespace dotMorten.Xamarin.Forms
         /// <summary>
         /// Gets or sets the PlaceholderText
         /// </summary>
+        /// <seealso cref="PlaceholderTextColor"/>
         public string PlaceholderText
         {
             get { return (string)GetValue(PlaceholderTextProperty); }
@@ -89,6 +90,22 @@ namespace dotMorten.Xamarin.Forms
         /// </summary>
         public static readonly BindableProperty PlaceholderTextProperty =
             BindableProperty.Create(nameof(PlaceholderText), typeof(string), typeof(AutoSuggestBox), string.Empty, BindingMode.OneWay, null, null);
+
+        /// <summary>
+        /// Gets or sets the foreground color of the control
+        /// </summary>
+        /// <seealso cref="PlaceholderText"/>
+        public global::Xamarin.Forms.Color PlaceholderTextColor
+        {
+            get { return (global::Xamarin.Forms.Color)GetValue(PlaceholderTextColorProperty); }
+            set { SetValue(PlaceholderTextColorProperty, value); }
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="PlaceholderTextColor"/> bindable property.
+        /// </summary>
+        public static readonly BindableProperty PlaceholderTextColorProperty =
+            BindableProperty.Create(nameof(PlaceholderTextColor), typeof(global::Xamarin.Forms.Color), typeof(AutoSuggestBox), global::Xamarin.Forms.Color.Gray, BindingMode.OneWay, null, null);
 
         /// <summary>
         /// Gets or sets the property path that is used to get the value for display in the
