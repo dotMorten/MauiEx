@@ -30,7 +30,7 @@ namespace dotMorten.Xamarin.Forms
             inputText = new UIKit.UITextField()
             {
                 TranslatesAutoresizingMaskIntoConstraints = false,
-                BorderStyle = UIKit.UITextBorderStyle.RoundedRect
+                BorderStyle = UIKit.UITextBorderStyle.None
             };
             inputText.ShouldReturn = InputText_OnShouldReturn;
             inputText.EditingChanged += InputText_EditingChanged;
@@ -46,6 +46,23 @@ namespace dotMorten.Xamarin.Forms
 
             UIKit.UIKeyboard.Notifications.ObserveWillShow(OnKeyboardShow);
             UIKit.UIKeyboard.Notifications.ObserveWillHide(OnKeyboardHide);
+        }
+
+        public override void LayoutSubviews()
+        {
+            base.LayoutSubviews();
+            AddBottomBorder();
+        }
+
+        private void AddBottomBorder()
+        {
+            var border = new CoreAnimation.CALayer();
+            var width = 1f;
+            border.BorderColor = UIColor.LightGray.CGColor;
+            border.Frame = new CGRect(0, Frame.Size.Height - width, Frame.Size.Width, Frame.Size.Height);
+            border.BorderWidth = width;
+            Layer.AddSublayer(border);
+            Layer.MasksToBounds = true;
         }
 
         public UIFont Font
