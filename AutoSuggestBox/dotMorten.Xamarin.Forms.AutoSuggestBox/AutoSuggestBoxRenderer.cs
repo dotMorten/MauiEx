@@ -79,16 +79,19 @@ namespace dotMorten.Xamarin.Forms
                 Control.QuerySubmitted += AutoSuggestBox_QuerySubmitted;
             }
 
-            Control.Text = Element?.Text ?? string.Empty;
-            UpdateTextColor();
-            UpdatePlaceholderText();
-            UpdatePlaceholderTextColor();
-            UpdateTextMemberPath();
-            UpdateDisplayMemberPath();
-            UpdateIsEnabled();
-            Control.UpdateTextOnSelect = Element?.UpdateTextOnSelect != false;
-            Control.IsSuggestionListOpen = Element?.IsSuggestionListOpen == true;
-            UpdateItemsSource();
+            if (Element != null)
+            {
+                Control.Text = Element.Text ?? string.Empty;
+                UpdateTextColor();
+                UpdatePlaceholderText();
+                UpdatePlaceholderTextColor();
+                UpdateTextMemberPath();
+                UpdateDisplayMemberPath();
+                UpdateIsEnabled();
+                Control.UpdateTextOnSelect = Element.UpdateTextOnSelect != false;
+                Control.IsSuggestionListOpen = Element.IsSuggestionListOpen == true;
+                UpdateItemsSource();
+            }
         }
 
         private void AutoSuggestBox_QuerySubmitted(object sender, XAutoSuggestBoxQuerySubmittedEventArgs e)
