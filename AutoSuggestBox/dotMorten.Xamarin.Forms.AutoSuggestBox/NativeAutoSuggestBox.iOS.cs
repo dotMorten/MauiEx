@@ -115,7 +115,11 @@ namespace dotMorten.Xamarin.Forms
             {
                 if (value && selectionList.Superview == null && selectionList.Source != null && selectionList.Source.RowsInSection(selectionList, 0) > 0)
                 {
-                    UIKit.UIApplication.SharedApplication.Windows[0].AddSubview(selectionList);
+                    var viewController = UIApplication.SharedApplication.Windows.FirstOrDefault(w => w.RootViewController != null && w.IsKeyWindow) ?? 
+                        UIApplication.SharedApplication.Windows.FirstOrDefault(w => w.RootViewController != null);
+                    if (viewController == null)
+                        return;
+                    viewController.Add(selectionList);
                     selectionList.TopAnchor.ConstraintEqualTo(inputText.BottomAnchor).Active = true;
                     selectionList.LeftAnchor.ConstraintEqualTo(inputText.LeftAnchor).Active = true;
                     selectionList.WidthAnchor.ConstraintEqualTo(inputText.WidthAnchor).Active = true;
