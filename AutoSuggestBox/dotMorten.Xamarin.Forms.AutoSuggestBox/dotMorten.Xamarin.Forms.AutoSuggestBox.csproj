@@ -10,7 +10,7 @@
     <RepositoryUrl>https://github.com/dotMorten/XamarinFormsControls</RepositoryUrl>
     <PackageProjectUrl>https://github.com/dotMorten/XamarinFormsControls/tree/master/AutoSuggestBox</PackageProjectUrl>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <Version>0.4.0</Version>
+    <Version>0.5.0</Version>
     <DocumentationFile>$(MSBuildThisFileDirectory)bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>

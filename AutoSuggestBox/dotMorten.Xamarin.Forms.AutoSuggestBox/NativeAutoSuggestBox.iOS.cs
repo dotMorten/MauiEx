@@ -105,7 +105,7 @@ namespace dotMorten.Xamarin.Forms
         public void SetPlaceholderTextColor(global::Xamarin.Forms.Color color)
         {
             // See https://github.com/xamarin/Xamarin.Forms/blob/4d9a5bf3706778770026a18ae81a7dd5c4c15db4/Xamarin.Forms.Platform.iOS/Renderers/EntryRenderer.cs#L260
-            inputText.AttributedPlaceholder = new NSAttributedString(inputText.Placeholder, null, ColorExtensions.ToUIColor(color));
+            inputText.AttributedPlaceholder = new NSAttributedString(inputText.Placeholder ?? string.Empty, null, ColorExtensions.ToUIColor(color));
         }
 
         public bool IsSuggestionListOpen
