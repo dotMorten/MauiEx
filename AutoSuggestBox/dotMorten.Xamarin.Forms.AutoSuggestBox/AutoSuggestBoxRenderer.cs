@@ -72,13 +72,6 @@ namespace dotMorten.Xamarin.Forms
                 Control.QuerySubmitted -= AutoSuggestBox_QuerySubmitted;
             }
 
-            if (e.NewElement != null)
-            {
-                Control.SuggestionChosen += AutoSuggestBox_SuggestionChosen;
-                Control.TextChanged += AutoSuggestBox_TextChanged;
-                Control.QuerySubmitted += AutoSuggestBox_QuerySubmitted;
-            }
-
             if (Element != null)
             {
                 Control.Text = Element.Text ?? string.Empty;
@@ -91,6 +84,13 @@ namespace dotMorten.Xamarin.Forms
                 Control.UpdateTextOnSelect = Element.UpdateTextOnSelect != false;
                 Control.IsSuggestionListOpen = Element.IsSuggestionListOpen == true;
                 UpdateItemsSource();
+            }
+
+            if (e.NewElement != null)
+            {
+                Control.SuggestionChosen += AutoSuggestBox_SuggestionChosen;
+                Control.TextChanged += AutoSuggestBox_TextChanged;
+                Control.QuerySubmitted += AutoSuggestBox_QuerySubmitted;
             }
         }
 
