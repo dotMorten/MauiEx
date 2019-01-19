@@ -7,33 +7,16 @@ using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
-namespace AutoSuggestBoxSample
+namespace AutoSuggestBoxSample.AutoSuggestBoxSamples
 {
-	public partial class MainPage : ContentPage
+	public partial class Dynamic : ContentPage
 	{
-        private List<string> countries;
-
-        public MainPage()
+        public Dynamic()
 		{
 			InitializeComponent();
-            Initialize();
 		}
 
-        private void Initialize()
-        {
-            using (var s = typeof(MainPage).Assembly.GetManifestResourceStream("AutoSuggestBoxSample.Countries.txt"))
-            {
-                countries = new StreamReader(s).ReadToEnd().Split('\n').Select(t => t.Trim()).ToList();
-            }
-        }
-
-        private void staticSuggestBox_TextChanged(object sender, AutoSuggestBoxTextChangedEventArgs e)
-        {
-            // Filter the list based on text input
-            staticSuggestBox.ItemsSource = string.IsNullOrWhiteSpace(staticSuggestBox.Text) ? null : countries.Where(s => s.StartsWith(staticSuggestBox.Text, StringComparison.InvariantCultureIgnoreCase)).ToList();
-        }
-
-        private async void dynamicSuggestBox_TextChanged(object sender, dotMorten.Xamarin.Forms.AutoSuggestBoxTextChangedEventArgs args)
+        private async void SuggestBox_TextChanged(object sender, dotMorten.Xamarin.Forms.AutoSuggestBoxTextChangedEventArgs args)
         {
             AutoSuggestBox box = (AutoSuggestBox)sender;
             // Only get results when it was a user typing, 
@@ -70,7 +53,7 @@ namespace AutoSuggestBoxSample
             var result = await Task.Run<IEnumerable<City>>(() =>
             {
                 List<City> suggestions = new List<City>();
-                using (var s = typeof(MainPage).Assembly.GetManifestResourceStream("AutoSuggestBoxSample.USCities.txt"))
+                using (var s = typeof(Dynamic).Assembly.GetManifestResourceStream("AutoSuggestBoxSample.Data.USCities.txt"))
                 {
                     using (var sr = new StreamReader(s))
                     {
@@ -87,6 +70,7 @@ namespace AutoSuggestBoxSample
                 }
                 return suggestions;
             });
+            await Task.Delay(1000); //Simulate slow web service response
             return result;
         }
 

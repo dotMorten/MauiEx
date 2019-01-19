@@ -13,7 +13,7 @@ namespace AutoSuggestBoxSample
 		{
 			InitializeComponent();
 
-			MainPage = new AutoSuggestBoxSample.MainPage();
+			MainPage = new NavigationPage(new AutoSuggestBoxSample.StartPage());
 		}
 
 		protected override void OnStart ()

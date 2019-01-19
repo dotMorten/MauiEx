@@ -18,19 +18,44 @@
     <Compile Condition=" '$(EnableDefaultCompileItems)' == 'true' " Update="App.xaml.cs">
       <DependentUpon>*.xaml</DependentUpon>
     </Compile>
-    <Compile Condition=" '$(EnableDefaultCompileItems)' == 'true' " Update="MainPage.xaml.cs">
-      <DependentUpon>*.xaml</DependentUpon>
+    <Compile Condition=" '$(EnableDefaultCompileItems)' == 'true' " Update="AutoSuggestBoxSamples\Dynamic.xaml.cs">
+      <DependentUpon>Dynamic.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Countries.txt" />
-    <None Remove="USCities.txt" />
+    <EmbeddedResource Include="Data\Countries.txt" />
+    <EmbeddedResource Include="Data\USCities.txt" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Countries.txt" />
-    <EmbeddedResource Include="USCities.txt" />
+    <EmbeddedResource Update="AutoSuggestBoxSamples\Email.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="AutoSuggestBoxSamples\Simple.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="StartPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <None Update="AutoSuggestBoxSamples\Dynamic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <None Update="AutoSuggestBoxSamples\Email.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <None Update="AutoSuggestBoxSamples\Simple.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <None Update="StartPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
   </ItemGroup>
 
 </Project>
