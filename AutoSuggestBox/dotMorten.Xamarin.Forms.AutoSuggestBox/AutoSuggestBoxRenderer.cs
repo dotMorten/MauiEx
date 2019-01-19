@@ -228,9 +228,9 @@ namespace dotMorten.Xamarin.Forms
         private void UpdateItemsSource()
         {
 #if NETFX_CORE
-            Control.ItemsSource = Element.ItemsSource;
+            Control.ItemsSource = Element?.ItemsSource;
 #elif __ANDROID__ || __IOS__
-            Control.SetItems(Element.ItemsSource?.OfType<object>(), (o) => FormatType(o, Element.DisplayMemberPath), (o) => FormatType(o, Element.TextMemberPath));
+            Control.SetItems(Element?.ItemsSource?.OfType<object>(), (o) => FormatType(o, Element?.DisplayMemberPath), (o) => FormatType(o, Element?.TextMemberPath));
 #endif
 
         }
