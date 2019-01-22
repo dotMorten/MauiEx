@@ -172,6 +172,11 @@ namespace dotMorten.Xamarin.Forms
             }
         }
 
+        public override bool BecomeFirstResponder()
+        {
+            return inputText.BecomeFirstResponder();
+        }
+
         private void SuggestionTableSource_TableRowSelected(object sender, TableRowSelectedEventArgs<object> e)
         {
             selectionList.DeselectRow(e.SelectedItemIndexPath, false);
