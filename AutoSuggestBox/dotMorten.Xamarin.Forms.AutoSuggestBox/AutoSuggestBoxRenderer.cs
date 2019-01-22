@@ -124,6 +124,10 @@ namespace dotMorten.Xamarin.Forms
 
         protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
+            if(Control == null)
+            {
+                return;
+            }
             if (e.PropertyName == nameof(AutoSuggestBox.Text))
             {
                 if (Control.Text != Element.Text)
