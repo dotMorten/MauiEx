@@ -59,20 +59,20 @@ namespace dotMorten.Xamarin.Forms
         {
             base.OnElementChanged(e);
 
-            if (Control == null)
+            if (Control == null && e.NewElement != null)
             {
                 var box = CreateNativeControl();
                 SetNativeControl(box);
             }
 
-            if (e.OldElement != null)
+            if (e.OldElement != null && Control != null)
             {
                 Control.SuggestionChosen -= AutoSuggestBox_SuggestionChosen;
                 Control.TextChanged -= AutoSuggestBox_TextChanged;
                 Control.QuerySubmitted -= AutoSuggestBox_QuerySubmitted;
             }
 
-            if (Element != null)
+            if (Element != null && Control != null)
             {
                 Control.Text = Element.Text ?? string.Empty;
                 UpdateTextColor();
@@ -86,7 +86,7 @@ namespace dotMorten.Xamarin.Forms
                 UpdateItemsSource();
             }
 
-            if (e.NewElement != null)
+            if (e.NewElement != null && Control != null)
             {
                 Control.SuggestionChosen += AutoSuggestBox_SuggestionChosen;
                 Control.TextChanged += AutoSuggestBox_TextChanged;
