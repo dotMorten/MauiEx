@@ -35,6 +35,8 @@ namespace dotMorten.Xamarin.Forms
                 AutocorrectionType = UITextAutocorrectionType.No
             };
             inputText.ShouldReturn = InputText_OnShouldReturn;
+            inputText.EditingDidBegin += (s, e) => EditingDidBegin?.Invoke(this, e);
+            inputText.EditingDidEnd += (s, e) => EditingDidEnd?.Invoke(this, e);
             inputText.EditingChanged += InputText_EditingChanged;
             inputText.EndedWithReason += InputText_EndedWithReason;
 
@@ -48,6 +50,10 @@ namespace dotMorten.Xamarin.Forms
             UIKit.UIKeyboard.Notifications.ObserveWillShow(OnKeyboardShow);
             UIKit.UIKeyboard.Notifications.ObserveWillHide(OnKeyboardHide);
         }
+
+        internal EventHandler EditingDidBegin;
+
+        internal EventHandler EditingDidEnd;
 
         public override void LayoutSubviews()
         {
@@ -176,6 +182,12 @@ namespace dotMorten.Xamarin.Forms
         {
             return inputText.BecomeFirstResponder();
         }
+
+        public override bool ResignFirstResponder()
+        {
+            return inputText.ResignFirstResponder();
+        }
+        public override bool IsFirstResponder => inputText.IsFirstResponder;
 
         private void SuggestionTableSource_TableRowSelected(object sender, TableRowSelectedEventArgs<object> e)
         {

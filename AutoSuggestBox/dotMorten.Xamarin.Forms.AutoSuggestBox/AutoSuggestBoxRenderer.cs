@@ -65,11 +65,18 @@ namespace dotMorten.Xamarin.Forms
                 SetNativeControl(box);
             }
 
-            if (e.OldElement != null && Control != null)
+            if (e.OldElement != null)
             {
-                Control.SuggestionChosen -= AutoSuggestBox_SuggestionChosen;
-                Control.TextChanged -= AutoSuggestBox_TextChanged;
-                Control.QuerySubmitted -= AutoSuggestBox_QuerySubmitted;
+                if (Control != null)
+                {
+                    Control.SuggestionChosen -= AutoSuggestBox_SuggestionChosen;
+                    Control.TextChanged -= AutoSuggestBox_TextChanged;
+                    Control.QuerySubmitted -= AutoSuggestBox_QuerySubmitted;
+#if __IOS__
+                    Control.EditingDidBegin -= Control_EditingDidBegin;
+                    Control.EditingDidEnd -= Control_EditingDidEnd;
+#endif
+                }
             }
 
             if (Element != null && Control != null)
@@ -91,8 +98,23 @@ namespace dotMorten.Xamarin.Forms
                 Control.SuggestionChosen += AutoSuggestBox_SuggestionChosen;
                 Control.TextChanged += AutoSuggestBox_TextChanged;
                 Control.QuerySubmitted += AutoSuggestBox_QuerySubmitted;
+#if __IOS__
+                Control.EditingDidBegin += Control_EditingDidBegin;
+                Control.EditingDidEnd += Control_EditingDidEnd;
+#endif
             }
         }
+
+#if __IOS__
+        private void Control_EditingDidBegin(object sender, EventArgs e)
+        {
+            Element?.SetValue(VisualElement.IsFocusedPropertyKey, true);
+        }
+        private void Control_EditingDidEnd(object sender, EventArgs e)
+        {
+            Element?.SetValue(VisualElement.IsFocusedPropertyKey, false);
+        }
+#endif
 
         private void AutoSuggestBox_QuerySubmitted(object sender, XAutoSuggestBoxQuerySubmittedEventArgs e)
         {
