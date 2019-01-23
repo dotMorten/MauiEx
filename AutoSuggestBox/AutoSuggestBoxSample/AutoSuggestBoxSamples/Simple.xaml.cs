@@ -34,7 +34,12 @@ namespace AutoSuggestBoxSample.AutoSuggestBoxSamples
         {
             AutoSuggestBox box = (AutoSuggestBox)sender;
             // Filter the list based on text input
-            box.ItemsSource = string.IsNullOrWhiteSpace(box.Text) ? null : countries.Where(s => s.StartsWith(box.Text, StringComparison.InvariantCultureIgnoreCase)).ToList();
+            box.ItemsSource = GetSuggestions(box.Text);
+        }
+
+        private List<string> GetSuggestions(string text)
+        {
+            return string.IsNullOrWhiteSpace(text) ? null : countries.Where(s => s.StartsWith(text, StringComparison.InvariantCultureIgnoreCase)).ToList();
         }
 
         private void SuggestBox_QuerySubmitted(object sender, AutoSuggestBoxQuerySubmittedEventArgs e)
@@ -43,6 +48,12 @@ namespace AutoSuggestBoxSample.AutoSuggestBoxSamples
                 status.Text = "Query submitted: " + e.QueryText;
             else
                 status.Text = "Suggestion chosen: " + e.ChosenSuggestion;
+
+            //Move focus to the next control or stop focus
+            if (sender == SuggestBox1)
+                SuggestBox2.Focus();
+            else if (sender == SuggestBox2)
+                SuggestBox2.Unfocus();
         }
     }
 }
