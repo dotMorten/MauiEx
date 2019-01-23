@@ -35,10 +35,10 @@ namespace dotMorten.Xamarin.Forms
                 AutocorrectionType = UITextAutocorrectionType.No
             };
             inputText.ShouldReturn = InputText_OnShouldReturn;
-            inputText.EditingDidBegin += (s, e) => EditingDidBegin?.Invoke(this, e);
-            inputText.EditingDidEnd += (s, e) => EditingDidEnd?.Invoke(this, e);
+            inputText.EditingDidBegin += OnEditingDidBegin;
+            inputText.EditingDidEnd += OnEditingDidEnd;
             inputText.EditingChanged += InputText_EditingChanged;
-            inputText.EndedWithReason += InputText_EndedWithReason;
+            //inputText.EndedWithReason += InputText_EndedWithReason;
 
             AddSubview(inputText);
             inputText.TopAnchor.ConstraintEqualTo(TopAnchor).Active = true;
@@ -49,6 +49,17 @@ namespace dotMorten.Xamarin.Forms
 
             UIKit.UIKeyboard.Notifications.ObserveWillShow(OnKeyboardShow);
             UIKit.UIKeyboard.Notifications.ObserveWillHide(OnKeyboardHide);
+        }
+
+        private void OnEditingDidBegin(object sender, EventArgs e)
+        {
+            IsSuggestionListOpen = true;
+            EditingDidBegin?.Invoke(this, e);
+        }
+        private void OnEditingDidEnd(object sender, EventArgs e)
+        {
+            IsSuggestionListOpen = false;
+            EditingDidEnd?.Invoke(this, e);
         }
 
         internal EventHandler EditingDidBegin;
