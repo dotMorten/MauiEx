@@ -59,12 +59,6 @@ namespace dotMorten.Xamarin.Forms
         {
             base.OnElementChanged(e);
 
-            if (Control == null && e.NewElement != null)
-            {
-                var box = CreateNativeControl();
-                SetNativeControl(box);
-            }
-
             if (e.OldElement != null)
             {
                 if (Control != null)
@@ -75,32 +69,38 @@ namespace dotMorten.Xamarin.Forms
 #if __IOS__
                     Control.EditingDidBegin -= Control_EditingDidBegin;
                     Control.EditingDidEnd -= Control_EditingDidEnd;
+#elif NETFX_CORE
+                    Control.GotFocus -= Control_GotFocus;
 #endif
                 }
             }
 
-            if (Element != null && Control != null)
+            if (e.NewElement != null)
             {
-                Control.Text = Element.Text ?? string.Empty;
+                if (Control == null)
+                {
+                    var box = CreateNativeControl();
+                    SetNativeControl(box);
+                }
+                Control.Text = e.NewElement.Text ?? string.Empty;
                 UpdateTextColor();
                 UpdatePlaceholderText();
                 UpdatePlaceholderTextColor();
                 UpdateTextMemberPath();
                 UpdateDisplayMemberPath();
                 UpdateIsEnabled();
-                Control.UpdateTextOnSelect = Element.UpdateTextOnSelect != false;
-                Control.IsSuggestionListOpen = Element.IsSuggestionListOpen == true;
+                Control.UpdateTextOnSelect = e.NewElement.UpdateTextOnSelect;
+                Control.IsSuggestionListOpen = e.NewElement.IsSuggestionListOpen;
                 UpdateItemsSource();
-            }
 
-            if (e.NewElement != null && Control != null)
-            {
                 Control.SuggestionChosen += AutoSuggestBox_SuggestionChosen;
                 Control.TextChanged += AutoSuggestBox_TextChanged;
                 Control.QuerySubmitted += AutoSuggestBox_QuerySubmitted;
 #if __IOS__
                 Control.EditingDidBegin += Control_EditingDidBegin;
                 Control.EditingDidEnd += Control_EditingDidEnd;
+#elif NETFX_CORE
+                Control.GotFocus += Control_GotFocus;
 #endif
             }
         }
@@ -113,6 +113,12 @@ namespace dotMorten.Xamarin.Forms
         private void Control_EditingDidEnd(object sender, EventArgs e)
         {
             Element?.SetValue(VisualElement.IsFocusedPropertyKey, false);
+        }
+#elif NETFX_CORE
+        private void Control_GotFocus(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            if (Element?.ItemsSource?.Count > 0)
+                (sender as NativeAutoSuggestBox).IsSuggestionListOpen = true;
         }
 #endif
 
@@ -146,7 +152,7 @@ namespace dotMorten.Xamarin.Forms
 
         protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if(Control == null)
+            if (Control == null)
             {
                 return;
             }
@@ -258,7 +264,6 @@ namespace dotMorten.Xamarin.Forms
 #elif __ANDROID__ || __IOS__
             Control.SetItems(Element?.ItemsSource?.OfType<object>(), (o) => FormatType(o, Element?.DisplayMemberPath), (o) => FormatType(o, Element?.TextMemberPath));
 #endif
-
         }
 
 #if __ANDROID__ || __IOS__
