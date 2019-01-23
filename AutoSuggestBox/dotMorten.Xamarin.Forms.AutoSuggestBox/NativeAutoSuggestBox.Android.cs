@@ -3,7 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Android.Content;
+using Android.Graphics;
 using Android.Runtime;
+using Android.Views;
 using Android.Views.InputMethods;
 using Android.Widget;
 using Java.Lang;
@@ -26,6 +28,12 @@ namespace dotMorten.Xamarin.Forms
             InputType = Android.Text.InputTypes.TextFlagNoSuggestions | Android.Text.InputTypes.TextVariationVisiblePassword; //Disables text suggestions as the auto-complete view is there to do that
             ItemClick += OnItemClick;
             Adapter = adapter = new SuggestCompleteAdapter(Context, Android.Resource.Layout.SimpleDropDownItem1Line);
+        }
+
+        protected override void OnFocusChanged(bool gainFocus, [GeneratedEnum] FocusSearchDirection direction, Rect previouslyFocusedRect)
+        {
+            IsSuggestionListOpen = gainFocus;
+            base.OnFocusChanged(gainFocus, direction, previouslyFocusedRect);
         }
 
         public void SetItems(IEnumerable<object> items, Func<object, string> labelFunc, Func<object, string> textFunc)
