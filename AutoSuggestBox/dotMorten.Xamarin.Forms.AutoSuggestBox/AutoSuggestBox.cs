@@ -14,8 +14,12 @@ using NativeAutoSuggestBox = Windows.UI.Xaml.Controls.AutoSuggestBox;
 #endif
 #endif
 
-#if !NETSTANDARD2_0
-[assembly: ExportRenderer(typeof(dotMorten.Xamarin.Forms.AutoSuggestBox), typeof(dotMorten.Xamarin.Forms.AutoSuggestBoxRenderer))]
+#if __ANDROID__
+[assembly: ExportRenderer(typeof(dotMorten.Xamarin.Forms.AutoSuggestBox), typeof(dotMorten.Xamarin.Forms.Platform.AutoSuggestBoxRenderer))]
+#elif __IOS__
+[assembly: ExportRenderer(typeof(dotMorten.Xamarin.Forms.AutoSuggestBox), typeof(dotMorten.Xamarin.Forms.Platform.AutoSuggestBoxRenderer))]
+#elif NETFX_CORE
+[assembly: ExportRenderer(typeof(dotMorten.Xamarin.Forms.AutoSuggestBox), typeof(dotMorten.Xamarin.Forms.Platform.AutoSuggestBoxRenderer))]
 #endif
 
 namespace dotMorten.Xamarin.Forms
