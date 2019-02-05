@@ -165,11 +165,11 @@
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
-    <ProjectReference Include="..\AutoSuggestBoxSample\AutoSuggestBoxSample.csproj">
-      <Project>{C7A54E99-9618-4294-A36B-0C61B24E8BCB}</Project>
-      <Name>AutoSuggestBoxSample</Name>
+    <ProjectReference Include="..\SampleApp\SampleApp.csproj">
+      <Project>{7F5B7DE8-B5BE-4C51-84F1-EFB22F50AC85}</Project>
+      <Name>SampleApp</Name>
     </ProjectReference>
-    <ProjectReference Include="..\dotMorten.Xamarin.Forms.AutoSuggestBox\dotMorten.Xamarin.Forms.AutoSuggestBox.csproj">
+    <ProjectReference Include="..\..\AutoSuggestBox\dotMorten.Xamarin.Forms.AutoSuggestBox\dotMorten.Xamarin.Forms.AutoSuggestBox.csproj">
       <Project>{c3614a19-3292-4efa-a8b0-31f55cdb8c5b}</Project>
       <Name>dotMorten.Xamarin.Forms.AutoSuggestBox</Name>
     </ProjectReference>

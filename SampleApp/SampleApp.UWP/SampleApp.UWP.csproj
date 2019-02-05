@@ -7,8 +7,8 @@
     <ProjectGuid>{8CEB84D7-D376-4426-B93A-CE79A34AE0D4}</ProjectGuid>
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AutoSuggestBoxSample.UWP</RootNamespace>
-    <AssemblyName>AutoSuggestBoxSample.UWP</AssemblyName>
+    <RootNamespace>SampleApp.UWP</RootNamespace>
+    <AssemblyName>SampleApp.UWP</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion>10.0.16299.0</TargetPlatformVersion>
@@ -152,11 +152,11 @@
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.1.5" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AutoSuggestBoxSample\AutoSuggestBoxSample.csproj">
-      <Project>{C7A54E99-9618-4294-A36B-0C61B24E8BCB}</Project>
-      <Name>AutoSuggestBoxSample</Name>
+    <ProjectReference Include="..\SampleApp\SampleApp.csproj">
+      <Project>{7F5B7DE8-B5BE-4C51-84F1-EFB22F50AC85}</Project>
+      <Name>SampleApp</Name>
     </ProjectReference>
-    <ProjectReference Include="..\dotMorten.Xamarin.Forms.AutoSuggestBox\dotMorten.Xamarin.Forms.AutoSuggestBox.csproj">
+    <ProjectReference Include="..\..\AutoSuggestBox\dotMorten.Xamarin.Forms.AutoSuggestBox\dotMorten.Xamarin.Forms.AutoSuggestBox.csproj">
       <Project>{c3614a19-3292-4efa-a8b0-31f55cdb8c5b}</Project>
       <Name>dotMorten.Xamarin.Forms.AutoSuggestBox</Name>
     </ProjectReference>

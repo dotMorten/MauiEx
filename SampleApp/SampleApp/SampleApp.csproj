@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\dotMorten.Xamarin.Forms.AutoSuggestBox\dotMorten.Xamarin.Forms.AutoSuggestBox.csproj">
+    <ProjectReference Include="..\..\AutoSuggestBox\dotMorten.Xamarin.Forms.AutoSuggestBox\dotMorten.Xamarin.Forms.AutoSuggestBox.csproj">
       <Private>false</Private>
     </ProjectReference>
   </ItemGroup>
@@ -18,7 +18,7 @@
     <Compile Condition=" '$(EnableDefaultCompileItems)' == 'true' " Update="App.xaml.cs">
       <DependentUpon>*.xaml</DependentUpon>
     </Compile>
-    <Compile Condition=" '$(EnableDefaultCompileItems)' == 'true' " Update="AutoSuggestBoxSamples\Dynamic.xaml.cs">
+    <Compile Condition=" '$(EnableDefaultCompileItems)' == 'true' " Update="Samples\AutoSuggestBoxSamples\Dynamic.xaml.cs">
       <DependentUpon>Dynamic.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
@@ -29,10 +29,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="AutoSuggestBoxSamples\Email.xaml">
+    <EmbeddedResource Update="Samples\AutoSuggestBoxSamples\Email.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="AutoSuggestBoxSamples\Simple.xaml">
+    <EmbeddedResource Update="Samples\AutoSuggestBoxSamples\Simple.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="StartPage.xaml">
@@ -42,15 +42,6 @@
 
   <ItemGroup>
     <None Update="App.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="AutoSuggestBoxSamples\Dynamic.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="AutoSuggestBoxSamples\Email.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="AutoSuggestBoxSamples\Simple.xaml">
       <Generator>MSBuild:Compile</Generator>
     </None>
     <None Update="StartPage.xaml">

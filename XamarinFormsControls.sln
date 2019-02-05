@@ -3,17 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27428.2043
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoSuggestBoxSample.Android", "AutoSuggestBoxSample.Android\AutoSuggestBoxSample.Android.csproj", "{547FB5A9-57E0-4A60-8ED1-284E523670F4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleApp.Android", "SampleApp\SampleApp.Android\SampleApp.Android.csproj", "{547FB5A9-57E0-4A60-8ED1-284E523670F4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoSuggestBoxSample.iOS", "AutoSuggestBoxSample.iOS\AutoSuggestBoxSample.iOS.csproj", "{45C294F4-2F07-4466-A0BF-0378E87A48EF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleApp.iOS", "SampleApp\SampleApp.iOS\SampleApp.iOS.csproj", "{45C294F4-2F07-4466-A0BF-0378E87A48EF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoSuggestBoxSample.UWP", "AutoSuggestBoxSample.UWP\AutoSuggestBoxSample.UWP.csproj", "{8CEB84D7-D376-4426-B93A-CE79A34AE0D4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleApp.UWP", "SampleApp\SampleApp.UWP\SampleApp.UWP.csproj", "{8CEB84D7-D376-4426-B93A-CE79A34AE0D4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoSuggestBoxSample", "AutoSuggestBoxSample\AutoSuggestBoxSample.csproj", "{7F5B7DE8-B5BE-4C51-84F1-EFB22F50AC85}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SampleApp", "SampleApp\SampleApp\SampleApp.csproj", "{7F5B7DE8-B5BE-4C51-84F1-EFB22F50AC85}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dotMorten.Xamarin.Forms.AutoSuggestBox", "dotMorten.Xamarin.Forms.AutoSuggestBox\dotMorten.Xamarin.Forms.AutoSuggestBox.csproj", "{C3614A19-3292-4EFA-A8B0-31F55CDB8C5B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dotMorten.Xamarin.Forms.AutoSuggestBox", "AutoSuggestBox\dotMorten.Xamarin.Forms.AutoSuggestBox\dotMorten.Xamarin.Forms.AutoSuggestBox.csproj", "{C3614A19-3292-4EFA-A8B0-31F55CDB8C5B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SampleApp", "SampleApp", "{BDEF07D0-115D-47FA-8486-17A251998DC3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AutoSuggestBox", "AutoSuggestBox", "{A7E8E170-CA6B-4A56-9EA7-1F37C9BFCBD9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -315,6 +317,7 @@ Global
 		{45C294F4-2F07-4466-A0BF-0378E87A48EF} = {BDEF07D0-115D-47FA-8486-17A251998DC3}
 		{8CEB84D7-D376-4426-B93A-CE79A34AE0D4} = {BDEF07D0-115D-47FA-8486-17A251998DC3}
 		{7F5B7DE8-B5BE-4C51-84F1-EFB22F50AC85} = {BDEF07D0-115D-47FA-8486-17A251998DC3}
+		{C3614A19-3292-4EFA-A8B0-31F55CDB8C5B} = {A7E8E170-CA6B-4A56-9EA7-1F37C9BFCBD9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {093EA9D7-7450-47B6-8DB2-61B04A2B03C0}

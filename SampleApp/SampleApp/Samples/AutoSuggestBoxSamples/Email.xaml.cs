@@ -8,10 +8,11 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace AutoSuggestBoxSample.AutoSuggestBoxSamples
+namespace SampleApp.Samples.AutoSuggestBoxSamples
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class Email : ContentPage
+    [System.ComponentModel.Description("Email completion")]
+    public partial class Email : ContentPage
 	{
         private static string[] AutoCompleteEmailNames = new[] { "aol.com", "gmail.com", "hotmail.com", "icloud.com", "outlook.com", "mail.com", "yahoo.com" };
 

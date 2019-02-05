@@ -6,9 +6,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
+using Xamarin.Forms.Xaml;
 
-namespace AutoSuggestBoxSample.AutoSuggestBoxSamples
+namespace SampleApp.Samples.AutoSuggestBoxSamples
 {
+    [XamlCompilation(XamlCompilationOptions.Compile)]
+    [System.ComponentModel.Description("Dynamic data lookup")]
 	public partial class Dynamic : ContentPage
 	{
         public Dynamic()
@@ -53,7 +56,7 @@ namespace AutoSuggestBoxSample.AutoSuggestBoxSamples
             var result = await Task.Run<IEnumerable<City>>(() =>
             {
                 List<City> suggestions = new List<City>();
-                using (var s = typeof(Dynamic).Assembly.GetManifestResourceStream("AutoSuggestBoxSample.Data.USCities.txt"))
+                using (var s = typeof(Dynamic).Assembly.GetManifestResourceStream("SampleApp.Data.USCities.txt"))
                 {
                     using (var sr = new StreamReader(s))
                     {

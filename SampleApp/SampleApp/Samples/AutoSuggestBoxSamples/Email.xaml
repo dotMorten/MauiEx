@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:dm="clr-namespace:dotMorten.Xamarin.Forms;assembly=dotMorten.Xamarin.Forms.AutoSuggestBox"
-             x:Class="AutoSuggestBoxSample.AutoSuggestBoxSamples.Email"
+             x:Class="SampleApp.Samples.AutoSuggestBoxSamples.Email"
              Padding="20">
     <ContentPage.Content>
         <StackLayout>

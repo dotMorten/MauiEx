@@ -1,6 +1,7 @@
 ﻿using dotMorten.Xamarin.Forms;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -9,9 +10,10 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace AutoSuggestBoxSample.AutoSuggestBoxSamples
+namespace SampleApp.Samples.AutoSuggestBoxSamples
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
+    [Description("Simple auto-completion")]
 	public partial class Simple : ContentPage
 	{
 		public Simple ()
@@ -24,7 +26,7 @@ namespace AutoSuggestBoxSample.AutoSuggestBoxSamples
 
         private void Initialize()
         {
-            using (var s = typeof(Simple).Assembly.GetManifestResourceStream("AutoSuggestBoxSample.Data.Countries.txt"))
+            using (var s = typeof(Simple).Assembly.GetManifestResourceStream("SampleApp.Data.Countries.txt"))
             {
                 countries = new StreamReader(s).ReadToEnd().Split('\n').Select(t => t.Trim()).ToList();
             }

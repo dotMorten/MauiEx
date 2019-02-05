@@ -13,7 +13,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-namespace AutoSuggestBoxSample.UWP
+namespace SampleApp.UWP
 {
     public sealed partial class MainPage
     {
@@ -21,7 +21,7 @@ namespace AutoSuggestBoxSample.UWP
         {
             this.InitializeComponent();
 
-            LoadApplication(new AutoSuggestBoxSample.App());
+            LoadApplication(new SampleApp.App());
         }
     }
 }

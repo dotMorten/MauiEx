@@ -91,14 +91,13 @@
     <Folder Include="Resources\drawable\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AutoSuggestBoxSample\AutoSuggestBoxSample.csproj">
-      <Project>{C7A54E99-9618-4294-A36B-0C61B24E8BCB}</Project>
-      <Name>AutoSuggestBoxSample</Name>
-      <Private>True</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\dotMorten.Xamarin.Forms.AutoSuggestBox\dotMorten.Xamarin.Forms.AutoSuggestBox.csproj">
+    <ProjectReference Include="..\..\AutoSuggestBox\dotMorten.Xamarin.Forms.AutoSuggestBox\dotMorten.Xamarin.Forms.AutoSuggestBox.csproj">
       <Project>{c3614a19-3292-4efa-a8b0-31f55cdb8c5b}</Project>
       <Name>dotMorten.Xamarin.Forms.AutoSuggestBox</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SampleApp\SampleApp.csproj">
+      <Project>{7f5b7de8-b5be-4c51-84f1-efb22f50ac85}</Project>
+      <Name>SampleApp</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />

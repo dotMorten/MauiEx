@@ -5,7 +5,7 @@ using System.Text;
 
 using Xamarin.Forms;
 
-namespace AutoSuggestBoxSample
+namespace SampleApp
 {
 	public partial class App : Application
 	{
@@ -13,7 +13,7 @@ namespace AutoSuggestBoxSample
 		{
 			InitializeComponent();
 
-			MainPage = new NavigationPage(new AutoSuggestBoxSample.StartPage());
+			MainPage = new NavigationPage(new StartPage());
 		}
 
 		protected override void OnStart ()
