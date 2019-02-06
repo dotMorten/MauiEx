@@ -14,6 +14,7 @@ namespace SampleApp.Samples.AutoSuggestBoxSamples
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
     [Description("Simple auto-completion")]
+    [SamplePriority(1)]
 	public partial class Simple : ContentPage
 	{
 		public Simple ()
