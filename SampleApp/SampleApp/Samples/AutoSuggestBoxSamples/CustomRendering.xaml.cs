@@ -16,7 +16,7 @@ using Xamarin.Forms.Xaml;
 namespace SampleApp.Samples.AutoSuggestBoxSamples
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    [System.ComponentModel.Description("Uses a custom renderer to override the style on iOS")]
+    [System.ComponentModel.Description("Uses a custom renderer to overrides the style on iOS")]
     public partial class CustomRendering : ContentPage
     {
         public CustomRendering()

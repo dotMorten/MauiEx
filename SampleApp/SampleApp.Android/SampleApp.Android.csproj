@@ -91,7 +91,7 @@
     <Folder Include="Resources\drawable\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\AutoSuggestBox\dotMorten.Xamarin.Forms.AutoSuggestBox\dotMorten.Xamarin.Forms.AutoSuggestBox.csproj">
+    <ProjectReference Include="..\..\AutoSuggestBox\dotMorten.Xamarin.Forms.AutoSuggestBox.csproj">
       <Project>{c3614a19-3292-4efa-a8b0-31f55cdb8c5b}</Project>
       <Name>dotMorten.Xamarin.Forms.AutoSuggestBox</Name>
     </ProjectReference>

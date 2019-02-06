@@ -12,6 +12,7 @@ namespace SampleApp.Samples.AutoSuggestBoxSamples
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
     [System.ComponentModel.Description("Email completion")]
+    [SamplePriority(3)]
     public partial class Email : ContentPage
 	{
         private static string[] AutoCompleteEmailNames = new[] { "aol.com", "gmail.com", "hotmail.com", "icloud.com", "outlook.com", "mail.com", "yahoo.com" };

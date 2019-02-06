@@ -9,6 +9,12 @@ using Xamarin.Forms.Xaml;
 
 namespace SampleApp
 {
+    public class SamplePriorityAttribute : Attribute
+    {
+        public SamplePriorityAttribute(int priority = 1) { Priority = priority;  }
+        public int Priority { get; set; }
+    }
+
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class StartPage : ContentPage
 	{
@@ -35,7 +41,16 @@ namespace SampleApp
                     return PageType.Name;
                 }
             }
-            public int Priority => 1;
+            public int Priority
+            {
+                get
+                {
+                    var desc = PageType.GetCustomAttributes(typeof(SamplePriorityAttribute), false).FirstOrDefault() as SamplePriorityAttribute;
+                    if (desc != null)
+                        return desc.Priority;
+                    return int.MaxValue;
+                }
+            }
 
             public string Category
             {

@@ -12,7 +12,8 @@ namespace SampleApp.Samples.AutoSuggestBoxSamples
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     [System.ComponentModel.Description("Dynamic data lookup")]
-	public partial class Dynamic : ContentPage
+    [SamplePriority(2)]
+    public partial class Dynamic : ContentPage
 	{
         public Dynamic()
 		{
