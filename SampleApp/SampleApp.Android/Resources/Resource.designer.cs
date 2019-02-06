@@ -9,9 +9,9 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: global::Android.Runtime.ResourceDesignerAttribute("AutoSuggestBoxSample.Droid.Resource", IsApplication=true)]
+[assembly: global::Android.Runtime.ResourceDesignerAttribute("SampleApp.Droid.Resource", IsApplication=true)]
 
-namespace AutoSuggestBoxSample.Droid
+namespace SampleApp.Droid
 {
 	
 	
@@ -26,7 +26,7 @@ namespace AutoSuggestBoxSample.Droid
 		
 		public static void UpdateIdValues()
 		{
-			global::Xamarin.Forms.Platform.Android.Resource.Attribute.actionBarSize = global::AutoSuggestBoxSample.Droid.Resource.Attribute.actionBarSize;
+			global::Xamarin.Forms.Platform.Android.Resource.Attribute.actionBarSize = global::SampleApp.Droid.Resource.Attribute.actionBarSize;
 		}
 		
 		public partial class Animation

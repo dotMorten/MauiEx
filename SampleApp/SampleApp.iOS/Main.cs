@@ -5,7 +5,7 @@ using System.Linq;
 using Foundation;
 using UIKit;
 
-namespace AutoSuggestBoxSample.iOS
+namespace SampleApp.iOS
 {
     public class Application
     {

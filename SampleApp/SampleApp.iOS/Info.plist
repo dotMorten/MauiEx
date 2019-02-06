@@ -23,9 +23,9 @@
 	<key>MinimumOSVersion</key>
 	<string>11.2</string>
 	<key>CFBundleDisplayName</key>
-	<string>AutoSuggestBoxSample</string>
+	<string>SampleApp</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.yourcompany.AutoSuggestBoxSample</string>
+	<string>com.dotMorten.SampleApp</string>
 	<key>CFBundleVersion</key>
 	<string>1.0</string>
 	<key>CFBundleIconFiles</key>
@@ -49,6 +49,6 @@
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>CFBundleName</key>
-	<string>AutoSuggestBoxSample</string>
+	<string>SampleApp</string>
 </dict>
 </plist>
