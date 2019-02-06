@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleApp.UWP", "SampleApp\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SampleApp", "SampleApp\SampleApp\SampleApp.csproj", "{7F5B7DE8-B5BE-4C51-84F1-EFB22F50AC85}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dotMorten.Xamarin.Forms.AutoSuggestBox", "AutoSuggestBox\dotMorten.Xamarin.Forms.AutoSuggestBox\dotMorten.Xamarin.Forms.AutoSuggestBox.csproj", "{C3614A19-3292-4EFA-A8B0-31F55CDB8C5B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dotMorten.Xamarin.Forms.AutoSuggestBox", "AutoSuggestBox\dotMorten.Xamarin.Forms.AutoSuggestBox.csproj", "{C3614A19-3292-4EFA-A8B0-31F55CDB8C5B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SampleApp", "SampleApp", "{BDEF07D0-115D-47FA-8486-17A251998DC3}"
 EndProject
