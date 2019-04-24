@@ -1,8 +1,8 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+﻿<Project Sdk="MSBuild.Sdk.Extras">
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;xamarinios10;MonoAndroid60</TargetFrameworks>
-    <TargetFrameworks Condition="'$(OS)' == 'Windows_NT'">$(TargetFrameworks);uap10.0.16299</TargetFrameworks> <!-- Allows compiling on MacOS without UWP support-->
+    <TargetFrameworks Condition="'$(OS)' == 'Windows_NT'">$(TargetFrameworks);net45;uap10.0.16299</TargetFrameworks>
+    <!-- Allows compiling on MacOS without UWP support-->
     <RootNamespace>dotMorten.Xamarin.Forms</RootNamespace>
     <AssemblyName>dotMorten.Xamarin.Forms.AutoSuggestBox</AssemblyName>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -18,6 +18,11 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net45'">
+    <DefineConstants>__WPF__;$(DefineConstants)</DefineConstants>
+    <ExtrasEnableWpfProjectSetup>true</ExtrasEnableWpfProjectSetup>
+  </PropertyGroup>
+
   <PropertyGroup Condition="'$(TargetFramework)' == 'uap10.0.16299'">
     <TargetPlatformVersion>10.0.16299.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.16299.0</TargetPlatformMinVersion>
@@ -26,13 +31,14 @@
   <ItemGroup Condition="'$(TargetFramework)' == 'uap10.0.16299'">
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.1.5" />
   </ItemGroup>
-   
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net45'">
+    <PackageReference Include="WpfControls.AutoCompleteTextBox" Version="1.0.0.7" />
+    <PackageReference Include="Xamarin.Forms.Platform.WPF" Version="3.0.0.446417" />
+  </ItemGroup>
+
   <ItemGroup>
-    <PackageReference Include="MSBuild.Sdk.Extras" Version="1.5.4" PrivateAssets="all" />
     <PackageReference Include="Xamarin.Forms" Version="3.0.0.446417" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta-63127-02" PrivateAssets="All" />
   </ItemGroup>
-
-  <Import Project="$(MSBuildSDKExtrasTargets)" Condition="Exists('$(MSBuildSDKExtrasTargets)')" />
-
 </Project>
