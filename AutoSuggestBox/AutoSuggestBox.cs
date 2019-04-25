@@ -27,14 +27,14 @@ namespace dotMorten.Xamarin.Forms
     /// has been changed by the user and is responsible for providing relevant suggestions for this control to display.
     /// Use the UWP Reference doc for more information: <a href="https://msdn.microsoft.com/en-us/library/windows/apps/mt280217.aspx">Link</a>
     /// </summary>
-	public partial class AutoSuggestBox : View
+    public partial class AutoSuggestBox : View
     {
         private bool suppressTextChangedEvent;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AutoSuggestBox"/> class
         /// </summary>
-        public AutoSuggestBox() 
+        public AutoSuggestBox()
         {
         }
 
@@ -76,7 +76,7 @@ namespace dotMorten.Xamarin.Forms
         /// <seealso cref="Text"/>
         public global::Xamarin.Forms.Color TextColor
         {
-            get { return (global::Xamarin.Forms.Color )GetValue(TextColorProperty); }
+            get { return (global::Xamarin.Forms.Color)GetValue(TextColorProperty); }
             set { SetValue(TextColorProperty, value); }
         }
 
@@ -84,7 +84,7 @@ namespace dotMorten.Xamarin.Forms
         /// Identifies the <see cref="TextColor"/> bindable property.
         /// </summary>
         public static readonly BindableProperty TextColorProperty =
-            BindableProperty.Create(nameof(TextColor), typeof(global::Xamarin.Forms.Color ), typeof(AutoSuggestBox), global::Xamarin.Forms.Color.Gray, BindingMode.OneWay, null, null);
+            BindableProperty.Create(nameof(TextColor), typeof(global::Xamarin.Forms.Color), typeof(AutoSuggestBox), global::Xamarin.Forms.Color.Gray, BindingMode.OneWay, null, null);
 
         /// <summary>
         /// Gets or sets the PlaceholderText
