@@ -107,10 +107,6 @@
       <Project>{c3614a19-3292-4efa-a8b0-31f55cdb8c5b}</Project>
       <Name>dotMorten.Xamarin.Forms.AutoSuggestBox</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\WpfAutoSuggestBox\WpfAutoSuggestBox.csproj">
-      <Project>{b5e19335-0e9a-4a08-8f2b-dc2ba01adaf2}</Project>
-      <Name>WpfAutoSuggestBox</Name>
-    </ProjectReference>
     <ProjectReference Include="..\SampleApp\SampleApp.csproj">
       <Project>{7f5b7de8-b5be-4c51-84f1-efb22f50ac85}</Project>
       <Name>SampleApp</Name>

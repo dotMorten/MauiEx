@@ -16,6 +16,7 @@
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <EnableDefaultXamlItems>false</EnableDefaultXamlItems>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'net45'">
@@ -28,6 +29,10 @@
     <TargetPlatformMinVersion>10.0.16299.0</TargetPlatformMinVersion>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Include="Themes/Generic.xaml" />
+  </ItemGroup>
+
   <ItemGroup Condition="'$(TargetFramework)' == 'uap10.0.16299'">
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.1.5" />
   </ItemGroup>
@@ -36,8 +41,14 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <ProjectReference Include="../WpfAutoSuggestBox/WpfAutoSuggestBox.csproj" />
+    <Reference Include="System.Xaml" />
     <PackageReference Include="Xamarin.Forms.Platform.WPF" Version="3.0.0.446417" />
+
+    <None Remove="Themes/Generic.xaml" />
+    <Page Include="Themes/Generic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
 
   <ItemGroup>
