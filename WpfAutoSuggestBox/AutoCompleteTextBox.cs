@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections;
-using System.ComponentModel;
 using System.Linq;
-using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Threading;
 
 namespace WpfAutoSuggestBox
 {
@@ -33,7 +30,6 @@ namespace WpfAutoSuggestBox
         public static readonly DependencyProperty ItemTemplateProperty = DependencyProperty.Register("ItemTemplate", typeof(DataTemplate), typeof(AutoCompleteTextBox), new FrameworkPropertyMetadata(null));
         public static readonly DependencyProperty ItemTemplateSelectorProperty = DependencyProperty.Register("ItemTemplateSelector", typeof(DataTemplateSelector), typeof(AutoCompleteTextBox));
         public static readonly DependencyProperty LoadingContentProperty = DependencyProperty.Register("LoadingContent", typeof(object), typeof(AutoCompleteTextBox), new FrameworkPropertyMetadata(null));
-        public static readonly DependencyProperty ProviderProperty = DependencyProperty.Register("Provider", typeof(ISuggestionProvider), typeof(AutoCompleteTextBox), new FrameworkPropertyMetadata(null));
         public static readonly DependencyProperty ItemsSourceProperty = DependencyProperty.Register(nameof(ItemsSource), typeof(IEnumerable), typeof(AutoCompleteTextBox), new FrameworkPropertyMetadata(Enumerable.Empty<object>(), new PropertyChangedCallback(ItemsSourcePropertyChanged)));
         public static readonly DependencyProperty SelectedItemProperty = DependencyProperty.Register("SelectedItem", typeof(object), typeof(AutoCompleteTextBox), new FrameworkPropertyMetadata(null, OnSelectedItemChanged));
         public static readonly DependencyProperty TextProperty = DependencyProperty.Register(nameof(Text), typeof(string), typeof(AutoCompleteTextBox), new FrameworkPropertyMetadata(string.Empty, new PropertyChangedCallback(TextPropertyChanged)));
@@ -164,12 +160,6 @@ namespace WpfAutoSuggestBox
         {
             get => GetValue(LoadingContentProperty);
             set => SetValue(LoadingContentProperty, value);
-        }
-
-        public ISuggestionProvider Provider
-        {
-            get => (ISuggestionProvider)GetValue(ProviderProperty);
-            set => SetValue(ProviderProperty, value);
         }
 
         public IEnumerable ItemsSource

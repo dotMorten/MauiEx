@@ -54,10 +54,8 @@
     <Compile Include="BindingEvaluator.cs" />
     <Compile Include="AutoCompleteTextBox.cs" />
     <Compile Include="IconPlacement.cs" />
-    <Compile Include="ISuggestionProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SelectionAdapter.cs" />
-    <Compile Include="SuggestionProvider.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
