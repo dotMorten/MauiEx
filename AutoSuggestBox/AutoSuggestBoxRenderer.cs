@@ -22,6 +22,11 @@ using NativeAutoSuggestBox = Windows.UI.Xaml.Controls.AutoSuggestBox;
 using XAutoSuggestBoxSuggestionChosenEventArgs = Windows.UI.Xaml.Controls.AutoSuggestBoxSuggestionChosenEventArgs;
 using XAutoSuggestBoxTextChangedEventArgs = Windows.UI.Xaml.Controls.AutoSuggestBoxTextChangedEventArgs;
 using XAutoSuggestBoxQuerySubmittedEventArgs = Windows.UI.Xaml.Controls.AutoSuggestBoxQuerySubmittedEventArgs;
+#elif __WPF__
+using Xamarin.Forms.Platform.WPF;
+using XAutoSuggestBoxSuggestionChosenEventArgs = dotMorten.Xamarin.Forms.AutoSuggestBoxSuggestionChosenEventArgs;
+using XAutoSuggestBoxTextChangedEventArgs = dotMorten.Xamarin.Forms.AutoSuggestBoxTextChangedEventArgs;
+using XAutoSuggestBoxQuerySubmittedEventArgs = dotMorten.Xamarin.Forms.AutoSuggestBoxQuerySubmittedEventArgs;
 #endif
 
 namespace dotMorten.Xamarin.Forms
@@ -137,7 +142,7 @@ namespace dotMorten.Xamarin.Forms
             Element?.RaiseSuggestionChosen(e.SelectedItem);
         }
 
-#if NETFX_CORE
+#if NETFX_CORE || __WPF__
         protected NativeAutoSuggestBox CreateNativeControl()
 #else
         protected override NativeAutoSuggestBox CreateNativeControl()

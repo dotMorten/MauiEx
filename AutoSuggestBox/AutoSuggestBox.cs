@@ -8,6 +8,8 @@ using Xamarin.Forms.Platform.Android;
 #elif __IOS__
 using CoreGraphics;
 using Xamarin.Forms.Platform.iOS;
+#elif __WPF__
+using Xamarin.Forms.Platform.WPF;
 #elif NETFX_CORE
 using Xamarin.Forms.Platform.UWP;
 using NativeAutoSuggestBox = Windows.UI.Xaml.Controls.AutoSuggestBox;

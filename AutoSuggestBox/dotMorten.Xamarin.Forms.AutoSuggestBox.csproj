@@ -33,6 +33,9 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net45'">
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <PackageReference Include="WpfControls.AutoCompleteTextBox" Version="1.0.0.7" />
     <PackageReference Include="Xamarin.Forms.Platform.WPF" Version="3.0.0.446417" />
   </ItemGroup>
