@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using dotMorten.Xamarin.Forms;
 using Foundation;
 using UIKit;
 
@@ -22,6 +22,8 @@ namespace SampleApp.iOS
         //
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
+            AutoSuggestBox.Init();
+
             global::Xamarin.Forms.Forms.Init();
             LoadApplication(new SampleApp.App());
 

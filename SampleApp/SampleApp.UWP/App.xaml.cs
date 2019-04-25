@@ -53,9 +53,9 @@ namespace SampleApp.UWP
 
                 rootFrame.NavigationFailed += OnNavigationFailed;
 
-                List<Assembly> assembliesToInclude = new List<Assembly>();
-                assembliesToInclude.Add(typeof(dotMorten.Xamarin.Forms.AutoSuggestBox).GetTypeInfo().Assembly);
-                Xamarin.Forms.Forms.Init(e, assembliesToInclude);
+                dotMorten.Xamarin.Forms.AutoSuggestBox.Init();
+
+                Xamarin.Forms.Forms.Init(e);
 
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {

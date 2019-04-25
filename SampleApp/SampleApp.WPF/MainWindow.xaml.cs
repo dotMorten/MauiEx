@@ -1,4 +1,6 @@
-﻿using Xamarin.Forms;
+﻿using dotMorten.Xamarin.Forms;
+using Xamarin.Forms;
+using Xamarin.Forms.Platform.WPF;
 
 namespace SampleApp.WPF
 {
@@ -10,6 +12,8 @@ namespace SampleApp.WPF
         public MainWindow()
         {
             InitializeComponent();
+
+            AutoSuggestBox.Init();
 
             Forms.Init();
             LoadApplication(new SampleApp.App());

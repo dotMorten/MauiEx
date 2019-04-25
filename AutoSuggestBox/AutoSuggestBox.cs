@@ -39,6 +39,15 @@ namespace dotMorten.Xamarin.Forms
         }
 
         /// <summary>
+        /// Initialize this library. Must be called before <c>Forms.Init()</c>.
+        /// </summary>
+        public static void Init()
+        {
+            // does nothing, only serves to make sure the assembly is loaded.
+            // see https://forums.xamarin.com/discussion/31612/renderers-in-separate-projects-not-working
+        }
+
+        /// <summary>
         /// Gets or sets the Text property
         /// </summary>
         /// <seealso cref="TextColor"/>
