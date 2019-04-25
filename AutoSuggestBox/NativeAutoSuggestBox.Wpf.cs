@@ -1,17 +1,19 @@
 ﻿#if __WPF__
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace dotMorten.Xamarin.Forms
 {
-    internal class NativeAutoSuggestBox : WpfControls.AutoCompleteTextBox
+    internal class NativeAutoSuggestBox : WpfAutoSuggestBox.AutoCompleteTextBox
     {
         public NativeAutoSuggestBox()
         {
         }
 
-        public string PlaceholderText { get; set; }
+        public string PlaceholderText
+        {
+            get => Watermark;
+            set => Watermark = value;
+        }
 
         public bool IsSuggestionListOpen { get; set; }
 
