@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections;
+using System.ComponentModel;
+using System.Linq;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -32,18 +34,44 @@ namespace WpfAutoSuggestBox
         public static readonly DependencyProperty ItemTemplateSelectorProperty = DependencyProperty.Register("ItemTemplateSelector", typeof(DataTemplateSelector), typeof(AutoCompleteTextBox));
         public static readonly DependencyProperty LoadingContentProperty = DependencyProperty.Register("LoadingContent", typeof(object), typeof(AutoCompleteTextBox), new FrameworkPropertyMetadata(null));
         public static readonly DependencyProperty ProviderProperty = DependencyProperty.Register("Provider", typeof(ISuggestionProvider), typeof(AutoCompleteTextBox), new FrameworkPropertyMetadata(null));
+        public static readonly DependencyProperty ItemsSourceProperty = DependencyProperty.Register(nameof(ItemsSource), typeof(IEnumerable), typeof(AutoCompleteTextBox), new FrameworkPropertyMetadata(Enumerable.Empty<object>(), new PropertyChangedCallback(ItemsSourcePropertyChanged)));
         public static readonly DependencyProperty SelectedItemProperty = DependencyProperty.Register("SelectedItem", typeof(object), typeof(AutoCompleteTextBox), new FrameworkPropertyMetadata(null, OnSelectedItemChanged));
-        public static readonly DependencyProperty TextProperty = DependencyProperty.Register("Text", typeof(string), typeof(AutoCompleteTextBox), new FrameworkPropertyMetadata(string.Empty));
+        public static readonly DependencyProperty TextProperty = DependencyProperty.Register(nameof(Text), typeof(string), typeof(AutoCompleteTextBox), new FrameworkPropertyMetadata(string.Empty, new PropertyChangedCallback(TextPropertyChanged)));
         public static readonly DependencyProperty MaxLengthProperty = DependencyProperty.Register("MaxLength", typeof(int), typeof(AutoCompleteTextBox), new FrameworkPropertyMetadata(0));
         public static readonly DependencyProperty CharacterCasingProperty = DependencyProperty.Register("CharacterCasing", typeof(CharacterCasing), typeof(AutoCompleteTextBox), new FrameworkPropertyMetadata(CharacterCasing.Normal));
         public static readonly DependencyProperty MaxPopUpHeightProperty = DependencyProperty.Register("MaxPopUpHeight", typeof(int), typeof(AutoCompleteTextBox), new FrameworkPropertyMetadata(600));
         public static readonly DependencyProperty WatermarkProperty = DependencyProperty.Register("Watermark", typeof(string), typeof(AutoCompleteTextBox), new FrameworkPropertyMetadata(string.Empty));
         public static readonly DependencyProperty SuggestionBackgroundProperty = DependencyProperty.Register("SuggestionBackground", typeof(Brush), typeof(AutoCompleteTextBox), new FrameworkPropertyMetadata(Brushes.White));
 
-        private bool _isUpdatingText;
-        private bool _selectionCancelled;
+        private TextBox _editor;
+        private Popup _popup;
+        private Selector _selector;
+        private SelectionAdapter _selectionAdapter;
 
-        private SuggestionsAdapter _suggestionsAdapter;
+        private static void TextPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is AutoCompleteTextBox t)
+            {
+                t.OnTextChanged();
+            }
+        }
+
+        private static void ItemsSourcePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is AutoCompleteTextBox t)
+            {
+                t.OnUpdatedSuggestions();
+            }
+        }
+
+        private bool _isUpdatingText;
+        protected bool IsUpdatingText
+        {
+            get => _isUpdatingText;
+            private set => _isUpdatingText = value;
+        }
+
+        private bool _selectionCancelled;
 
         static AutoCompleteTextBox()
         {
@@ -73,71 +101,56 @@ namespace WpfAutoSuggestBox
         public int Delay
         {
             get => (int)GetValue(DelayProperty);
-
             set => SetValue(DelayProperty, value);
         }
 
         public string DisplayMember
         {
             get => (string)GetValue(DisplayMemberProperty);
-
             set => SetValue(DisplayMemberProperty, value);
         }
-
-        public TextBox Editor { get; set; }
-
-        public DispatcherTimer FetchTimer { get; set; }
 
         public string Filter { get; set; }
 
         public object Icon
         {
             get => GetValue(IconProperty);
-
             set => SetValue(IconProperty, value);
         }
 
         public IconPlacement IconPlacement
         {
             get => (IconPlacement)GetValue(IconPlacementProperty);
-
             set => SetValue(IconPlacementProperty, value);
         }
 
         public Visibility IconVisibility
         {
             get => (Visibility)GetValue(IconVisibilityProperty);
-
             set => SetValue(IconVisibilityProperty, value);
         }
 
         public bool IsDropDownOpen
         {
             get => (bool)GetValue(IsDropDownOpenProperty);
-
             set => SetValue(IsDropDownOpenProperty, value);
         }
 
         public bool IsLoading
         {
             get => (bool)GetValue(IsLoadingProperty);
-
             set => SetValue(IsLoadingProperty, value);
         }
 
         public bool IsReadOnly
         {
             get => (bool)GetValue(IsReadOnlyProperty);
-
             set => SetValue(IsReadOnlyProperty, value);
         }
-
-        public Selector ItemsSelector { get; set; }
 
         public DataTemplate ItemTemplate
         {
             get => (DataTemplate)GetValue(ItemTemplateProperty);
-
             set => SetValue(ItemTemplateProperty, value);
         }
 
@@ -153,12 +166,16 @@ namespace WpfAutoSuggestBox
             set => SetValue(LoadingContentProperty, value);
         }
 
-        public Popup Popup { get; set; }
-
         public ISuggestionProvider Provider
         {
             get => (ISuggestionProvider)GetValue(ProviderProperty);
             set => SetValue(ProviderProperty, value);
+        }
+
+        public IEnumerable ItemsSource
+        {
+            get => (IEnumerable)GetValue(ItemsSourceProperty);
+            set => SetValue(ItemsSourceProperty, value);
         }
 
         public object SelectedItem
@@ -166,8 +183,6 @@ namespace WpfAutoSuggestBox
             get => GetValue(SelectedItemProperty);
             set => SetValue(SelectedItemProperty, value);
         }
-
-        public SelectionAdapter SelectionAdapter { get; set; }
 
         public string Text
         {
@@ -192,18 +207,18 @@ namespace WpfAutoSuggestBox
             act = d as AutoCompleteTextBox;
             if (act != null)
             {
-                if (act.Editor != null & !act._isUpdatingText)
+                if (!act.IsUpdatingText)
                 {
-                    act._isUpdatingText = true;
-                    act.Editor.Text = act.BindingEvaluator.Evaluate(e.NewValue);
-                    act._isUpdatingText = false;
+                    act.IsUpdatingText = true;
+                    act.Text = act.BindingEvaluator.Evaluate(e.NewValue);
+                    act.IsUpdatingText = false;
                 }
             }
         }
 
         private void ScrollToSelectedItem()
         {
-            if (ItemsSelector is ListBox listBox && listBox.SelectedItem != null)
+            if (_selector is ListBox listBox && listBox.SelectedItem != null)
                 listBox.ScrollIntoView(listBox.SelectedItem);
         }
 
@@ -211,41 +226,40 @@ namespace WpfAutoSuggestBox
         {
             base.OnApplyTemplate();
 
-            Editor = Template.FindName(PartEditor, this) as TextBox;
-            Popup = Template.FindName(PartPopup, this) as Popup;
-            ItemsSelector = Template.FindName(PartSelector, this) as Selector;
+            _editor = Template.FindName(PartEditor, this) as TextBox;
+            _popup = Template.FindName(PartPopup, this) as Popup;
+            _selector = Template.FindName(PartSelector, this) as Selector;
             BindingEvaluator = new BindingEvaluator(new Binding(DisplayMember));
 
-            if (Editor != null)
+            if (_editor != null)
             {
-                Editor.TextChanged += OnEditorTextChanged;
-                Editor.PreviewKeyDown += OnEditorKeyDown;
-                Editor.LostFocus += OnEditorLostFocus;
+                _editor.PreviewKeyDown += OnEditorKeyDown;
+                _editor.LostFocus += OnEditorLostFocus;
 
                 if (SelectedItem != null)
                 {
-                    _isUpdatingText = true;
-                    Editor.Text = BindingEvaluator.Evaluate(SelectedItem);
-                    _isUpdatingText = false;
+                    IsUpdatingText = true;
+                    Text = BindingEvaluator.Evaluate(SelectedItem);
+                    IsUpdatingText = false;
                 }
 
             }
 
-            GotFocus += AutoCompleteTextBox_GotFocus;
+            GotFocus += OnGotFocus;
 
-            if (Popup != null)
+            if (_popup != null)
             {
-                Popup.StaysOpen = false;
-                Popup.Opened += OnPopupOpened;
-                Popup.Closed += OnPopupClosed;
+                _popup.Opened += OnPopupOpened;
+                _popup.Closed += OnPopupClosed;
             }
-            if (ItemsSelector != null)
+
+            if (_selector != null)
             {
-                SelectionAdapter = new SelectionAdapter(ItemsSelector);
-                SelectionAdapter.Commit += OnSelectionAdapterCommit;
-                SelectionAdapter.Cancel += OnSelectionAdapterCancel;
-                SelectionAdapter.SelectionChanged += OnSelectionAdapterSelectionChanged;
-                ItemsSelector.PreviewMouseDown += ItemsSelector_PreviewMouseDown;
+                _selectionAdapter = new SelectionAdapter(_selector);
+                _selectionAdapter.Commit += OnSelectionAdapterCommit;
+                _selectionAdapter.Cancel += OnSelectionAdapterCancel;
+                _selectionAdapter.SelectionChanged += OnSelectionAdapterSelectionChanged;
+                _selector.PreviewMouseDown += ItemsSelector_PreviewMouseDown;
             }
         }
 
@@ -253,15 +267,15 @@ namespace WpfAutoSuggestBox
         {
             if ((e.OriginalSource as FrameworkElement)?.DataContext == null)
                 return;
-            if (!ItemsSelector.Items.Contains(((FrameworkElement)e.OriginalSource)?.DataContext))
+            if (!_selector.Items.Contains(((FrameworkElement)e.OriginalSource)?.DataContext))
                 return;
-            ItemsSelector.SelectedItem = ((FrameworkElement)e.OriginalSource)?.DataContext;
+            _selector.SelectedItem = ((FrameworkElement)e.OriginalSource)?.DataContext;
             OnSelectionAdapterCommit();
         }
 
-        private void AutoCompleteTextBox_GotFocus(object sender, RoutedEventArgs e)
+        protected virtual void OnGotFocus(object sender, RoutedEventArgs e)
         {
-            Editor?.Focus();
+            _editor?.Focus();
         }
 
         private string GetDisplayText(object dataItem)
@@ -283,10 +297,10 @@ namespace WpfAutoSuggestBox
 
         private void OnEditorKeyDown(object sender, KeyEventArgs e)
         {
-            if (SelectionAdapter != null)
+            if (_selectionAdapter != null)
             {
                 if (IsDropDownOpen)
-                    SelectionAdapter.HandleKeyDown(e);
+                    _selectionAdapter.HandleKeyDown(e);
                 else
                     IsDropDownOpen = e.Key == Key.Down || e.Key == Key.Up;
             }
@@ -300,44 +314,20 @@ namespace WpfAutoSuggestBox
             }
         }
 
-        private void OnEditorTextChanged(object sender, TextChangedEventArgs e)
+        protected virtual void OnTextChanged()
         {
-            if (_isUpdatingText)
+            if (IsUpdatingText)
                 return;
-            if (FetchTimer == null)
-            {
-                FetchTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(Delay) };
-                FetchTimer.Tick += OnFetchTimerTick;
-            }
-            FetchTimer.IsEnabled = false;
-            FetchTimer.Stop();
+
             SetSelectedItem(null);
-            if (Editor.Text.Length > 0)
+            if (Text.Length > 0)
             {
                 IsLoading = true;
                 IsDropDownOpen = true;
-                ItemsSelector.ItemsSource = null;
-                FetchTimer.IsEnabled = true;
-                FetchTimer.Start();
             }
             else
             {
                 IsDropDownOpen = false;
-            }
-        }
-
-        private void OnFetchTimerTick(object sender, EventArgs e)
-        {
-            FetchTimer.IsEnabled = false;
-            FetchTimer.Stop();
-            if (Provider != null && ItemsSelector != null)
-            {
-                Filter = Editor.Text;
-                if (_suggestionsAdapter == null)
-                {
-                    _suggestionsAdapter = new SuggestionsAdapter(this);
-                }
-                _suggestionsAdapter.GetSuggestions(Filter);
             }
         }
 
@@ -352,99 +342,76 @@ namespace WpfAutoSuggestBox
         private void OnPopupOpened(object sender, EventArgs e)
         {
             _selectionCancelled = false;
-            ItemsSelector.SelectedItem = SelectedItem;
+            _selector.SelectedItem = SelectedItem;
         }
 
         private void OnSelectionAdapterCancel()
         {
-            _isUpdatingText = true;
-            Editor.Text = SelectedItem == null ? Filter : GetDisplayText(SelectedItem);
-            Editor.SelectionStart = Editor.Text.Length;
-            Editor.SelectionLength = 0;
-            _isUpdatingText = false;
+            IsUpdatingText = true;
+            _editor.Text = SelectedItem == null ? Filter : GetDisplayText(SelectedItem);
+            _editor.SelectionStart = _editor.Text.Length;
+            _editor.SelectionLength = 0;
+            IsUpdatingText = false;
             IsDropDownOpen = false;
             _selectionCancelled = true;
         }
 
         private void OnSelectionAdapterCommit()
         {
-            if (ItemsSelector.SelectedItem != null)
+            if (_selector.SelectedItem != null)
             {
-                SelectedItem = ItemsSelector.SelectedItem;
-                _isUpdatingText = true;
-                Editor.Text = GetDisplayText(ItemsSelector.SelectedItem);
-                SetSelectedItem(ItemsSelector.SelectedItem);
-                _isUpdatingText = false;
+                SelectedItem = _selector.SelectedItem;
+                IsUpdatingText = true;
+                Text = GetDisplayText(_selector.SelectedItem);
+                SetSelectedItem(_selector.SelectedItem);
+                IsUpdatingText = false;
                 IsDropDownOpen = false;
             }
         }
 
         private void OnSelectionAdapterSelectionChanged()
         {
-            _isUpdatingText = true;
-            Editor.Text = ItemsSelector.SelectedItem == null ? Filter : GetDisplayText(ItemsSelector.SelectedItem);
-            Editor.SelectionStart = Editor.Text.Length;
-            Editor.SelectionLength = 0;
+            IsUpdatingText = true;
+            _editor.Text = _selector.SelectedItem == null ? Filter : GetDisplayText(_selector.SelectedItem);
+            _editor.SelectionStart = _editor.Text.Length;
+            _editor.SelectionLength = 0;
             ScrollToSelectedItem();
-            _isUpdatingText = false;
+            IsUpdatingText = false;
         }
 
         private void SetSelectedItem(object item)
         {
-            _isUpdatingText = true;
+            OnItemSelecting();
             SelectedItem = item;
-            _isUpdatingText = false;
+            OnItemSelected();
         }
 
-        private class SuggestionsAdapter
+        protected virtual void OnItemSelecting()
         {
-            private readonly AutoCompleteTextBox _actb;
-            private string _filter;
+            IsUpdatingText = true;
+        }
 
-            public SuggestionsAdapter(AutoCompleteTextBox actb)
+        protected virtual void OnItemSelected()
+        {
+            IsUpdatingText = false;
+        }
+
+        private void OnUpdatedSuggestions()
+        {
+            if (ItemsSource is ICollection c)
             {
-                _actb = actb;
+                IsDropDownOpen = c.Count > 0;
+            }
+            else if (_selector != null)
+            {
+                IsDropDownOpen = _selector.HasItems;
+            }
+            else
+            {
+                IsDropDownOpen = false;
             }
 
-            public void GetSuggestions(string searchText)
-            {
-                _filter = searchText;
-                _actb.IsLoading = true;
-                ParameterizedThreadStart thInfo = GetSuggestionsAsync;
-                Thread th = new Thread(thInfo);
-                th.Start(new object[] {
-                    searchText,
-                    _actb.Provider
-                });
-            }
-
-            private void DisplaySuggestions(IEnumerable suggestions, string filter)
-            {
-                if (_filter != filter)
-                {
-                    return;
-                }
-                if (_actb.IsDropDownOpen)
-                {
-                    _actb.IsLoading = false;
-                    _actb.ItemsSelector.ItemsSource = suggestions;
-                    _actb.IsDropDownOpen = _actb.ItemsSelector.HasItems;
-                }
-
-            }
-
-            private void GetSuggestionsAsync(object param)
-            {
-                if (param is object[] args)
-                {
-                    string searchText = Convert.ToString(args[0]);
-                    if (args[1] is ISuggestionProvider provider)
-                    {
-                        IEnumerable list = provider.GetSuggestions(searchText);
-                        _actb.Dispatcher.BeginInvoke(new Action<IEnumerable, string>(DisplaySuggestions), DispatcherPriority.Background, list, searchText);
-                    }
-                }
-            }
+            IsLoading = false;
         }
     }
 }

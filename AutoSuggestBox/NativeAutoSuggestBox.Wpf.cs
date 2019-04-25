@@ -1,12 +1,23 @@
 ﻿#if __WPF__
 using System;
+using System.Windows;
+using System.Windows.Media;
 
 namespace dotMorten.Xamarin.Forms
 {
     internal class NativeAutoSuggestBox : WpfAutoSuggestBox.AutoCompleteTextBox
     {
+        public event EventHandler<AutoSuggestBoxTextChangedEventArgs> TextChanged;
+
+        public event EventHandler<AutoSuggestBoxQuerySubmittedEventArgs> QuerySubmitted;
+
+        public event EventHandler<AutoSuggestBoxSuggestionChosenEventArgs> SuggestionChosen;
+
+        public new event EventHandler<RoutedEventArgs> GotFocus;
+
         public NativeAutoSuggestBox()
         {
+            Foreground = new SolidColorBrush(Colors.Black);
         }
 
         public string PlaceholderText
@@ -19,11 +30,37 @@ namespace dotMorten.Xamarin.Forms
 
         public bool UpdateTextOnSelect { get; set; }
 
-        public event EventHandler<AutoSuggestBoxTextChangedEventArgs> TextChanged;
+        protected override void OnTextChanged()
+        {
+            base.OnTextChanged();
 
-        public event EventHandler<AutoSuggestBoxQuerySubmittedEventArgs> QuerySubmitted;
+            if (IsUpdatingText)
+            {
+                return;
+            }
 
-        public event EventHandler<AutoSuggestBoxSuggestionChosenEventArgs> SuggestionChosen;
+            var reason = IsUpdatingText ? AutoSuggestionBoxTextChangeReason.ProgrammaticChange : AutoSuggestionBoxTextChangeReason.UserInput;
+            TextChanged?.Invoke(this, new AutoSuggestBoxTextChangedEventArgs(reason));
+        }
+
+        protected override void OnItemSelected()
+        {
+            base.OnItemSelected();
+
+            QuerySubmitted?.Invoke(this, new AutoSuggestBoxQuerySubmittedEventArgs(Text, SelectedItem));
+
+            if (SelectedItem != null)
+            {
+                SuggestionChosen?.Invoke(this, new AutoSuggestBoxSuggestionChosenEventArgs(SelectedItem));
+            }
+        }
+
+        protected override void OnGotFocus(object sender, RoutedEventArgs e)
+        {
+            base.OnGotFocus(sender, e);
+
+            GotFocus?.Invoke(this, e);
+        }
     }
 }
 #endif

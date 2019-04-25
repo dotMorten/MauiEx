@@ -12,14 +12,14 @@ using Xamarin.Forms.Xaml;
 
 namespace SampleApp.Samples.AutoSuggestBoxSamples
 {
-	[XamlCompilation(XamlCompilationOptions.Compile)]
+    [XamlCompilation(XamlCompilationOptions.Compile)]
     [Description("Simple auto-completion")]
     [SamplePriority(1)]
-	public partial class Simple : ContentPage
-	{
-		public Simple ()
-		{
-			InitializeComponent ();
+    public partial class Simple : ContentPage
+    {
+        public Simple()
+        {
+            InitializeComponent();
             Initialize();
         }
 

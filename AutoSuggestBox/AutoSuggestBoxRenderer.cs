@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using Xamarin.Forms;
+using System.Windows;
 #if __ANDROID__
 using Xamarin.Forms.Platform.Android;
 using XAutoSuggestBoxSuggestionChosenEventArgs = dotMorten.Xamarin.Forms.AutoSuggestBoxSuggestionChosenEventArgs;
@@ -74,7 +75,7 @@ namespace dotMorten.Xamarin.Forms
 #if __IOS__
                     Control.EditingDidBegin -= Control_EditingDidBegin;
                     Control.EditingDidEnd -= Control_EditingDidEnd;
-#elif NETFX_CORE
+#elif NETFX_CORE || __WPF__
                     Control.GotFocus -= Control_GotFocus;
 #endif
                 }
@@ -104,7 +105,7 @@ namespace dotMorten.Xamarin.Forms
 #if __IOS__
                 Control.EditingDidBegin += Control_EditingDidBegin;
                 Control.EditingDidEnd += Control_EditingDidEnd;
-#elif NETFX_CORE
+#elif NETFX_CORE || __WPF__
                 Control.GotFocus += Control_GotFocus;
 #endif
             }
@@ -121,6 +122,10 @@ namespace dotMorten.Xamarin.Forms
         }
 #elif NETFX_CORE
         private void Control_GotFocus(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+#elif __WPF__
+        private void Control_GotFocus(object sender, RoutedEventArgs e)
+#endif
+#if NETFX_CORE || __WPF__
         {
             if (Element?.ItemsSource?.Count > 0)
                 (sender as NativeAutoSuggestBox).IsSuggestionListOpen = true;
@@ -264,7 +269,7 @@ namespace dotMorten.Xamarin.Forms
 
         private void UpdateItemsSource()
         {
-#if NETFX_CORE
+#if NETFX_CORE || __WPF__
             Control.ItemsSource = Element?.ItemsSource;
 #elif __ANDROID__ || __IOS__
             Control.SetItems(Element?.ItemsSource?.OfType<object>(), (o) => FormatType(o, Element?.DisplayMemberPath), (o) => FormatType(o, Element?.TextMemberPath));

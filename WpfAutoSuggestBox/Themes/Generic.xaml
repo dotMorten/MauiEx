@@ -81,7 +81,7 @@
                                         VerticalAlignment="Center"
                                         Foreground="{Binding Path=Foreground, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}"
                                         Style="{StaticResource ResourceKey=TransparentTextBoxStyle}"
-                                        Text="{Binding Path=Text, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay}" />
+                                        Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                 </Grid>
                             </DockPanel>
                             <Popup
@@ -93,7 +93,8 @@
                                 Focusable="False"
                                 HorizontalOffset="0"
                                 IsOpen="{Binding Path=IsDropDownOpen, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay}"
-                                PopupAnimation="Slide">
+                                PopupAnimation="Slide"
+                                StaysOpen="False">
                                 <Border
                                     Padding="2"
                                     Background="White"
@@ -109,6 +110,7 @@
                                             ItemContainerStyle="{StaticResource ResourceKey=SuggestionItemStyle}"
                                             ItemTemplate="{TemplateBinding ItemTemplate}"
                                             ItemTemplateSelector="{TemplateBinding ItemTemplateSelector}"
+                                            ItemsSource="{Binding ItemsSource, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
                                             ScrollViewer.HorizontalScrollBarVisibility="Auto"
                                             ScrollViewer.VerticalScrollBarVisibility="Auto" />
                                         <Border Visibility="{Binding Path=IsLoading, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource ResourceKey=BoolToVisConverter}}">

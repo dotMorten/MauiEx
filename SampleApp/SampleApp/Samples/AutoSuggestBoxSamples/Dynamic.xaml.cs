@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -14,11 +15,15 @@ namespace SampleApp.Samples.AutoSuggestBoxSamples
     [System.ComponentModel.Description("Dynamic data lookup")]
     [SamplePriority(2)]
     public partial class Dynamic : ContentPage
-	{
+    {
+        private Random _random;
+        private CancellationTokenSource _cts;
+
         public Dynamic()
-		{
-			InitializeComponent();
-		}
+        {
+            _random = new Random();
+            InitializeComponent();
+        }
 
         private async void SuggestBox_TextChanged(object sender, dotMorten.Xamarin.Forms.AutoSuggestBoxTextChangedEventArgs args)
         {
@@ -28,12 +33,25 @@ namespace SampleApp.Samples.AutoSuggestBoxSamples
             // or the handler for SuggestionChosen.
             if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
             {
-                if (string.IsNullOrWhiteSpace(box.Text) || box.Text.Length < 3)
+                if (string.IsNullOrWhiteSpace(box.Text))
                     box.ItemsSource = null;
                 else
                 {
-                    var suggestions = await GetSuggestions(box.Text);
-                    box.ItemsSource = suggestions.ToList();
+                    try
+                    {
+                        if (_cts != null)
+                        {
+                            _cts.Cancel();
+                        }
+                        _cts = new CancellationTokenSource();
+
+                        var suggestions = await GetSuggestions(box.Text, _cts.Token);
+                        box.ItemsSource = suggestions.ToList();
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        // do nothing
+                    }
                 }
             }
         }
@@ -52,7 +70,7 @@ namespace SampleApp.Samples.AutoSuggestBoxSamples
         /// </summary>
         /// <param name="text"></param>
         /// <returns></returns>
-        private async Task<IEnumerable<City>> GetSuggestions(string text)
+        private async Task<IEnumerable<City>> GetSuggestions(string text, CancellationToken ct)
         {
             var result = await Task.Run<IEnumerable<City>>(() =>
             {
@@ -61,7 +79,7 @@ namespace SampleApp.Samples.AutoSuggestBoxSamples
                 {
                     using (var sr = new StreamReader(s))
                     {
-                        while (!sr.EndOfStream && suggestions.Count < 20)
+                        while (!sr.EndOfStream)
                         {
                             var data = sr.ReadLine().Split('\t');
                             var city = new City() { Name = data[0], State = data[1] };
@@ -74,13 +92,15 @@ namespace SampleApp.Samples.AutoSuggestBoxSamples
                 }
                 return suggestions;
             });
-            await Task.Delay(1000); //Simulate slow web service response
+            var delay = _random.Next(100, 300);
+            await Task.Delay(delay);
+            ct.ThrowIfCancellationRequested();
             return result;
         }
 
         private void SuggestBox_QuerySubmitted(object sender, AutoSuggestBoxQuerySubmittedEventArgs e)
         {
-            if(e.ChosenSuggestion == null)
+            if (e.ChosenSuggestion == null)
                 status.Text = "Query submitted: " + e.QueryText;
             else
                 status.Text = "Suggestion chosen: " + e.ChosenSuggestion;
