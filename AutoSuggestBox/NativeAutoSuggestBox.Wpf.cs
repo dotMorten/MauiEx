@@ -392,7 +392,8 @@ namespace dotMorten.Xamarin.Forms
         public SelectionAdapter(Selector selector)
         {
             SelectorControl = selector;
-            SelectorControl.PreviewMouseUp += OnSelectorMouseDown;
+            SelectorControl.PreviewMouseDown += OnSelectorMouseDown;
+            SelectorControl.PreviewMouseUp += OnSelectorMouseUp;
         }
 
         public delegate void CancelEventHandler();
@@ -462,6 +463,12 @@ namespace dotMorten.Xamarin.Forms
 
         private void OnSelectorMouseDown(object sender, MouseButtonEventArgs e)
         {
+            e.Handled = true;
+        }
+
+        private void OnSelectorMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            e.Handled = true;
             Commit?.Invoke();
         }
     }
