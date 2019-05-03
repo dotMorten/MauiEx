@@ -217,6 +217,8 @@ namespace dotMorten.Xamarin.Forms
             Control.Foreground = new Windows.UI.Xaml.Media.SolidColorBrush(Windows.UI.Color.FromArgb((byte)(color.A * 255), (byte)(color.R * 255), (byte)(color.G * 255), (byte)(color.B * 255)));
 #elif __ANDROID__ || __IOS__
             Control.SetTextColor(color);
+#elif __WPF__
+            Control.Foreground = color.ToBrush();
 #endif
         }
 
@@ -235,6 +237,8 @@ namespace dotMorten.Xamarin.Forms
             //     () => Control.PlaceholderForegroundFocusBrush, brush => Control.PlaceholderForegroundFocusBrush = brush);
 #elif __ANDROID__ || __IOS__
             Control.SetPlaceholderTextColor(placeholderColor);
+#elif __WPF__
+            Control.PlaceholderTextForeground = placeholderColor.ToBrush();
 #endif
         }
 
@@ -249,7 +253,7 @@ namespace dotMorten.Xamarin.Forms
 
         private void UpdateDisplayMemberPath()
         {
-#if NETFX_CORE
+#if NETFX_CORE || __WPF__
             Control.DisplayMemberPath = Element.DisplayMemberPath;
 #elif __ANDROID__ || __IOS__
             Control.SetItems(Element.ItemsSource?.OfType<object>(), (o) => FormatType(o, Element.DisplayMemberPath), (o) => FormatType(o, Element.TextMemberPath));
@@ -258,7 +262,7 @@ namespace dotMorten.Xamarin.Forms
 
         private void UpdateIsEnabled()
         {
-#if NETFX_CORE
+#if NETFX_CORE || __WPF__
             Control.IsEnabled = Element.IsEnabled;
 #elif __ANDROID__
             Control.Enabled = Element.IsEnabled;

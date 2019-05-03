@@ -30,17 +30,6 @@ namespace dotMorten.Xamarin.Forms
 
         public new event EventHandler<RoutedEventArgs> GotFocus;
 
-        public NativeAutoSuggestBox()
-        {
-            Foreground = new SolidColorBrush(Colors.Black);
-        }
-
-        public string PlaceholderText
-        {
-            get => Watermark;
-            set => Watermark = value;
-        }
-
         public bool IsSuggestionListOpen { get; set; }
 
         public bool UpdateTextOnSelect { get; set; }
@@ -87,24 +76,17 @@ namespace dotMorten.Xamarin.Forms
         public const string PartPopup = "PART_Popup";
         public const string PartSelector = "PART_Selector";
 
-        public static readonly DependencyProperty DelayProperty = DependencyProperty.Register("Delay", typeof(int), typeof(AutoCompleteTextBox), new FrameworkPropertyMetadata(200));
-        public static readonly DependencyProperty DisplayMemberProperty = DependencyProperty.Register("DisplayMember", typeof(string), typeof(AutoCompleteTextBox), new FrameworkPropertyMetadata(string.Empty));
-        public static readonly DependencyProperty IconPlacementProperty = DependencyProperty.Register("IconPlacement", typeof(IconPlacement), typeof(AutoCompleteTextBox), new FrameworkPropertyMetadata(IconPlacement.Left));
-        public static readonly DependencyProperty IconProperty = DependencyProperty.Register("Icon", typeof(object), typeof(AutoCompleteTextBox), new FrameworkPropertyMetadata(null));
-        public static readonly DependencyProperty IconVisibilityProperty = DependencyProperty.Register("IconVisibility", typeof(Visibility), typeof(AutoCompleteTextBox), new FrameworkPropertyMetadata(Visibility.Visible));
-        public static readonly DependencyProperty IsDropDownOpenProperty = DependencyProperty.Register("IsDropDownOpen", typeof(bool), typeof(AutoCompleteTextBox), new FrameworkPropertyMetadata(false));
-        public static readonly DependencyProperty IsLoadingProperty = DependencyProperty.Register("IsLoading", typeof(bool), typeof(AutoCompleteTextBox), new FrameworkPropertyMetadata(false));
-        public static readonly DependencyProperty IsReadOnlyProperty = DependencyProperty.Register("IsReadOnly", typeof(bool), typeof(AutoCompleteTextBox), new FrameworkPropertyMetadata(false));
-        public static readonly DependencyProperty ItemTemplateProperty = DependencyProperty.Register("ItemTemplate", typeof(DataTemplate), typeof(AutoCompleteTextBox), new FrameworkPropertyMetadata(null));
-        public static readonly DependencyProperty ItemTemplateSelectorProperty = DependencyProperty.Register("ItemTemplateSelector", typeof(DataTemplateSelector), typeof(AutoCompleteTextBox));
-        public static readonly DependencyProperty LoadingContentProperty = DependencyProperty.Register("LoadingContent", typeof(object), typeof(AutoCompleteTextBox), new FrameworkPropertyMetadata(null));
+        public static readonly DependencyProperty DisplayMemberPathProperty = DependencyProperty.Register(nameof(DisplayMemberPath), typeof(string), typeof(AutoCompleteTextBox), new FrameworkPropertyMetadata(string.Empty));
         public static readonly DependencyProperty ItemsSourceProperty = DependencyProperty.Register(nameof(ItemsSource), typeof(IEnumerable), typeof(AutoCompleteTextBox), new FrameworkPropertyMetadata(Enumerable.Empty<object>(), new PropertyChangedCallback(ItemsSourcePropertyChanged)));
-        public static readonly DependencyProperty SelectedItemProperty = DependencyProperty.Register("SelectedItem", typeof(object), typeof(AutoCompleteTextBox), new FrameworkPropertyMetadata(null, OnSelectedItemChanged));
+        public static readonly DependencyProperty PlaceholderTextProperty = DependencyProperty.Register(nameof(PlaceholderText), typeof(string), typeof(AutoCompleteTextBox), new FrameworkPropertyMetadata(string.Empty));
+        public static readonly DependencyProperty PlaceholderTextForegroundProperty = DependencyProperty.Register(nameof(PlaceholderTextForeground), typeof(Brush), typeof(AutoCompleteTextBox), new FrameworkPropertyMetadata(Brushes.Gray));
         public static readonly DependencyProperty TextProperty = DependencyProperty.Register(nameof(Text), typeof(string), typeof(AutoCompleteTextBox), new FrameworkPropertyMetadata(string.Empty, new PropertyChangedCallback(TextPropertyChanged)));
+
+        public static readonly DependencyProperty IsDropDownOpenProperty = DependencyProperty.Register("IsDropDownOpen", typeof(bool), typeof(AutoCompleteTextBox), new FrameworkPropertyMetadata(false));
+        public static readonly DependencyProperty SelectedItemProperty = DependencyProperty.Register("SelectedItem", typeof(object), typeof(AutoCompleteTextBox), new FrameworkPropertyMetadata(null, OnSelectedItemChanged));
         public static readonly DependencyProperty MaxLengthProperty = DependencyProperty.Register("MaxLength", typeof(int), typeof(AutoCompleteTextBox), new FrameworkPropertyMetadata(0));
         public static readonly DependencyProperty CharacterCasingProperty = DependencyProperty.Register("CharacterCasing", typeof(CharacterCasing), typeof(AutoCompleteTextBox), new FrameworkPropertyMetadata(CharacterCasing.Normal));
         public static readonly DependencyProperty MaxPopUpHeightProperty = DependencyProperty.Register("MaxPopUpHeight", typeof(int), typeof(AutoCompleteTextBox), new FrameworkPropertyMetadata(600));
-        public static readonly DependencyProperty WatermarkProperty = DependencyProperty.Register("Watermark", typeof(string), typeof(AutoCompleteTextBox), new FrameworkPropertyMetadata(string.Empty));
         public static readonly DependencyProperty SuggestionBackgroundProperty = DependencyProperty.Register("SuggestionBackground", typeof(Brush), typeof(AutoCompleteTextBox), new FrameworkPropertyMetadata(Brushes.White));
 
         private TextBox _editor;
@@ -150,84 +132,16 @@ namespace dotMorten.Xamarin.Forms
 
         public BindingEvaluator BindingEvaluator { get; set; }
 
-        public CharacterCasing CharacterCasing
+        public string DisplayMemberPath
         {
-            get => (CharacterCasing)GetValue(CharacterCasingProperty);
-            set => SetValue(CharacterCasingProperty, value);
-        }
-
-        public int MaxLength
-        {
-            get => (int)GetValue(MaxLengthProperty);
-            set => SetValue(MaxLengthProperty, value);
-        }
-
-        public int Delay
-        {
-            get => (int)GetValue(DelayProperty);
-            set => SetValue(DelayProperty, value);
-        }
-
-        public string DisplayMember
-        {
-            get => (string)GetValue(DisplayMemberProperty);
-            set => SetValue(DisplayMemberProperty, value);
-        }
-
-        public string Filter { get; set; }
-
-        public object Icon
-        {
-            get => GetValue(IconProperty);
-            set => SetValue(IconProperty, value);
-        }
-
-        public IconPlacement IconPlacement
-        {
-            get => (IconPlacement)GetValue(IconPlacementProperty);
-            set => SetValue(IconPlacementProperty, value);
-        }
-
-        public Visibility IconVisibility
-        {
-            get => (Visibility)GetValue(IconVisibilityProperty);
-            set => SetValue(IconVisibilityProperty, value);
+            get => (string)GetValue(DisplayMemberPathProperty);
+            set => SetValue(DisplayMemberPathProperty, value);
         }
 
         public bool IsDropDownOpen
         {
             get => (bool)GetValue(IsDropDownOpenProperty);
             set => SetValue(IsDropDownOpenProperty, value);
-        }
-
-        public bool IsLoading
-        {
-            get => (bool)GetValue(IsLoadingProperty);
-            set => SetValue(IsLoadingProperty, value);
-        }
-
-        public bool IsReadOnly
-        {
-            get => (bool)GetValue(IsReadOnlyProperty);
-            set => SetValue(IsReadOnlyProperty, value);
-        }
-
-        public DataTemplate ItemTemplate
-        {
-            get => (DataTemplate)GetValue(ItemTemplateProperty);
-            set => SetValue(ItemTemplateProperty, value);
-        }
-
-        public DataTemplateSelector ItemTemplateSelector
-        {
-            get => ((DataTemplateSelector)(GetValue(ItemTemplateSelectorProperty)));
-            set => SetValue(ItemTemplateSelectorProperty, value);
-        }
-
-        public object LoadingContent
-        {
-            get => GetValue(LoadingContentProperty);
-            set => SetValue(LoadingContentProperty, value);
         }
 
         public IEnumerable ItemsSource
@@ -248,11 +162,18 @@ namespace dotMorten.Xamarin.Forms
             set => SetValue(TextProperty, value);
         }
 
-        public string Watermark
+        public string PlaceholderText
         {
-            get => (string)GetValue(WatermarkProperty);
-            set => SetValue(WatermarkProperty, value);
+            get => (string)GetValue(PlaceholderTextProperty);
+            set => SetValue(PlaceholderTextProperty, value);
         }
+
+        public Brush PlaceholderTextForeground
+        {
+            get => (Brush)GetValue(PlaceholderTextForegroundProperty);
+            set => SetValue(PlaceholderTextForegroundProperty, value);
+        }
+
         public Brush SuggestionBackground
         {
             get => (Brush)GetValue(SuggestionBackgroundProperty);
@@ -287,7 +208,7 @@ namespace dotMorten.Xamarin.Forms
             _editor = Template.FindName(PartEditor, this) as TextBox;
             _popup = Template.FindName(PartPopup, this) as Popup;
             _selector = Template.FindName(PartSelector, this) as Selector;
-            BindingEvaluator = new BindingEvaluator(new Binding(DisplayMember));
+            BindingEvaluator = new BindingEvaluator(new Binding(DisplayMemberPath));
 
             if (_editor != null)
             {
@@ -340,13 +261,13 @@ namespace dotMorten.Xamarin.Forms
         {
             if (BindingEvaluator == null)
             {
-                BindingEvaluator = new BindingEvaluator(new Binding(DisplayMember));
+                BindingEvaluator = new BindingEvaluator(new Binding(DisplayMemberPath));
             }
             if (dataItem == null)
             {
                 return string.Empty;
             }
-            if (string.IsNullOrEmpty(DisplayMember))
+            if (string.IsNullOrEmpty(DisplayMemberPath))
             {
                 return dataItem.ToString();
             }
@@ -380,7 +301,6 @@ namespace dotMorten.Xamarin.Forms
             SetSelectedItem(null);
             if (Text.Length > 0)
             {
-                IsLoading = true;
                 IsDropDownOpen = true;
             }
             else
@@ -406,7 +326,7 @@ namespace dotMorten.Xamarin.Forms
         private void OnSelectionAdapterCancel()
         {
             IsUpdatingText = true;
-            _editor.Text = SelectedItem == null ? Filter : GetDisplayText(SelectedItem);
+            _editor.Text = SelectedItem == null ? Text : GetDisplayText(SelectedItem);
             _editor.SelectionStart = _editor.Text.Length;
             _editor.SelectionLength = 0;
             IsUpdatingText = false;
@@ -430,7 +350,7 @@ namespace dotMorten.Xamarin.Forms
         private void OnSelectionAdapterSelectionChanged()
         {
             IsUpdatingText = true;
-            _editor.Text = _selector.SelectedItem == null ? Filter : GetDisplayText(_selector.SelectedItem);
+            _editor.Text = _selector.SelectedItem == null ? Text : GetDisplayText(_selector.SelectedItem);
             _editor.SelectionStart = _editor.Text.Length;
             _editor.SelectionLength = 0;
             ScrollToSelectedItem();
@@ -460,16 +380,10 @@ namespace dotMorten.Xamarin.Forms
             {
                 IsDropDownOpen = c.Count > 0;
             }
-            else if (_selector != null)
-            {
-                IsDropDownOpen = _selector.HasItems;
-            }
             else
             {
                 IsDropDownOpen = false;
             }
-
-            IsLoading = false;
         }
     }
 
@@ -576,12 +490,6 @@ namespace dotMorten.Xamarin.Forms
             SetBinding(ValueProperty, ValueBinding);
             return Value;
         }
-    }
-
-    public enum IconPlacement
-    {
-        Left,
-        Right
     }
 }
 #endif
