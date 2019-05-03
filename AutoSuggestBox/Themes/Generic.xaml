@@ -84,16 +84,25 @@
                                 Width="{TemplateBinding ActualWidth}"
                                 MinHeight="25"
                                 MaxHeight="600"
+                                AllowsTransparency="True"
                                 Focusable="False"
-                                HorizontalOffset="0"
+                                HorizontalOffset="-10"
                                 IsOpen="{Binding Path=IsDropDownOpen, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay}"
                                 PopupAnimation="Slide"
                                 StaysOpen="False">
-                                <Border
-                                    Background="White"
-                                    BorderBrush="Gray"
-                                    BorderThickness="1">
-                                    <Grid>
+                                <Grid>
+                                    <Border
+                                        Margin="10,0,10,10"
+                                        Background="White"
+                                        BorderBrush="Gray"
+                                        BorderThickness="1">
+                                        <Border.Effect>
+                                            <DropShadowEffect
+                                                BlurRadius="10"
+                                                Opacity="0.4"
+                                                RenderingBias="Quality"
+                                                ShadowDepth="0" />
+                                        </Border.Effect>
                                         <ListBox
                                             x:Name="PART_Selector"
                                             MaxHeight="{Binding Path=MaxPopupHeight, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay}"
@@ -103,8 +112,8 @@
                                             ItemsSource="{Binding ItemsSource, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
                                             ScrollViewer.HorizontalScrollBarVisibility="Auto"
                                             ScrollViewer.VerticalScrollBarVisibility="Auto" />
-                                    </Grid>
-                                </Border>
+                                    </Border>
+                                </Grid>
                             </Popup>
                         </Grid>
                     </Border>
