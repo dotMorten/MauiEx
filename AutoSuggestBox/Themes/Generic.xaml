@@ -84,7 +84,6 @@
                                 Width="{TemplateBinding ActualWidth}"
                                 MinHeight="25"
                                 MaxHeight="600"
-                                AllowsTransparency="True"
                                 Focusable="False"
                                 HorizontalOffset="0"
                                 IsOpen="{Binding Path=IsDropDownOpen, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay}"
