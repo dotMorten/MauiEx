@@ -38,12 +38,12 @@ namespace dotMorten.Xamarin.Forms
         {
             base.OnTextChanged();
 
-            if (IsUpdatingText)
+            if (_isUpdatingText)
             {
                 return;
             }
 
-            var reason = IsUpdatingText ? AutoSuggestionBoxTextChangeReason.ProgrammaticChange : AutoSuggestionBoxTextChangeReason.UserInput;
+            var reason = _isUpdatingText ? AutoSuggestionBoxTextChangeReason.ProgrammaticChange : AutoSuggestionBoxTextChangeReason.UserInput;
             TextChanged?.Invoke(this, new AutoSuggestBoxTextChangedEventArgs(reason));
         }
 
@@ -72,27 +72,123 @@ namespace dotMorten.Xamarin.Forms
     [TemplatePart(Name = PartSelector, Type = typeof(Selector))]
     public class AutoCompleteTextBox : Control
     {
-        public const string PartEditor = "PART_Editor";
-        public const string PartPopup = "PART_Popup";
-        public const string PartSelector = "PART_Selector";
-
-        public static readonly DependencyProperty DisplayMemberPathProperty = DependencyProperty.Register(nameof(DisplayMemberPath), typeof(string), typeof(AutoCompleteTextBox), new FrameworkPropertyMetadata(string.Empty));
-        public static readonly DependencyProperty ItemsSourceProperty = DependencyProperty.Register(nameof(ItemsSource), typeof(IEnumerable), typeof(AutoCompleteTextBox), new FrameworkPropertyMetadata(Enumerable.Empty<object>(), new PropertyChangedCallback(ItemsSourcePropertyChanged)));
-        public static readonly DependencyProperty PlaceholderTextProperty = DependencyProperty.Register(nameof(PlaceholderText), typeof(string), typeof(AutoCompleteTextBox), new FrameworkPropertyMetadata(string.Empty));
-        public static readonly DependencyProperty PlaceholderTextForegroundProperty = DependencyProperty.Register(nameof(PlaceholderTextForeground), typeof(Brush), typeof(AutoCompleteTextBox), new FrameworkPropertyMetadata(Brushes.Gray));
-        public static readonly DependencyProperty TextProperty = DependencyProperty.Register(nameof(Text), typeof(string), typeof(AutoCompleteTextBox), new FrameworkPropertyMetadata(string.Empty, new PropertyChangedCallback(TextPropertyChanged)));
-
-        public static readonly DependencyProperty IsDropDownOpenProperty = DependencyProperty.Register("IsDropDownOpen", typeof(bool), typeof(AutoCompleteTextBox), new FrameworkPropertyMetadata(false));
-        public static readonly DependencyProperty SelectedItemProperty = DependencyProperty.Register("SelectedItem", typeof(object), typeof(AutoCompleteTextBox), new FrameworkPropertyMetadata(null, OnSelectedItemChanged));
-        public static readonly DependencyProperty MaxLengthProperty = DependencyProperty.Register("MaxLength", typeof(int), typeof(AutoCompleteTextBox), new FrameworkPropertyMetadata(0));
-        public static readonly DependencyProperty CharacterCasingProperty = DependencyProperty.Register("CharacterCasing", typeof(CharacterCasing), typeof(AutoCompleteTextBox), new FrameworkPropertyMetadata(CharacterCasing.Normal));
-        public static readonly DependencyProperty MaxPopUpHeightProperty = DependencyProperty.Register("MaxPopUpHeight", typeof(int), typeof(AutoCompleteTextBox), new FrameworkPropertyMetadata(600));
-        public static readonly DependencyProperty SuggestionBackgroundProperty = DependencyProperty.Register("SuggestionBackground", typeof(Brush), typeof(AutoCompleteTextBox), new FrameworkPropertyMetadata(Brushes.White));
-
         private TextBox _editor;
         private Popup _popup;
         private Selector _selector;
         private SelectionAdapter _selectionAdapter;
+        private bool _selectionCancelled;
+        protected bool _isUpdatingText;
+
+        public const string PartEditor = "PART_Editor";
+        public const string PartPopup = "PART_Popup";
+        public const string PartSelector = "PART_Selector";
+
+        static AutoCompleteTextBox()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(AutoCompleteTextBox), new FrameworkPropertyMetadata(typeof(AutoCompleteTextBox)));
+        }
+
+        public BindingEvaluator BindingEvaluator { get; set; }
+
+        public static readonly DependencyProperty DisplayMemberPathProperty = DependencyProperty.Register(
+            nameof(DisplayMemberPath),
+            typeof(string),
+            typeof(AutoCompleteTextBox),
+            new FrameworkPropertyMetadata(string.Empty));
+
+        public string DisplayMemberPath
+        {
+            get => (string)GetValue(DisplayMemberPathProperty);
+            set => SetValue(DisplayMemberPathProperty, value);
+        }
+
+        public static readonly DependencyProperty ItemsSourceProperty = DependencyProperty.Register(
+            nameof(ItemsSource),
+            typeof(IEnumerable),
+            typeof(AutoCompleteTextBox),
+            new FrameworkPropertyMetadata(
+                Enumerable.Empty<object>(),
+                new PropertyChangedCallback(ItemsSourcePropertyChanged)));
+
+        public IEnumerable ItemsSource
+        {
+            get => (IEnumerable)GetValue(ItemsSourceProperty);
+            set => SetValue(ItemsSourceProperty, value);
+        }
+
+        public static readonly DependencyProperty PlaceholderTextProperty = DependencyProperty.Register(
+            nameof(PlaceholderText),
+            typeof(string),
+            typeof(AutoCompleteTextBox),
+            new FrameworkPropertyMetadata(string.Empty));
+
+        public string PlaceholderText
+        {
+            get => (string)GetValue(PlaceholderTextProperty);
+            set => SetValue(PlaceholderTextProperty, value);
+        }
+
+        public static readonly DependencyProperty PlaceholderTextForegroundProperty = DependencyProperty.Register(
+            nameof(PlaceholderTextForeground),
+            typeof(Brush),
+            typeof(AutoCompleteTextBox),
+            new FrameworkPropertyMetadata(Brushes.Gray));
+
+        public Brush PlaceholderTextForeground
+        {
+            get => (Brush)GetValue(PlaceholderTextForegroundProperty);
+            set => SetValue(PlaceholderTextForegroundProperty, value);
+        }
+
+        public static readonly DependencyProperty TextProperty = DependencyProperty.Register(
+            nameof(Text),
+            typeof(string),
+            typeof(AutoCompleteTextBox),
+            new FrameworkPropertyMetadata(
+                string.Empty,
+                new PropertyChangedCallback(TextPropertyChanged)));
+
+        public string Text
+        {
+            get => (string)GetValue(TextProperty);
+            set => SetValue(TextProperty, value);
+        }
+
+        public static readonly DependencyProperty IsDropDownOpenProperty = DependencyProperty.Register(
+            nameof(IsDropDownOpen),
+            typeof(bool),
+            typeof(AutoCompleteTextBox),
+            new FrameworkPropertyMetadata(false));
+
+        public bool IsDropDownOpen
+        {
+            get => (bool)GetValue(IsDropDownOpenProperty);
+            set => SetValue(IsDropDownOpenProperty, value);
+        }
+
+        public static readonly DependencyProperty SelectedItemProperty = DependencyProperty.Register(
+            nameof(SelectedItem),
+            typeof(object),
+            typeof(AutoCompleteTextBox),
+            new FrameworkPropertyMetadata(null, OnSelectedItemChanged));
+
+        public object SelectedItem
+        {
+            get => GetValue(SelectedItemProperty);
+            set => SetValue(SelectedItemProperty, value);
+        }
+
+        public static readonly DependencyProperty MaxPopUpHeightProperty = DependencyProperty.Register(
+            nameof(MaxPopupHeight),
+            typeof(int),
+            typeof(AutoCompleteTextBox),
+            new FrameworkPropertyMetadata(600));
+
+        public int MaxPopupHeight
+        {
+            get => (int)GetValue(MaxPopUpHeightProperty);
+            set => SetValue(MaxPopUpHeightProperty, value);
+        }
 
         private static void TextPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -110,87 +206,17 @@ namespace dotMorten.Xamarin.Forms
             }
         }
 
-        private bool _isUpdatingText;
-        protected bool IsUpdatingText
-        {
-            get => _isUpdatingText;
-            private set => _isUpdatingText = value;
-        }
-
-        private bool _selectionCancelled;
-
-        static AutoCompleteTextBox()
-        {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(AutoCompleteTextBox), new FrameworkPropertyMetadata(typeof(AutoCompleteTextBox)));
-        }
-
-        public int MaxPopupHeight
-        {
-            get => (int)GetValue(MaxPopUpHeightProperty);
-            set => SetValue(MaxPopUpHeightProperty, value);
-        }
-
-        public BindingEvaluator BindingEvaluator { get; set; }
-
-        public string DisplayMemberPath
-        {
-            get => (string)GetValue(DisplayMemberPathProperty);
-            set => SetValue(DisplayMemberPathProperty, value);
-        }
-
-        public bool IsDropDownOpen
-        {
-            get => (bool)GetValue(IsDropDownOpenProperty);
-            set => SetValue(IsDropDownOpenProperty, value);
-        }
-
-        public IEnumerable ItemsSource
-        {
-            get => (IEnumerable)GetValue(ItemsSourceProperty);
-            set => SetValue(ItemsSourceProperty, value);
-        }
-
-        public object SelectedItem
-        {
-            get => GetValue(SelectedItemProperty);
-            set => SetValue(SelectedItemProperty, value);
-        }
-
-        public string Text
-        {
-            get => (string)GetValue(TextProperty);
-            set => SetValue(TextProperty, value);
-        }
-
-        public string PlaceholderText
-        {
-            get => (string)GetValue(PlaceholderTextProperty);
-            set => SetValue(PlaceholderTextProperty, value);
-        }
-
-        public Brush PlaceholderTextForeground
-        {
-            get => (Brush)GetValue(PlaceholderTextForegroundProperty);
-            set => SetValue(PlaceholderTextForegroundProperty, value);
-        }
-
-        public Brush SuggestionBackground
-        {
-            get => (Brush)GetValue(SuggestionBackgroundProperty);
-            set => SetValue(SuggestionBackgroundProperty, value);
-        }
-
         public static void OnSelectedItemChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             AutoCompleteTextBox act = null;
             act = d as AutoCompleteTextBox;
             if (act != null)
             {
-                if (!act.IsUpdatingText)
+                if (!act._isUpdatingText)
                 {
-                    act.IsUpdatingText = true;
+                    act._isUpdatingText = true;
                     act.Text = act.BindingEvaluator.Evaluate(e.NewValue);
-                    act.IsUpdatingText = false;
+                    act._isUpdatingText = false;
                 }
             }
         }
@@ -217,9 +243,9 @@ namespace dotMorten.Xamarin.Forms
 
                 if (SelectedItem != null)
                 {
-                    IsUpdatingText = true;
+                    _isUpdatingText = true;
                     Text = BindingEvaluator.Evaluate(SelectedItem);
-                    IsUpdatingText = false;
+                    _isUpdatingText = false;
                 }
 
             }
@@ -295,7 +321,7 @@ namespace dotMorten.Xamarin.Forms
 
         protected virtual void OnTextChanged()
         {
-            if (IsUpdatingText)
+            if (_isUpdatingText)
                 return;
 
             SetSelectedItem(null);
@@ -325,11 +351,11 @@ namespace dotMorten.Xamarin.Forms
 
         private void OnSelectionAdapterCancel()
         {
-            IsUpdatingText = true;
+            _isUpdatingText = true;
             _editor.Text = SelectedItem == null ? Text : GetDisplayText(SelectedItem);
             _editor.SelectionStart = _editor.Text.Length;
             _editor.SelectionLength = 0;
-            IsUpdatingText = false;
+            _isUpdatingText = false;
             IsDropDownOpen = false;
             _selectionCancelled = true;
         }
@@ -339,22 +365,22 @@ namespace dotMorten.Xamarin.Forms
             if (_selector.SelectedItem != null)
             {
                 SelectedItem = _selector.SelectedItem;
-                IsUpdatingText = true;
+                _isUpdatingText = true;
                 Text = GetDisplayText(_selector.SelectedItem);
                 SetSelectedItem(_selector.SelectedItem);
-                IsUpdatingText = false;
+                _isUpdatingText = false;
                 IsDropDownOpen = false;
             }
         }
 
         private void OnSelectionAdapterSelectionChanged()
         {
-            IsUpdatingText = true;
+            _isUpdatingText = true;
             _editor.Text = _selector.SelectedItem == null ? Text : GetDisplayText(_selector.SelectedItem);
             _editor.SelectionStart = _editor.Text.Length;
             _editor.SelectionLength = 0;
             ScrollToSelectedItem();
-            IsUpdatingText = false;
+            _isUpdatingText = false;
         }
 
         private void SetSelectedItem(object item)
@@ -366,12 +392,12 @@ namespace dotMorten.Xamarin.Forms
 
         protected virtual void OnItemSelecting()
         {
-            IsUpdatingText = true;
+            _isUpdatingText = true;
         }
 
         protected virtual void OnItemSelected()
         {
-            IsUpdatingText = false;
+            _isUpdatingText = false;
         }
 
         private void OnUpdatedSuggestions()
@@ -485,7 +511,6 @@ namespace dotMorten.Xamarin.Forms
         public string Value
         {
             get => (string)GetValue(ValueProperty);
-
             set => SetValue(ValueProperty, value);
         }
 
