@@ -1,8 +1,8 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras">
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;xamarinios10;MonoAndroid60</TargetFrameworks>
+    <!-- Allows compiling on macOS without UWP/WPF support-->
     <TargetFrameworks Condition="'$(OS)' == 'Windows_NT'">$(TargetFrameworks);net45;uap10.0.16299</TargetFrameworks>
-    <!-- Allows compiling on MacOS without UWP support-->
     <RootNamespace>dotMorten.Xamarin.Forms</RootNamespace>
     <AssemblyName>dotMorten.Xamarin.Forms.AutoSuggestBox</AssemblyName>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -21,7 +21,7 @@
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'net45'">
     <DefineConstants>__WPF__;$(DefineConstants)</DefineConstants>
-    <ExtrasEnableWpfProjectSetup>true</ExtrasEnableWpfProjectSetup>
+    <UseWPF>true</UseWPF>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'uap10.0.16299'">
