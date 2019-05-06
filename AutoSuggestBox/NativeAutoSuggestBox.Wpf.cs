@@ -18,6 +18,12 @@ using System.Windows.Media;
                                               // app, or any theme specific resource dictionaries)
 )]
 
+/*
+ * AutoCompleteTextBox, BindingEvaluator and SelectionAdapter were originally
+ * taken from https://github.com/quicoli/WPF-AutoComplete-TextBox, then cleaned
+ * up a bit and stripped of all the features we don't need here.
+ */
+
 namespace dotMorten.Xamarin.Forms
 {
     internal class NativeAutoSuggestBox : AutoCompleteTextBox
