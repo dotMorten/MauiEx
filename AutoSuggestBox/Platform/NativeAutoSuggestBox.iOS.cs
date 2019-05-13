@@ -9,7 +9,7 @@ using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
 
-namespace dotMorten.Xamarin.Forms.Platform
+namespace dotMorten.Xamarin.Forms.Platform.iOS
 {
     /// <summary>
     ///  Creates a UIView with dropdown with a similar API and behavior to UWP's AutoSuggestBox

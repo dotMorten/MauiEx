@@ -10,7 +10,7 @@ using Android.Views.InputMethods;
 using Android.Widget;
 using Java.Lang;
 
-namespace dotMorten.Xamarin.Forms.Platform
+namespace dotMorten.Xamarin.Forms.Platform.Android
 {
     /// <summary>
     ///  Extends AutoCompleteTextView to have similar APIs and behavior to UWP's AutoSuggestBox, which greatly simplifies wrapping it
@@ -28,9 +28,9 @@ namespace dotMorten.Xamarin.Forms.Platform
         {
             SetMaxLines(1);
             Threshold = 0;
-            InputType = Android.Text.InputTypes.TextFlagNoSuggestions | Android.Text.InputTypes.TextVariationVisiblePassword; //Disables text suggestions as the auto-complete view is there to do that
+            InputType = global::Android.Text.InputTypes.TextFlagNoSuggestions | global::Android.Text.InputTypes.TextVariationVisiblePassword; //Disables text suggestions as the auto-complete view is there to do that
             ItemClick += OnItemClick;
-            Adapter = adapter = new SuggestCompleteAdapter(Context, Android.Resource.Layout.SimpleDropDownItem1Line);
+            Adapter = adapter = new SuggestCompleteAdapter(Context, global::Android.Resource.Layout.SimpleDropDownItem1Line);
         }
 
         /// <inheritdoc />
@@ -119,7 +119,7 @@ namespace dotMorten.Xamarin.Forms.Platform
 
         private void DismissKeyboard()
         {
-            var imm = (Android.Views.InputMethods.InputMethodManager)Context.GetSystemService(Context.InputMethodService);
+            var imm = (global::Android.Views.InputMethods.InputMethodManager)Context.GetSystemService(Context.InputMethodService);
             imm.HideSoftInputFromWindow(WindowToken, 0);
         }
 

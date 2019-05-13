@@ -25,8 +25,14 @@ using XAutoSuggestBoxTextChangedEventArgs = Windows.UI.Xaml.Controls.AutoSuggest
 using XAutoSuggestBoxQuerySubmittedEventArgs = Windows.UI.Xaml.Controls.AutoSuggestBoxQuerySubmittedEventArgs;
 #endif
 
-namespace dotMorten.Xamarin.Forms.Platform
-{
+#if __ANDROID__
+namespace dotMorten.Xamarin.Forms.Platform.Android {
+#elif __IOS__
+namespace dotMorten.Xamarin.Forms.Platform.iOS {
+#elif NETFX_CORE
+namespace dotMorten.Xamarin.Forms.Platform.UWP {
+#endif
+
     /// <summary>
     /// Platform specific renderer for the <see cref="AutoSuggestBox"/>
     /// </summary>
@@ -40,7 +46,7 @@ namespace dotMorten.Xamarin.Forms.Platform
         /// Initializes a new instance of the <see cref="AutoSuggestBoxRenderer"/>
         /// </summary>
         /// <param name="context">Context</param>
-        public AutoSuggestBoxRenderer(Android.Content.Context context) : base(context)
+        public AutoSuggestBoxRenderer(global::Android.Content.Context context) : base(context)
         {
         }
 #endif
