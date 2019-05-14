@@ -10,33 +10,37 @@ using Android.Views.InputMethods;
 using Android.Widget;
 using Java.Lang;
 
-namespace dotMorten.Xamarin.Forms
+namespace dotMorten.Xamarin.Forms.Platform.Android
 {
     /// <summary>
     ///  Extends AutoCompleteTextView to have similar APIs and behavior to UWP's AutoSuggestBox, which greatly simplifies wrapping it
     /// </summary>
-    internal class NativeAutoSuggestBox : AutoCompleteTextView
+    public class AndroidAutoSuggestBox : AutoCompleteTextView
     {
         private bool suppressTextChangedEvent;
         private Func<object, string> textFunc;
         private SuggestCompleteAdapter adapter;
 
-        public NativeAutoSuggestBox(Context context) : base(context)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AndroidAutoSuggestBox"/>.
+        /// </summary>
+        public AndroidAutoSuggestBox(Context context) : base(context)
         {
             SetMaxLines(1);
             Threshold = 0;
-            InputType = Android.Text.InputTypes.TextFlagNoSuggestions | Android.Text.InputTypes.TextVariationVisiblePassword; //Disables text suggestions as the auto-complete view is there to do that
+            InputType = global::Android.Text.InputTypes.TextFlagNoSuggestions | global::Android.Text.InputTypes.TextVariationVisiblePassword; //Disables text suggestions as the auto-complete view is there to do that
             ItemClick += OnItemClick;
-            Adapter = adapter = new SuggestCompleteAdapter(Context, Android.Resource.Layout.SimpleDropDownItem1Line);
+            Adapter = adapter = new SuggestCompleteAdapter(Context, global::Android.Resource.Layout.SimpleDropDownItem1Line);
         }
 
+        /// <inheritdoc />
         protected override void OnFocusChanged(bool gainFocus, [GeneratedEnum] FocusSearchDirection direction, Rect previouslyFocusedRect)
         {
             IsSuggestionListOpen = gainFocus;
             base.OnFocusChanged(gainFocus, direction, previouslyFocusedRect);
         }
 
-        public void SetItems(IEnumerable<object> items, Func<object, string> labelFunc, Func<object, string> textFunc)
+        internal void SetItems(IEnumerable<object> items, Func<object, string> labelFunc, Func<object, string> textFunc)
         {
             this.textFunc = textFunc;
             if (items == null)
@@ -45,7 +49,10 @@ namespace dotMorten.Xamarin.Forms
                 adapter.UpdateList(items.OfType<object>(), labelFunc);
         }
 
-        public new string Text
+        /// <summary>
+        /// Gets or sets the text displayed in the entry field
+        /// </summary>
+        public virtual new string Text
         {
             get => base.Text;
             set
@@ -57,22 +64,36 @@ namespace dotMorten.Xamarin.Forms
             }
         }
 
-        public void SetTextColor(global::Xamarin.Forms.Color color)
+        /// <summary>
+        /// Sets the text color on the entry field
+        /// </summary>
+        /// <param name="color"></param>
+        public virtual void SetTextColor(global::Xamarin.Forms.Color color)
         {
             this.SetTextColor(global::Xamarin.Forms.Platform.Android.ColorExtensions.ToAndroid(color));
         }
 
-        public string PlaceholderText
+        /// <summary>
+        /// Gets or sets the placeholder text to be displayed in the <see cref="AutoCompleteTextView"/>
+        /// </summary>
+        public virtual string PlaceholderText
         {
             set => HintFormatted = new Java.Lang.String(value as string ?? "");
         }
 
-        public void SetPlaceholderTextColor(global::Xamarin.Forms.Color color)
+        /// <summary>
+        /// Gets or sets the color of the <see cref="PlaceholderText"/>.
+        /// </summary>
+        /// <param name="color">color</param>
+        public virtual void SetPlaceholderTextColor(global::Xamarin.Forms.Color color)
         {
             this.SetHintTextColor(global::Xamarin.Forms.Platform.Android.ColorExtensions.ToAndroid(color));
         }
 
-        public bool IsSuggestionListOpen
+        /// <summary>
+        /// Sets a Boolean value indicating whether the drop-down portion of the AutoSuggestBox is open.
+        /// </summary>
+        public virtual bool IsSuggestionListOpen
         {
             set
             {
@@ -83,8 +104,12 @@ namespace dotMorten.Xamarin.Forms
             }
         }
 
-        public bool UpdateTextOnSelect { get; set; } = true;
+        /// <summary>
+        /// Gets or sets a value indicating whether items in the view will trigger an update of the editable text part of the AutoSuggestBox when clicked.
+        /// </summary>
+        public virtual bool UpdateTextOnSelect { get; set; } = true;
 
+        /// <inheritdoc />
         protected override void OnTextChanged(ICharSequence text, int start, int lengthBefore, int lengthAfter)
         {
             if (!suppressTextChangedEvent)
@@ -94,7 +119,7 @@ namespace dotMorten.Xamarin.Forms
 
         private void DismissKeyboard()
         {
-            var imm = (Android.Views.InputMethods.InputMethodManager)Context.GetSystemService(Context.InputMethodService);
+            var imm = (global::Android.Views.InputMethods.InputMethodManager)Context.GetSystemService(Context.InputMethodService);
             imm.HideSoftInputFromWindow(WindowToken, 0);
         }
 
@@ -113,6 +138,7 @@ namespace dotMorten.Xamarin.Forms
             QuerySubmitted?.Invoke(this, new AutoSuggestBoxQuerySubmittedEventArgs(Text, obj));
         }
 
+        /// <inheritdoc />
         public override void OnEditorAction([GeneratedEnum] ImeAction actionCode)
         {
             if (actionCode == ImeAction.Done || actionCode == ImeAction.Next)
@@ -125,15 +151,25 @@ namespace dotMorten.Xamarin.Forms
                 base.OnEditorAction(actionCode);
         }
 
+        /// <inheritdoc />
         protected override void ReplaceText(ICharSequence text)
         {
             //Override to avoid updating textbox on itemclick. We'll do this later using TextMemberPath and raise the proper TextChanged event then
         }
 
+        /// <summary>
+        /// Raised after the text content of the editable control component is updated.
+        /// </summary>
         public new event EventHandler<AutoSuggestBoxTextChangedEventArgs> TextChanged;
 
+        /// <summary>
+        /// Occurs when the user submits a search query.
+        /// </summary>
         public event EventHandler<AutoSuggestBoxQuerySubmittedEventArgs> QuerySubmitted;
 
+        /// <summary>
+        /// Raised before the text content of the editable control component is updated.
+        /// </summary>
         public event EventHandler<AutoSuggestBoxSuggestionChosenEventArgs> SuggestionChosen;
 
         private class SuggestCompleteAdapter : ArrayAdapter, IFilterable

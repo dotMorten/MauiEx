@@ -4,17 +4,20 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using Xamarin.Forms;
+using dotMorten.Xamarin.Forms;
 #if __ANDROID__
 using Xamarin.Forms.Platform.Android;
 using XAutoSuggestBoxSuggestionChosenEventArgs = dotMorten.Xamarin.Forms.AutoSuggestBoxSuggestionChosenEventArgs;
 using XAutoSuggestBoxTextChangedEventArgs = dotMorten.Xamarin.Forms.AutoSuggestBoxTextChangedEventArgs;
 using XAutoSuggestBoxQuerySubmittedEventArgs = dotMorten.Xamarin.Forms.AutoSuggestBoxQuerySubmittedEventArgs;
+using NativeAutoSuggestBox = dotMorten.Xamarin.Forms.Platform.Android.AndroidAutoSuggestBox;
 #elif __IOS__
 using UIKit;
 using Xamarin.Forms.Platform.iOS;
 using XAutoSuggestBoxSuggestionChosenEventArgs = dotMorten.Xamarin.Forms.AutoSuggestBoxSuggestionChosenEventArgs;
 using XAutoSuggestBoxTextChangedEventArgs = dotMorten.Xamarin.Forms.AutoSuggestBoxTextChangedEventArgs;
 using XAutoSuggestBoxQuerySubmittedEventArgs = dotMorten.Xamarin.Forms.AutoSuggestBoxQuerySubmittedEventArgs;
+using NativeAutoSuggestBox = dotMorten.Xamarin.Forms.Platform.iOS.iOSAutoSuggestBox;
 #elif NETFX_CORE
 using Xamarin.Forms.Platform.UWP;
 using Windows.UI.Xaml.Media;
@@ -24,13 +27,28 @@ using XAutoSuggestBoxTextChangedEventArgs = Windows.UI.Xaml.Controls.AutoSuggest
 using XAutoSuggestBoxQuerySubmittedEventArgs = Windows.UI.Xaml.Controls.AutoSuggestBoxQuerySubmittedEventArgs;
 #endif
 
-namespace dotMorten.Xamarin.Forms
-{
-    internal class AutoSuggestBoxRenderer : ViewRenderer<AutoSuggestBox, NativeAutoSuggestBox>
-    {
-        private bool suppressTextChangedEvent;
 #if __ANDROID__
-        public AutoSuggestBoxRenderer(Android.Content.Context context) : base(context)
+namespace dotMorten.Xamarin.Forms.Platform.Android {
+#elif __IOS__
+namespace dotMorten.Xamarin.Forms.Platform.iOS {
+#elif NETFX_CORE
+namespace dotMorten.Xamarin.Forms.Platform.UWP {
+#endif
+
+    /// <summary>
+    /// Platform specific renderer for the <see cref="AutoSuggestBox"/>
+    /// </summary>
+    public class AutoSuggestBoxRenderer : ViewRenderer<AutoSuggestBox, NativeAutoSuggestBox>
+    {
+#if !NETFX_CORE
+        private bool suppressTextChangedEvent;
+#endif
+#if __ANDROID__
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AutoSuggestBoxRenderer"/>
+        /// </summary>
+        /// <param name="context">Context</param>
+        public AutoSuggestBoxRenderer(global::Android.Content.Context context) : base(context)
         {
         }
 #endif
@@ -38,11 +56,15 @@ namespace dotMorten.Xamarin.Forms
 #if __IOS__
         static readonly int baseHeight = 10;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AutoSuggestBoxRenderer"/>
+        /// </summary>
         public AutoSuggestBoxRenderer()
         {
             Frame = new RectangleF(0, 20, 320, 40);
         }
 
+        /// <inheritdoc />
         public override SizeRequest GetDesiredSize(double widthConstraint, double heightConstraint)
         {
             var baseResult = base.GetDesiredSize(widthConstraint, heightConstraint);
@@ -55,6 +77,7 @@ namespace dotMorten.Xamarin.Forms
         }
 #endif
 
+        /// <inheritdoc />
         protected override void OnElementChanged(ElementChangedEventArgs<dotMorten.Xamarin.Forms.AutoSuggestBox> e)
         {
             base.OnElementChanged(e);
@@ -137,6 +160,7 @@ namespace dotMorten.Xamarin.Forms
             Element?.RaiseSuggestionChosen(e.SelectedItem);
         }
 
+        /// <inheritdoc />
 #if NETFX_CORE
         protected NativeAutoSuggestBox CreateNativeControl()
 #else
@@ -144,12 +168,17 @@ namespace dotMorten.Xamarin.Forms
 #endif
         {
 #if __ANDROID__
-            return new NativeAutoSuggestBox(this.Context);
+            return new AndroidAutoSuggestBox(this.Context);
+#elif __IOS__
+            return new iOSAutoSuggestBox();
+#elif NETFX_CORE
+            return new Windows.UI.Xaml.Controls.AutoSuggestBox();
 #else
-            return new NativeAutoSuggestBox();
+            throw new NotImplementedException();
 #endif
         }
 
+        /// <inheritdoc />
         protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (Control == null)

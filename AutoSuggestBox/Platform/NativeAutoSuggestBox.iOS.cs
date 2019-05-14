@@ -9,43 +9,52 @@ using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
 
-namespace dotMorten.Xamarin.Forms
+namespace dotMorten.Xamarin.Forms.Platform.iOS
 {
     /// <summary>
-    ///  Extends AutoCompleteTextView to have similar APIs and behavior to UWP's AutoSuggestBox, which greatly simplifies wrapping it
+    ///  Creates a UIView with dropdown with a similar API and behavior to UWP's AutoSuggestBox
     /// </summary>
-    internal class NativeAutoSuggestBox : UIKit.UIView
+    public class iOSAutoSuggestBox : UIKit.UIView
     {
-        private bool suppressTextChangedEvent;
         private nfloat keyboardHeight;
         private NSLayoutConstraint bottomConstraint;
         private Func<object, string> textFunc;
+        private CoreAnimation.CALayer border;
+        private bool showBottomBorder = true;
 
-        private UIKit.UITextField inputText { get; }
+        /// <summary>
+        /// Gets a reference to the text field in the view
+        /// </summary>
+        public UIKit.UITextField InputTextField { get; }
 
-        private UIKit.UITableView selectionList { get; }
+        /// <summary>
+        /// Gets a reference to the drop down selection list in the view
+        /// </summary>
+        public UIKit.UITableView SelectionList { get; }
 
-        public NativeAutoSuggestBox()
+        /// <summary>
+        /// Initializes a new instance of the <see cref="iOSAutoSuggestBox"/>.
+        /// </summary>
+        public iOSAutoSuggestBox()
         {
-            inputText = new UIKit.UITextField()
+            InputTextField = new UIKit.UITextField()
             {
                 TranslatesAutoresizingMaskIntoConstraints = false,
                 BorderStyle = UIKit.UITextBorderStyle.None,
                 ReturnKeyType = UIKit.UIReturnKeyType.Search,
                 AutocorrectionType = UITextAutocorrectionType.No
             };
-            inputText.ShouldReturn = InputText_OnShouldReturn;
-            inputText.EditingDidBegin += OnEditingDidBegin;
-            inputText.EditingDidEnd += OnEditingDidEnd;
-            inputText.EditingChanged += InputText_EditingChanged;
-            //inputText.EndedWithReason += InputText_EndedWithReason;
+            InputTextField.ShouldReturn = InputText_OnShouldReturn;
+            InputTextField.EditingDidBegin += OnEditingDidBegin;
+            InputTextField.EditingDidEnd += OnEditingDidEnd;
+            InputTextField.EditingChanged += InputText_EditingChanged;
 
-            AddSubview(inputText);
-            inputText.TopAnchor.ConstraintEqualTo(TopAnchor).Active = true;
-            inputText.LeftAnchor.ConstraintEqualTo(LeftAnchor).Active = true;
-            inputText.WidthAnchor.ConstraintEqualTo(WidthAnchor).Active = true;
-            inputText.HeightAnchor.ConstraintEqualTo(HeightAnchor).Active = true;
-            selectionList = new UIKit.UITableView() { TranslatesAutoresizingMaskIntoConstraints = false };
+            AddSubview(InputTextField);
+            InputTextField.TopAnchor.ConstraintEqualTo(TopAnchor).Active = true;
+            InputTextField.LeftAnchor.ConstraintEqualTo(LeftAnchor).Active = true;
+            InputTextField.WidthAnchor.ConstraintEqualTo(WidthAnchor).Active = true;
+            InputTextField.HeightAnchor.ConstraintEqualTo(HeightAnchor).Active = true;
+            SelectionList = new UIKit.UITableView() { TranslatesAutoresizingMaskIntoConstraints = false };
 
             UIKit.UIKeyboard.Notifications.ObserveWillShow(OnKeyboardShow);
             UIKit.UIKeyboard.Notifications.ObserveWillHide(OnKeyboardHide);
@@ -56,6 +65,7 @@ namespace dotMorten.Xamarin.Forms
             IsSuggestionListOpen = true;
             EditingDidBegin?.Invoke(this, e);
         }
+
         private void OnEditingDidEnd(object sender, EventArgs e)
         {
             IsSuggestionListOpen = false;
@@ -66,6 +76,7 @@ namespace dotMorten.Xamarin.Forms
 
         internal EventHandler EditingDidEnd;
 
+        /// <inheritdoc />
         public override void LayoutSubviews()
         {
             base.LayoutSubviews();
@@ -74,37 +85,54 @@ namespace dotMorten.Xamarin.Forms
 
         private void AddBottomBorder()
         {
-            var border = new CoreAnimation.CALayer();
+            border = new CoreAnimation.CALayer();
             var width = 1f;
             border.BorderColor = UIColor.LightGray.CGColor;
             border.Frame = new CGRect(0, Frame.Size.Height - width, Frame.Size.Width, Frame.Size.Height);
             border.BorderWidth = width;
+            border.Hidden = !showBottomBorder;
             Layer.AddSublayer(border);
             Layer.MasksToBounds = true;
         }
 
-        public UIFont Font
+        /// <summary>
+        /// Gets or sets a value indicating whether to render a border line under the text field
+        /// </summary>
+        public bool ShowBottomBorder
         {
-            get => inputText.Font;
-            set => inputText.Font = value;
+            get => showBottomBorder;
+            set
+            {
+                showBottomBorder = value;
+                if (border != null) border.Hidden = !value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the font of the <see cref="InputTextField"/>
+        /// </summary>
+        public virtual UIFont Font
+        {
+            get => InputTextField.Font;
+            set => InputTextField.Font = value;
         }
 
         internal void SetItems(IEnumerable<object> items, Func<object, string> labelFunc, Func<object, string> textFunc)
         {
             this.textFunc = textFunc;
-            if (selectionList.Source is TableSource<object> oldSource)
+            if (SelectionList.Source is TableSource<object> oldSource)
             {
                 oldSource.TableRowSelected -= SuggestionTableSource_TableRowSelected;
             }
-            selectionList.Source = null;
+            SelectionList.Source = null;
 
             IEnumerable<object> suggestions = items?.OfType<object>();
             if (suggestions != null && suggestions.Any())
             {
                 var suggestionTableSource = new TableSource<object>(suggestions, labelFunc);
                 suggestionTableSource.TableRowSelected += SuggestionTableSource_TableRowSelected;
-                selectionList.Source = suggestionTableSource;
-                selectionList.ReloadData();
+                SelectionList.Source = suggestionTableSource;
+                SelectionList.ReloadData();
                 IsSuggestionListOpen = true;
             }
             else
@@ -113,43 +141,56 @@ namespace dotMorten.Xamarin.Forms
             }
         }
 
-        public string PlaceholderText
+        /// <summary>
+        /// Gets or sets the placeholder text to be displayed in the <see cref="InputTextField"/>.
+        /// </summary>
+        public virtual string PlaceholderText
         {
-            get => inputText.Placeholder;
-            set => inputText.Placeholder = value;
+            get => InputTextField.Placeholder;
+            set => InputTextField.Placeholder = value;
         }
 
-        public void SetPlaceholderTextColor(global::Xamarin.Forms.Color color)
+        /// <summary>
+        /// Gets or sets the color of the <see cref="PlaceholderText"/> in the <see cref="InputTextField" />.
+        /// </summary>
+        /// <param name="color">color</param>
+        public virtual void SetPlaceholderTextColor(global::Xamarin.Forms.Color color)
         {
             // See https://github.com/xamarin/Xamarin.Forms/blob/4d9a5bf3706778770026a18ae81a7dd5c4c15db4/Xamarin.Forms.Platform.iOS/Renderers/EntryRenderer.cs#L260
-            inputText.AttributedPlaceholder = new NSAttributedString(inputText.Placeholder ?? string.Empty, null, ColorExtensions.ToUIColor(color));
+            InputTextField.AttributedPlaceholder = new NSAttributedString(InputTextField.Placeholder ?? string.Empty, null, ColorExtensions.ToUIColor(color));
         }
 
-        public bool IsSuggestionListOpen
+        /// <summary>
+        /// Gets or sets a Boolean value indicating whether the drop-down portion of the AutoSuggestBox is open.
+        /// </summary>
+        public virtual bool IsSuggestionListOpen
         {
-            get => selectionList.Superview != null;
+            get => SelectionList.Superview != null;
             set
             {
-                if (value && selectionList.Superview == null && selectionList.Source != null && selectionList.Source.RowsInSection(selectionList, 0) > 0)
+                if (value && SelectionList.Superview == null && SelectionList.Source != null && SelectionList.Source.RowsInSection(SelectionList, 0) > 0)
                 {
                     var viewController = UIApplication.SharedApplication.Windows.FirstOrDefault(w => w.RootViewController != null && w.IsKeyWindow) ?? 
                         UIApplication.SharedApplication.Windows.FirstOrDefault(w => w.RootViewController != null);
                     if (viewController == null)
                         return;
-                    viewController.Add(selectionList);
-                    selectionList.TopAnchor.ConstraintEqualTo(inputText.BottomAnchor).Active = true;
-                    selectionList.LeftAnchor.ConstraintEqualTo(inputText.LeftAnchor).Active = true;
-                    selectionList.WidthAnchor.ConstraintEqualTo(inputText.WidthAnchor).Active = true;
-                    bottomConstraint = selectionList.BottomAnchor.ConstraintGreaterThanOrEqualTo(selectionList.Superview.BottomAnchor, -keyboardHeight);
+                    viewController.Add(SelectionList);
+                    SelectionList.TopAnchor.ConstraintEqualTo(InputTextField.BottomAnchor).Active = true;
+                    SelectionList.LeftAnchor.ConstraintEqualTo(InputTextField.LeftAnchor).Active = true;
+                    SelectionList.WidthAnchor.ConstraintEqualTo(InputTextField.WidthAnchor).Active = true;
+                    bottomConstraint = SelectionList.BottomAnchor.ConstraintGreaterThanOrEqualTo(SelectionList.Superview.BottomAnchor, -keyboardHeight);
                     bottomConstraint.Active = true;
-                    selectionList.UpdateConstraints();
+                    SelectionList.UpdateConstraints();
                 }
-                else if (!value && selectionList.Superview != null)
-                    selectionList.RemoveFromSuperview();
+                else if (!value && SelectionList.Superview != null)
+                    SelectionList.RemoveFromSuperview();
             }
         }
 
-        public bool UpdateTextOnSelect { get; set; } = true;
+        /// <summary>
+        /// Gets or sets a value indicating whether items in the view will trigger an update of the editable text part of the AutoSuggestBox when clicked.
+        /// </summary>
+        public virtual bool UpdateTextOnSelect { get; set; } = true;
 
         private void OnKeyboardHide(object sender, UIKeyboardEventArgs e)
         {
@@ -157,7 +198,7 @@ namespace dotMorten.Xamarin.Forms
             if (bottomConstraint != null)
             {
                 bottomConstraint.Constant = keyboardHeight;
-                selectionList.UpdateConstraints();
+                SelectionList.UpdateConstraints();
             }
         }
 
@@ -169,7 +210,7 @@ namespace dotMorten.Xamarin.Forms
             if (bottomConstraint != null)
             {
                 bottomConstraint.Constant = -keyboardHeight;
-                selectionList.UpdateConstraints();
+                SelectionList.UpdateConstraints();
             }
         }
 
@@ -177,38 +218,32 @@ namespace dotMorten.Xamarin.Forms
         {
             if (string.IsNullOrWhiteSpace(field.Text)) { return false; }
             field.ResignFirstResponder();
-            QuerySubmitted?.Invoke(this, new AutoSuggestBoxQuerySubmittedEventArgs(inputText.Text, null));
+            QuerySubmitted?.Invoke(this, new AutoSuggestBoxQuerySubmittedEventArgs(InputTextField.Text, null));
             return true;
         }
 
-        private void InputText_EndedWithReason(object sender, UIKit.UITextFieldEditingEndedEventArgs e)
-        {
-            if (e.Reason == UITextFieldDidEndEditingReason.Committed)
-            {
-                IsSuggestionListOpen = false;
-            }
-        }
-
+        /// <inheritdoc />
         public override bool BecomeFirstResponder()
         {
-            return inputText.BecomeFirstResponder();
+            return InputTextField.BecomeFirstResponder();
         }
 
+        /// <inheritdoc />
         public override bool ResignFirstResponder()
         {
-            return inputText.ResignFirstResponder();
+            return InputTextField.ResignFirstResponder();
         }
-        public override bool IsFirstResponder => inputText.IsFirstResponder;
+
+        /// <inheritdoc />
+        public override bool IsFirstResponder => InputTextField.IsFirstResponder;
 
         private void SuggestionTableSource_TableRowSelected(object sender, TableRowSelectedEventArgs<object> e)
         {
-            selectionList.DeselectRow(e.SelectedItemIndexPath, false);
+            SelectionList.DeselectRow(e.SelectedItemIndexPath, false);
             var selection = e.SelectedItem;
             if (UpdateTextOnSelect)
             {
-                suppressTextChangedEvent = true;
-                inputText.Text = textFunc(selection);
-                suppressTextChangedEvent = true;
+                InputTextField.Text = textFunc(selection);
                 TextChanged?.Invoke(this, new AutoSuggestBoxTextChangedEventArgs(AutoSuggestionBoxTextChangeReason.SuggestionChosen));
             }
             SuggestionChosen?.Invoke(this, new AutoSuggestBoxSuggestionChosenEventArgs(selection));
@@ -222,27 +257,41 @@ namespace dotMorten.Xamarin.Forms
             IsSuggestionListOpen = true;
         }
 
-        public string Text
+        /// <summary>
+        /// Gets or sets the text displayed in the <see cref="InputTextField"/>
+        /// </summary>
+        public virtual string Text
         {
-            get => inputText.Text;
+            get => InputTextField.Text;
             set
             {
-                suppressTextChangedEvent = true;
-                inputText.Text = value;
-                suppressTextChangedEvent = true;
+                InputTextField.Text = value;
                 this.TextChanged?.Invoke(this, new AutoSuggestBoxTextChangedEventArgs(AutoSuggestionBoxTextChangeReason.ProgrammaticChange));
             }
         }
 
-        public void SetTextColor(global::Xamarin.Forms.Color color)
+        /// <summary>
+        /// Assigns the text color to the <see cref="InputTextField"/>
+        /// </summary>
+        /// <param name="color">color</param>
+        public virtual void SetTextColor(global::Xamarin.Forms.Color color)
         {
-            inputText.TextColor = global::Xamarin.Forms.Platform.iOS.ColorExtensions.ToUIColor(color);
+            InputTextField.TextColor = global::Xamarin.Forms.Platform.iOS.ColorExtensions.ToUIColor(color);
         }
 
+        /// <summary>
+        /// Raised after the text content of the editable control component is updated.
+        /// </summary>
         public event EventHandler<AutoSuggestBoxTextChangedEventArgs> TextChanged;
 
+        /// <summary>
+        /// Occurs when the user submits a search query.
+        /// </summary>
         public event EventHandler<AutoSuggestBoxQuerySubmittedEventArgs> QuerySubmitted;
 
+        /// <summary>
+        /// Raised before the text content of the editable control component is updated.
+        /// </summary>
         public event EventHandler<AutoSuggestBoxSuggestionChosenEventArgs> SuggestionChosen;
 
         private class TableSource<T> : UITableViewSource
