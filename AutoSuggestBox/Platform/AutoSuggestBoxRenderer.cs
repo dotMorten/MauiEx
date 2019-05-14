@@ -10,12 +10,14 @@ using Xamarin.Forms.Platform.Android;
 using XAutoSuggestBoxSuggestionChosenEventArgs = dotMorten.Xamarin.Forms.AutoSuggestBoxSuggestionChosenEventArgs;
 using XAutoSuggestBoxTextChangedEventArgs = dotMorten.Xamarin.Forms.AutoSuggestBoxTextChangedEventArgs;
 using XAutoSuggestBoxQuerySubmittedEventArgs = dotMorten.Xamarin.Forms.AutoSuggestBoxQuerySubmittedEventArgs;
+using NativeAutoSuggestBox = dotMorten.Xamarin.Forms.Platform.Android.AndroidAutoSuggestBox;
 #elif __IOS__
 using UIKit;
 using Xamarin.Forms.Platform.iOS;
 using XAutoSuggestBoxSuggestionChosenEventArgs = dotMorten.Xamarin.Forms.AutoSuggestBoxSuggestionChosenEventArgs;
 using XAutoSuggestBoxTextChangedEventArgs = dotMorten.Xamarin.Forms.AutoSuggestBoxTextChangedEventArgs;
 using XAutoSuggestBoxQuerySubmittedEventArgs = dotMorten.Xamarin.Forms.AutoSuggestBoxQuerySubmittedEventArgs;
+using NativeAutoSuggestBox = dotMorten.Xamarin.Forms.Platform.iOS.iOSAutoSuggestBox;
 #elif NETFX_CORE
 using Xamarin.Forms.Platform.UWP;
 using Windows.UI.Xaml.Media;
@@ -166,9 +168,13 @@ namespace dotMorten.Xamarin.Forms.Platform.UWP {
 #endif
         {
 #if __ANDROID__
-            return new NativeAutoSuggestBox(this.Context);
+            return new AndroidAutoSuggestBox(this.Context);
+#elif __IOS__
+            return new iOSAutoSuggestBox();
+#elif NETFX_CORE
+            return new Windows.UI.Xaml.Controls.AutoSuggestBox();
 #else
-            return new NativeAutoSuggestBox();
+            throw new NotImplementedException();
 #endif
         }
 

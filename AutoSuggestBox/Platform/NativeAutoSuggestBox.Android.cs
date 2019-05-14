@@ -15,16 +15,16 @@ namespace dotMorten.Xamarin.Forms.Platform.Android
     /// <summary>
     ///  Extends AutoCompleteTextView to have similar APIs and behavior to UWP's AutoSuggestBox, which greatly simplifies wrapping it
     /// </summary>
-    public class NativeAutoSuggestBox : AutoCompleteTextView
+    public class AndroidAutoSuggestBox : AutoCompleteTextView
     {
         private bool suppressTextChangedEvent;
         private Func<object, string> textFunc;
         private SuggestCompleteAdapter adapter;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="NativeAutoSuggestBox"/>.
+        /// Initializes a new instance of the <see cref="AndroidAutoSuggestBox"/>.
         /// </summary>
-        public NativeAutoSuggestBox(Context context) : base(context)
+        public AndroidAutoSuggestBox(Context context) : base(context)
         {
             SetMaxLines(1);
             Threshold = 0;

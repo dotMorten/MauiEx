@@ -14,11 +14,13 @@ namespace dotMorten.Xamarin.Forms.Platform.iOS
     /// <summary>
     ///  Creates a UIView with dropdown with a similar API and behavior to UWP's AutoSuggestBox
     /// </summary>
-    public class NativeAutoSuggestBox : UIKit.UIView
+    public class iOSAutoSuggestBox : UIKit.UIView
     {
         private nfloat keyboardHeight;
         private NSLayoutConstraint bottomConstraint;
         private Func<object, string> textFunc;
+        private CoreAnimation.CALayer border;
+        private bool showBottomBorder = true;
 
         /// <summary>
         /// Gets a reference to the text field in the view
@@ -31,9 +33,9 @@ namespace dotMorten.Xamarin.Forms.Platform.iOS
         public UIKit.UITableView SelectionList { get; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="NativeAutoSuggestBox"/>.
+        /// Initializes a new instance of the <see cref="iOSAutoSuggestBox"/>.
         /// </summary>
-        public NativeAutoSuggestBox()
+        public iOSAutoSuggestBox()
         {
             InputTextField = new UIKit.UITextField()
             {
@@ -83,13 +85,27 @@ namespace dotMorten.Xamarin.Forms.Platform.iOS
 
         private void AddBottomBorder()
         {
-            var border = new CoreAnimation.CALayer();
+            border = new CoreAnimation.CALayer();
             var width = 1f;
             border.BorderColor = UIColor.LightGray.CGColor;
             border.Frame = new CGRect(0, Frame.Size.Height - width, Frame.Size.Width, Frame.Size.Height);
             border.BorderWidth = width;
+            border.Hidden = !showBottomBorder;
             Layer.AddSublayer(border);
             Layer.MasksToBounds = true;
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to render a border line under the text field
+        /// </summary>
+        public bool ShowBottomBorder
+        {
+            get => showBottomBorder;
+            set
+            {
+                showBottomBorder = value;
+                if (border != null) border.Hidden = !value;
+            }
         }
 
         /// <summary>
