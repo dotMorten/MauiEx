@@ -58,8 +58,11 @@ namespace SampleApp.Samples.AutoSuggestBoxSamples
             base.OnElementChanged(e);
 #if __IOS__
             //Override the border style for iOS:
-            Control.InputTextField.BorderStyle = UIKit.UITextBorderStyle.RoundedRect;
-            Control.ShowBottomBorder = false;
+            if(Control != null)
+            {
+               Control.InputTextField.BorderStyle = UIKit.UITextBorderStyle.RoundedRect;
+               Control.ShowBottomBorder = false;
+            }
 #endif
         }
     }
