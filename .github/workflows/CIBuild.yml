@@ -24,4 +24,10 @@ jobs:
     - name: Build
       run: |
         msbuild /restore /t:Build XamarinFormsControls.sln /p:Configuration=Release
+
+    - name: Upload artfacts
+      uses: actions/upload-artifact@v1
+      with:
+        name: NuGet Packages
+        path:  /artifacts/Reease/NuGet
       
