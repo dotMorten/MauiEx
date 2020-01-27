@@ -29,5 +29,5 @@ jobs:
       uses: actions/upload-artifact@v1
       with:
         name: NuGet Packages
-        path:  /artifacts/Reease/NuGet
+        path:  artifacts/Reease/NuGet
       
