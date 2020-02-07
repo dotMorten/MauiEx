@@ -60,6 +60,13 @@ namespace dotMorten.Xamarin.Forms.Platform.iOS
             UIKit.UIKeyboard.Notifications.ObserveWillHide(OnKeyboardHide);
         }
 
+        /// <inheritdoc />
+        public override void MovedToWindow()
+        {
+            base.MovedToWindow();
+            UpdateSuggestionListOpenState();
+        }
+
         private void OnEditingDidBegin(object sender, EventArgs e)
         {
             IsSuggestionListOpen = true;
@@ -160,29 +167,42 @@ namespace dotMorten.Xamarin.Forms.Platform.iOS
             InputTextField.AttributedPlaceholder = new NSAttributedString(InputTextField.Placeholder ?? string.Empty, null, ColorExtensions.ToUIColor(color));
         }
 
+        private bool _isSuggestionListOpen;
+
         /// <summary>
         /// Gets or sets a Boolean value indicating whether the drop-down portion of the AutoSuggestBox is open.
         /// </summary>
         public virtual bool IsSuggestionListOpen
         {
-            get => SelectionList.Superview != null;
+            get => _isSuggestionListOpen;
             set
             {
-                if (value && SelectionList.Superview == null && SelectionList.Source != null && SelectionList.Source.RowsInSection(SelectionList, 0) > 0)
+                _isSuggestionListOpen = value;
+                UpdateSuggestionListOpenState();
+            }
+        }
+
+        private void UpdateSuggestionListOpenState()
+        {
+            if (_isSuggestionListOpen && SelectionList.Source != null && SelectionList.Source.RowsInSection(SelectionList, 0) > 0)
+            {
+                var viewController = InputTextField.Window?.RootViewController;
+                if (viewController == null)
+                    return;
+                if (SelectionList.Superview == null)
                 {
-                    var viewController = UIApplication.SharedApplication.Windows.FirstOrDefault(w => w.RootViewController != null && w.IsKeyWindow) ?? 
-                        UIApplication.SharedApplication.Windows.FirstOrDefault(w => w.RootViewController != null);
-                    if (viewController == null)
-                        return;
                     viewController.Add(SelectionList);
-                    SelectionList.TopAnchor.ConstraintEqualTo(InputTextField.BottomAnchor).Active = true;
-                    SelectionList.LeftAnchor.ConstraintEqualTo(InputTextField.LeftAnchor).Active = true;
-                    SelectionList.WidthAnchor.ConstraintEqualTo(InputTextField.WidthAnchor).Active = true;
-                    bottomConstraint = SelectionList.BottomAnchor.ConstraintGreaterThanOrEqualTo(SelectionList.Superview.BottomAnchor, -keyboardHeight);
-                    bottomConstraint.Active = true;
-                    SelectionList.UpdateConstraints();
                 }
-                else if (!value && SelectionList.Superview != null)
+                SelectionList.TopAnchor.ConstraintEqualTo(InputTextField.BottomAnchor).Active = true;
+                SelectionList.LeftAnchor.ConstraintEqualTo(InputTextField.LeftAnchor).Active = true;
+                SelectionList.WidthAnchor.ConstraintEqualTo(InputTextField.WidthAnchor).Active = true;
+                bottomConstraint = SelectionList.BottomAnchor.ConstraintGreaterThanOrEqualTo(SelectionList.Superview.BottomAnchor, -keyboardHeight);
+                bottomConstraint.Active = true;
+                SelectionList.UpdateConstraints();
+            }
+            else
+            {
+                if (SelectionList.Superview != null)
                     SelectionList.RemoveFromSuperview();
             }
         }
