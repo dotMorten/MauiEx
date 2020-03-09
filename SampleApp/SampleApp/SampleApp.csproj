@@ -8,10 +8,10 @@
     <PackageReference Include="Xamarin.Forms" Version="3.0.0.446417" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\AutoSuggestBox\dotMorten.Xamarin.Forms.AutoSuggestBox.csproj">
-      <Private>false</Private>
-    </ProjectReference>
+  <ItemGroup>	
+    <ProjectReference Include="..\..\AutoSuggestBox\dotMorten.Xamarin.Forms.AutoSuggestBox.csproj">	
+      <Private>false</Private>	
+    </ProjectReference>	
   </ItemGroup>
 
   <ItemGroup>
