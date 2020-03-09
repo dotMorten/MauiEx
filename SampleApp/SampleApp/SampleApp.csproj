@@ -9,23 +9,24 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\AutoSuggestBox\dotMorten.Xamarin.Forms.AutoSuggestBox.csproj">
-      <Private>false</Private>
-    </ProjectReference>
-  </ItemGroup>
-
-  <ItemGroup>
     <Compile Condition=" '$(EnableDefaultCompileItems)' == 'true' " Update="App.xaml.cs">
       <DependentUpon>*.xaml</DependentUpon>
     </Compile>
     <Compile Condition=" '$(EnableDefaultCompileItems)' == 'true' " Update="Samples\AutoSuggestBoxSamples\Dynamic.xaml.cs">
       <DependentUpon>Dynamic.xaml</DependentUpon>
     </Compile>
+    <Compile Update="Samples\AutoSuggestBoxSamples\PreviousAndSuggested.xaml.cs">
+      <DependentUpon>PreviousAndSuggested.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="Data\Countries.txt" />
     <EmbeddedResource Include="Data\USCities.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\AutoSuggestBox\dotMorten.Xamarin.Forms.AutoSuggestBox.csproj" />
   </ItemGroup>
 
   <ItemGroup>
