@@ -34,6 +34,16 @@ namespace dotMorten.Xamarin.Forms.Platform.Android
         }
 
         /// <inheritdoc />
+        public override bool EnoughToFilter()
+        {
+            // Setting Threshold = 0 in the constructor does not allow the control to display suggestions when the Text property is null or empty.
+            // This is by design by Android.
+            // See https://stackoverflow.com/questions/2126717/android-autocompletetextview-show-suggestions-when-no-text-entered for details
+            // Overriding this method to always returns true changes this behaviour.
+            return true;
+        }
+
+        /// <inheritdoc />
         protected override void OnFocusChanged(bool gainFocus, [GeneratedEnum] FocusSearchDirection direction, Rect previouslyFocusedRect)
         {
             IsSuggestionListOpen = gainFocus;

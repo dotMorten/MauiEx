@@ -38,6 +38,9 @@ namespace dotMorten.Xamarin.Forms
         /// </summary>
         public AutoSuggestBox() 
         {
+            MessagingCenter.Subscribe(this, nameof(SuggestionChosen), (AutoSuggestBox box, object selectedItem) => RaiseSuggestionChosen(selectedItem));
+            MessagingCenter.Subscribe(this, nameof(TextChanged), (AutoSuggestBox box, (string queryText, AutoSuggestionBoxTextChangeReason reason) args) => NativeControlTextChanged(args.queryText, args.reason));
+            MessagingCenter.Subscribe(this, nameof(QuerySubmitted), (AutoSuggestBox box, (string queryText, object chosenSuggestion) args) => RaiseQuerySubmitted(args.queryText, args.chosenSuggestion));
         }
 
         /// <summary>
@@ -200,7 +203,7 @@ namespace dotMorten.Xamarin.Forms
         public static readonly BindableProperty ItemsSourceProperty =
             BindableProperty.Create(nameof(ItemsSource), typeof(System.Collections.IList), typeof(AutoSuggestBox), null, BindingMode.OneWay, null, null);
 
-        internal void RaiseSuggestionChosen(object selectedItem)
+        private void RaiseSuggestionChosen(object selectedItem)
         {
             SuggestionChosen?.Invoke(this, new AutoSuggestBoxSuggestionChosenEventArgs(selectedItem));
         }
@@ -211,7 +214,7 @@ namespace dotMorten.Xamarin.Forms
         public event EventHandler<AutoSuggestBoxSuggestionChosenEventArgs> SuggestionChosen;
 
         // Called by the native control when users enter text
-        internal void NativeControlTextChanged(string text, AutoSuggestionBoxTextChangeReason reason)
+        private void NativeControlTextChanged(string text, AutoSuggestionBoxTextChangeReason reason)
         {
             suppressTextChangedEvent = true; //prevent loop of events raising, as setting this property will make it back into the native control
             Text = text;
@@ -224,7 +227,7 @@ namespace dotMorten.Xamarin.Forms
         /// </summary>
         public event EventHandler<AutoSuggestBoxTextChangedEventArgs> TextChanged;
 
-        internal void RaiseQuerySubmitted(string queryText, object chosenSuggestion)
+        private void RaiseQuerySubmitted(string queryText, object chosenSuggestion)
         {
             QuerySubmitted?.Invoke(this, new AutoSuggestBoxQuerySubmittedEventArgs(queryText, chosenSuggestion));
         }
