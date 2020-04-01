@@ -147,17 +147,17 @@ namespace dotMorten.Xamarin.Forms.Platform.UWP {
 
         private void AutoSuggestBox_QuerySubmitted(object sender, XAutoSuggestBoxQuerySubmittedEventArgs e)
         {
-            MessagingCenter.Send(Element, nameof(AutoSuggestBox.QuerySubmitted), (e.QueryText, e.ChosenSuggestion));
+            MessagingCenter.Send(Element, "AutoSuggestBox_" + nameof(AutoSuggestBox.QuerySubmitted), (e.QueryText, e.ChosenSuggestion));
         }
 
         private void AutoSuggestBox_TextChanged(object sender, XAutoSuggestBoxTextChangedEventArgs e)
         {
-            MessagingCenter.Send(Element, nameof(AutoSuggestBox.TextChanged), (Control.Text, (AutoSuggestionBoxTextChangeReason)e.Reason));
+            MessagingCenter.Send(Element, "AutoSuggestBox_" + nameof(AutoSuggestBox.TextChanged), (Control.Text, (AutoSuggestionBoxTextChangeReason)e.Reason));
         }
 
         private void AutoSuggestBox_SuggestionChosen(object sender, XAutoSuggestBoxSuggestionChosenEventArgs e)
         {
-            MessagingCenter.Send(Element, nameof(AutoSuggestBox.SuggestionChosen), e.SelectedItem);
+            MessagingCenter.Send(Element, "AutoSuggestBox_" + nameof(AutoSuggestBox.SuggestionChosen), e.SelectedItem);
         }
 
         /// <inheritdoc />

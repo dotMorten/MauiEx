@@ -36,11 +36,11 @@ namespace dotMorten.Xamarin.Forms
         /// <summary>
         /// Initializes a new instance of the <see cref="AutoSuggestBox"/> class
         /// </summary>
-        public AutoSuggestBox() 
+        public AutoSuggestBox()
         {
-            MessagingCenter.Subscribe(this, nameof(SuggestionChosen), (AutoSuggestBox box, object selectedItem) => RaiseSuggestionChosen(selectedItem));
-            MessagingCenter.Subscribe(this, nameof(TextChanged), (AutoSuggestBox box, (string queryText, AutoSuggestionBoxTextChangeReason reason) args) => NativeControlTextChanged(args.queryText, args.reason));
-            MessagingCenter.Subscribe(this, nameof(QuerySubmitted), (AutoSuggestBox box, (string queryText, object chosenSuggestion) args) => RaiseQuerySubmitted(args.queryText, args.chosenSuggestion));
+            MessagingCenter.Subscribe(this, "AutoSuggestBox_" + nameof(SuggestionChosen), (AutoSuggestBox box, object selectedItem) => { if (box == this) RaiseSuggestionChosen(selectedItem); });
+            MessagingCenter.Subscribe(this, "AutoSuggestBox_" + nameof(TextChanged), (AutoSuggestBox box, (string queryText, AutoSuggestionBoxTextChangeReason reason) args) => { if (box == this) NativeControlTextChanged(args.queryText, args.reason); });
+            MessagingCenter.Subscribe(this, "AutoSuggestBox_" + nameof(QuerySubmitted), (AutoSuggestBox box, (string queryText, object chosenSuggestion) args) => { if (box == this) RaiseQuerySubmitted(args.queryText, args.chosenSuggestion); });
         }
 
         /// <summary>
