@@ -189,12 +189,16 @@ namespace dotMorten.Xamarin.Forms.Platform.iOS
                 var viewController = InputTextField.Window?.RootViewController;
                 if (viewController == null)
                     return;
-                if (viewController.ModalViewController != null)
-                    viewController = viewController.ModalViewController;
+                if (viewController.PresentedViewController != null)
+                    viewController = viewController.PresentedViewController;
                 if (SelectionList.Superview == null)
                 {
                     viewController.Add(SelectionList);
                 }
+
+                if (SelectionList.Window == null)
+                   InputTextField.Window.Add(SelectionList);
+
                 SelectionList.TopAnchor.ConstraintEqualTo(InputTextField.BottomAnchor).Active = true;
                 SelectionList.LeftAnchor.ConstraintEqualTo(InputTextField.LeftAnchor).Active = true;
                 SelectionList.WidthAnchor.ConstraintEqualTo(InputTextField.WidthAnchor).Active = true;
