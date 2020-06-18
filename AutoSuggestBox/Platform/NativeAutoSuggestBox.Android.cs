@@ -28,7 +28,7 @@ namespace dotMorten.Xamarin.Forms.Platform.Android
         {
             SetMaxLines(1);
             Threshold = 0;
-            InputType = global::Android.Text.InputTypes.TextFlagNoSuggestions | global::Android.Text.InputTypes.TextVariationVisiblePassword; //Disables text suggestions as the auto-complete view is there to do that
+            InputType = global::Android.Text.InputTypes.TextFlagNoSuggestions | global::Android.Text.InputTypes.ClassText; //Disables text suggestions as the auto-complete view is there to do that
             ItemClick += OnItemClick;
             Adapter = adapter = new SuggestCompleteAdapter(Context, global::Android.Resource.Layout.SimpleDropDownItem1Line);
         }
