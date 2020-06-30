@@ -8,15 +8,15 @@
         <StackLayout>            
             <Label Text="Simple Test using a static list of results, and filtering them dynamically based on input" HorizontalOptions="Start" />
             <dm:AutoSuggestBox x:Name="SuggestBox1" 
-                           PlaceholderText="Enter a country"
+                           Placeholder="Enter a country"
                            TextChanged="SuggestBox_TextChanged" 
                            QuerySubmitted="SuggestBox_QuerySubmitted" />
             <Label Text="" x:Name="status" />
             <dm:AutoSuggestBox x:Name="SuggestBox2" 
-                           PlaceholderText="Enter another country"
+                           Placeholder="Enter another country"
                            TextChanged="SuggestBox_TextChanged"
-                           QuerySubmitted="SuggestBox_QuerySubmitted" />
-            
+                           QuerySubmitted="SuggestBox_QuerySubmitted" TextColor="DarkGray"  FontFamily="MarkerFelt-Thin" FontAttributes="Italic" HeightRequest="40" FontSize="25" BackgroundColor="White"/>
+
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Xamarin.Forms;
+using Xamarin.Forms.Internals;
 #if !NETSTANDARD2_0
 #if __ANDROID__
 using Xamarin.Forms.Platform.Android;
@@ -32,6 +33,63 @@ namespace dotMorten.Xamarin.Forms
 	public partial class AutoSuggestBox : View
     {
         private bool suppressTextChangedEvent;
+
+
+        private static readonly BindableProperty FontProperty = BindableProperty.Create(nameof(ElementFont), typeof(Font), typeof(AutoSuggestBox), default(Font), BindingMode.OneWay);
+        public static readonly BindableProperty FontFamilyProperty = BindableProperty.Create(nameof(FontFamily), typeof(string), typeof(AutoSuggestBox), default(string), BindingMode.OneWay,propertyChanged:OnFontFamilyChanged);
+        public static readonly BindableProperty FontSizeProperty = BindableProperty.Create(nameof(FontSize), typeof(double), typeof(AutoSuggestBox), Device.GetNamedSize(NamedSize.Default, typeof(Entry)), propertyChanged:OnFontSizeChanged);
+        public static readonly BindableProperty FontAttributesProperty = BindableProperty.Create(nameof(FontAttributes), typeof(FontAttributes), typeof(AutoSuggestBox), FontAttributes.None, propertyChanged:OnFontAttributesChanged);
+
+        public double FontSize { get { return (double)GetValue(FontSizeProperty); } set { SetValue(FontSizeProperty, value); } }
+        public Font ElementFont { get { return (Font)GetValue(FontProperty); } set { SetValue(FontProperty, value); } }
+        public string FontFamily { get { return (string)GetValue(FontFamilyProperty); } set { SetValue(FontFamilyProperty, value); } }
+        public FontAttributes FontAttributes { get { return (FontAttributes)this.GetValue(FontAttributesProperty); } set { this.SetValue(FontAttributesProperty, value); } }
+
+        private static void OnFontFamilyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            var fontSize = (double)bindable.GetValue(FontSizeProperty);
+            var fontAttributes = (FontAttributes)bindable.GetValue(FontAttributesProperty);
+            var fontFamily = (string)newValue;
+
+            if (fontFamily != null)
+                bindable.SetValue(FontProperty, Font.OfSize(fontFamily, fontSize).WithAttributes(fontAttributes));
+            else
+                bindable.SetValue(FontProperty, Font.SystemFontOfSize(fontSize, fontAttributes));
+        }
+
+        private static void OnFontSizeChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            var fontSize = (double)newValue;
+            var fontAttributes = (FontAttributes)bindable.GetValue(FontAttributesProperty);
+            var fontFamily = (string)bindable.GetValue(FontFamilyProperty);
+
+            if (fontFamily != null)
+                bindable.SetValue(FontProperty, Font.OfSize(fontFamily, fontSize).WithAttributes(fontAttributes));
+            else
+                bindable.SetValue(FontProperty, Font.SystemFontOfSize(fontSize, fontAttributes));
+        }
+
+        private static void OnFontAttributesChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            var fontSize = (double)bindable.GetValue(FontSizeProperty);
+            var fontAttributes = (FontAttributes)newValue;
+            var fontFamily = (string)bindable.GetValue(FontFamilyProperty);
+
+            if (fontFamily != null)
+                bindable.SetValue(FontProperty, Font.OfSize(fontFamily, fontSize).WithAttributes(fontAttributes));
+            else
+                bindable.SetValue(FontProperty, Font.SystemFontOfSize(fontSize, fontAttributes));
+        }
+        //private static void OnFontChanged(BindableObject bindable, object oldValue, object newValue)
+        //{
+        //    var box = (AutoSuggestBox)bindable;
+        //    box.FontChanged?.Invoke(box, new EventArgs());
+        //}
+
+        //public event EventHandler<EventArgs> FontChanged;
+
+
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AutoSuggestBox"/> class
@@ -81,27 +139,27 @@ namespace dotMorten.Xamarin.Forms
         /// </summary>
         public static readonly BindableProperty TextColorProperty =
             BindableProperty.Create(nameof(TextColor), typeof(global::Xamarin.Forms.Color ), typeof(AutoSuggestBox), global::Xamarin.Forms.Color.Gray, BindingMode.OneWay, null, null);
-
+           
         /// <summary>
         /// Gets or sets the PlaceholderText
         /// </summary>
         /// <seealso cref="PlaceholderTextColor"/>
-        public string PlaceholderText
+        public string Placeholder
         {
             get { return (string)GetValue(PlaceholderTextProperty); }
             set { SetValue(PlaceholderTextProperty, value); }
         }
 
         /// <summary>
-        /// Identifies the <see cref="PlaceholderText"/> bindable property.
+        /// Identifies the <see cref="Placeholder"/> bindable property.
         /// </summary>
         public static readonly BindableProperty PlaceholderTextProperty =
-            BindableProperty.Create(nameof(PlaceholderText), typeof(string), typeof(AutoSuggestBox), string.Empty, BindingMode.OneWay, null, null);
+            BindableProperty.Create(nameof(Placeholder), typeof(string), typeof(AutoSuggestBox), string.Empty, BindingMode.OneWay, null, null);
 
         /// <summary>
         /// Gets or sets the foreground color of the control
         /// </summary>
-        /// <seealso cref="PlaceholderText"/>
+        /// <seealso cref="Placeholder"/>
         public global::Xamarin.Forms.Color PlaceholderTextColor
         {
             get { return (global::Xamarin.Forms.Color)GetValue(PlaceholderTextColorProperty); }

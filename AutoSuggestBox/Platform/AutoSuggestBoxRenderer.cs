@@ -11,6 +11,7 @@ using XAutoSuggestBoxSuggestionChosenEventArgs = dotMorten.Xamarin.Forms.AutoSug
 using XAutoSuggestBoxTextChangedEventArgs = dotMorten.Xamarin.Forms.AutoSuggestBoxTextChangedEventArgs;
 using XAutoSuggestBoxQuerySubmittedEventArgs = dotMorten.Xamarin.Forms.AutoSuggestBoxQuerySubmittedEventArgs;
 using NativeAutoSuggestBox = dotMorten.Xamarin.Forms.Platform.Android.AndroidAutoSuggestBox;
+using Android.Util;
 #elif __IOS__
 using UIKit;
 using Xamarin.Forms.Platform.iOS;
@@ -53,6 +54,16 @@ namespace dotMorten.Xamarin.Forms.Platform.UWP {
         }
 #endif
 
+        /// <summary>
+        /// Sets BackgroundColor 
+        /// </summary>
+        protected void UpdateBackgroundColor()
+        {
+            global::Xamarin.Forms.Color color = Element.BackgroundColor;
+#if __IOS__
+            Control?.SetBackgroundColor(color);
+#endif
+        }
 #if __IOS__
         static readonly int baseHeight = 10;
 
@@ -112,6 +123,8 @@ namespace dotMorten.Xamarin.Forms.Platform.UWP {
                 UpdateTextMemberPath();
                 UpdateDisplayMemberPath();
                 UpdateIsEnabled();
+                UpdateBackgroundColor();
+                UpdateFont();
                 Control.UpdateTextOnSelect = e.NewElement.UpdateTextOnSelect;
                 Control.IsSuggestionListOpen = e.NewElement.IsSuggestionListOpen;
                 UpdateItemsSource();
@@ -194,7 +207,7 @@ namespace dotMorten.Xamarin.Forms.Platform.UWP {
             {
                 UpdateTextColor();
             }
-            else if (e.PropertyName == nameof(AutoSuggestBox.PlaceholderText))
+            else if (e.PropertyName == nameof(AutoSuggestBox.Placeholder))
             {
                 UpdatePlaceholderText();
             }
@@ -226,7 +239,32 @@ namespace dotMorten.Xamarin.Forms.Platform.UWP {
             {
                 UpdateItemsSource();
             }
+            else if (e.PropertyName == nameof(AutoSuggestBox.FontSize))
+            {
+                UpdateFont();
+            }
+            else if (e.PropertyName == nameof(AutoSuggestBox.FontFamily))
+            {
+                UpdateFont();
+            }  
+            else if (e.PropertyName == nameof(AutoSuggestBox.FontAttributes))
+            {
+                UpdateFont();
+            }
             base.OnElementPropertyChanged(sender, e);
+        }
+
+        private void UpdateFont()
+        {
+#if __IOS__
+            Control.Font = Element.ElementFont.ToUIFont();
+#endif
+#if __ANDROID__
+
+            Control.Typeface = Element.ElementFont.ToTypeface();
+            Control.SetTextSize(ComplexUnitType.Sp, (float)Element.FontSize);
+#endif
+
         }
 
         private void UpdateTextColor()
@@ -257,7 +295,7 @@ namespace dotMorten.Xamarin.Forms.Platform.UWP {
 #endif
         }
 
-        private void UpdatePlaceholderText() => Control.PlaceholderText = Element.PlaceholderText;
+        private void UpdatePlaceholderText() => Control.PlaceholderText = Element.Placeholder;
 
         private void UpdateTextMemberPath()
         {

@@ -21,6 +21,7 @@ namespace dotMorten.Xamarin.Forms.Platform.iOS
         private Func<object, string> textFunc;
         private CoreAnimation.CALayer border;
         private bool showBottomBorder = true;
+        private static UIColor _deafultColor;
 
         /// <summary>
         /// Gets a reference to the text field in the view
@@ -40,7 +41,7 @@ namespace dotMorten.Xamarin.Forms.Platform.iOS
             InputTextField = new UIKit.UITextField()
             {
                 TranslatesAutoresizingMaskIntoConstraints = false,
-                BorderStyle = UIKit.UITextBorderStyle.None,
+                BorderStyle = UITextBorderStyle.None,
                 ReturnKeyType = UIKit.UIReturnKeyType.Search,
                 AutocorrectionType = UITextAutocorrectionType.No
             };
@@ -55,10 +56,25 @@ namespace dotMorten.Xamarin.Forms.Platform.iOS
             InputTextField.WidthAnchor.ConstraintEqualTo(WidthAnchor).Active = true;
             InputTextField.HeightAnchor.ConstraintEqualTo(HeightAnchor).Active = true;
             SelectionList = new UIKit.UITableView() { TranslatesAutoresizingMaskIntoConstraints = false };
+            _deafultColor = SelectionList.BackgroundColor;
 
             UIKit.UIKeyboard.Notifications.ObserveWillShow(OnKeyboardShow);
             UIKit.UIKeyboard.Notifications.ObserveWillHide(OnKeyboardHide);
         }
+
+
+        internal void SetBackgroundColor(Color color)
+        {
+            UIColor uiColor = global::Xamarin.Forms.Platform.iOS.ColorExtensions.ToUIColor(color);
+            InputTextField.BackgroundColor = uiColor;
+            if (uiColor.ToColor().A > 0)
+            {
+                SelectionList.BackgroundColor = global::Xamarin.Forms.Platform.iOS.ColorExtensions.ToUIColor(color);
+            }
+            else
+                SelectionList.BackgroundColor = _deafultColor;
+        }
+
 
         /// <inheritdoc />
         public override void MovedToWindow()
@@ -92,14 +108,16 @@ namespace dotMorten.Xamarin.Forms.Platform.iOS
 
         private void AddBottomBorder()
         {
-            border = new CoreAnimation.CALayer();
             var width = 1f;
-            border.BorderColor = UIColor.LightGray.CGColor;
-            border.Frame = new CGRect(0, Frame.Size.Height - width, Frame.Size.Width, Frame.Size.Height);
-            border.BorderWidth = width;
-            border.Hidden = !showBottomBorder;
-            Layer.AddSublayer(border);
-            Layer.MasksToBounds = true;
+            InputTextField.Layer.BorderColor = UIColor.LightGray.CGColor;
+            InputTextField.Layer.BorderWidth = width;
+            //border = new CoreAnimation.CALayer();
+            //border.BorderColor = UIColor.LightGray.CGColor;
+            //border.Frame = new CGRect(0, Frame.Size.Height - width, Frame.Size.Width, Frame.Size.Height);
+            //border.BorderWidth = width;
+            //border.Hidden = !showBottomBorder;
+            //Layer.AddSublayer(border);
+            //Layer.MasksToBounds = true;
         }
 
         /// <summary>
@@ -136,7 +154,7 @@ namespace dotMorten.Xamarin.Forms.Platform.iOS
             IEnumerable<object> suggestions = items?.OfType<object>();
             if (suggestions != null && suggestions.Any())
             {
-                var suggestionTableSource = new TableSource<object>(suggestions, labelFunc);
+                TableSource<object> suggestionTableSource = new TableSource<object>(suggestions, labelFunc, InputTextField);
                 suggestionTableSource.TableRowSelected += SuggestionTableSource_TableRowSelected;
                 SelectionList.Source = suggestionTableSource;
                 SelectionList.ReloadData();
@@ -189,17 +207,24 @@ namespace dotMorten.Xamarin.Forms.Platform.iOS
                 var viewController = InputTextField.Window?.RootViewController;
                 if (viewController == null)
                     return;
-                if (viewController.ModalViewController != null)
-                    viewController = viewController.ModalViewController;
-                if (SelectionList.Superview == null)
-                {
-                    viewController.Add(SelectionList);
-                }
-                SelectionList.TopAnchor.ConstraintEqualTo(InputTextField.BottomAnchor).Active = true;
+
+                if (SelectionList.Superview != null)
+                    SelectionList.RemoveFromSuperview();
+                viewController.Add(SelectionList);
+
+                NSLayoutConstraint TopConstraint = SelectionList.TopAnchor.ConstraintEqualTo(InputTextField.BottomAnchor);
+                TopConstraint.Priority = 1000;
+                TopConstraint.Active = true;
                 SelectionList.LeftAnchor.ConstraintEqualTo(InputTextField.LeftAnchor).Active = true;
-                SelectionList.WidthAnchor.ConstraintEqualTo(InputTextField.WidthAnchor).Active = true;
-                bottomConstraint = SelectionList.BottomAnchor.ConstraintGreaterThanOrEqualTo(SelectionList.Superview.BottomAnchor, -keyboardHeight);
-                bottomConstraint.Active = true;
+                SelectionList.RightAnchor.ConstraintEqualTo(InputTextField.RightAnchor).Active = true;
+                NSLayoutConstraint HeightConstraint = SelectionList.HeightAnchor.ConstraintLessThanOrEqualTo(InputTextField.HeightAnchor, SelectionList.NumberOfRowsInSection(0));
+                HeightConstraint.Active = true;
+                HeightConstraint.Priority = 750;
+
+                NSLayoutConstraint BottomConstraint = SelectionList.BottomAnchor.ConstraintEqualTo(SelectionList.Superview.BottomAnchor, -(keyboardHeight + 20));
+                BottomConstraint.Active = true;
+                BottomConstraint.Priority = 750;
+
                 SelectionList.UpdateConstraints();
             }
             else
@@ -226,12 +251,13 @@ namespace dotMorten.Xamarin.Forms.Platform.iOS
 
         private void OnKeyboardShow(object sender, UIKeyboardEventArgs e)
         {
+            UpdateSuggestionListOpenState();
             NSValue nsKeyboardBounds = (NSValue)e.Notification.UserInfo.ObjectForKey(UIKeyboard.BoundsUserInfoKey);
             var keyboardBounds = nsKeyboardBounds.RectangleFValue;
             keyboardHeight = keyboardBounds.Height;
             if (bottomConstraint != null)
             {
-                bottomConstraint.Constant = -keyboardHeight;
+                bottomConstraint.Constant = keyboardHeight;
                 SelectionList.UpdateConstraints();
             }
         }
@@ -321,12 +347,17 @@ namespace dotMorten.Xamarin.Forms.Platform.iOS
             readonly IEnumerable<T> _items;
             readonly Func<T, string> _labelFunc;
             readonly string _cellIdentifier;
-
-            public TableSource(IEnumerable<T> items, Func<T, string> labelFunc)
+            readonly UIFont _inputFont;
+            readonly UIColor _inputTextColor;
+            readonly nfloat _inputHeight;
+            public TableSource(IEnumerable<T> items, Func<T, string> labelFunc, UITextField input)
             {
                 _items = items;
                 _labelFunc = labelFunc;
                 _cellIdentifier = Guid.NewGuid().ToString();
+                _inputFont = input.Font;
+                _inputTextColor = input.TextColor;
+                _inputHeight = input.Frame.Size.Height;
             }
 
             public override UITableViewCell GetCell(UITableView tableView, NSIndexPath indexPath)
@@ -334,7 +365,9 @@ namespace dotMorten.Xamarin.Forms.Platform.iOS
                 var cell = tableView.DequeueReusableCell(_cellIdentifier);
                 if (cell == null)
                     cell = new UITableViewCell(UITableViewCellStyle.Default, _cellIdentifier);
-
+                cell.BackgroundColor = tableView.BackgroundColor;
+                cell.TextLabel.TextColor = _inputTextColor;
+                cell.TextLabel.Font = _inputFont;
                 var item = _items.ElementAt(indexPath.Row);
 
                 cell.TextLabel.Text = _labelFunc(item);
@@ -354,7 +387,7 @@ namespace dotMorten.Xamarin.Forms.Platform.iOS
 
             public override nfloat GetHeightForRow(UITableView tableView, NSIndexPath indexPath)
             {
-                return 30f;
+                return _inputHeight;
             }
 
             public event EventHandler<TableRowSelectedEventArgs<T>> TableRowSelected;

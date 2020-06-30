@@ -11,7 +11,7 @@
 
             <Label Text="Enter at least 3 characters" HorizontalOptions="Start" />
             <dm:AutoSuggestBox x:Name="SuggestBox" 
-                           PlaceholderText="Enter a US City Name" 
+                           Placeholder="Enter a US City Name" 
                            DisplayMemberPath="FullDisplayName" 
                            TextMemberPath="DisplayName"
                            TextChanged="SuggestBox_TextChanged"

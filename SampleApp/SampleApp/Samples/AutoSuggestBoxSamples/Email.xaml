@@ -8,7 +8,7 @@
         <StackLayout>
             <Label Text="Helps autocomplete an email by suggesting common domain names" HorizontalOptions="Start" />
             <dm:AutoSuggestBox x:Name="SuggestBox" 
-                           PlaceholderText="Start entering an email"
+                           Placeholder="Start entering an email"
                            TextChanged="SuggestBox_TextChanged"
                            QuerySubmitted="SuggestBox_QuerySubmitted" />
             <Label Text="" x:Name="status" />

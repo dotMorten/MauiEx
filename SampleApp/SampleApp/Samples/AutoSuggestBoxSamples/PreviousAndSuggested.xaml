@@ -10,7 +10,7 @@
             <dm:AutoSuggestBox
               x:Name="SuggestBox1"
               Focused="SuggestBox1_OnFocused"
-              PlaceholderText="Scan or type"
+              Placeholder="Scan or type"
               QuerySubmitted="SuggestBox_QuerySubmitted"
               TextChanged="SuggestBox_TextChanged" />
         </StackLayout>

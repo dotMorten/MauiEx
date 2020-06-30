@@ -7,7 +7,7 @@
         <StackLayout>
             <Label Text="This uses a custom renderer and override the border style on iOS" HorizontalOptions="Start" />
             <local:CustomAutoSuggestBox x:Name="SuggestBox1" Margin="20"
-                           PlaceholderText="This has a full border on iOS" />
+                           Placeholder="This has a full border on iOS"/>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
