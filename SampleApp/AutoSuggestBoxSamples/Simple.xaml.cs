@@ -21,7 +21,6 @@ public partial class Simple : ContentPage
             countries = new StreamReader(s).ReadToEnd().Split('\n').Select(t => t.Trim()).ToList();
         }
         SuggestBox1.ItemsSource = countries;
-        SuggestBox1.IsSuggestionListOpen = true;
     }
 
     private void SuggestBox_TextChanged(object sender, AutoSuggestBoxTextChangedEventArgs e)
@@ -33,7 +32,7 @@ public partial class Simple : ContentPage
 
     private List<string> GetSuggestions(string text)
     {
-        return string.IsNullOrWhiteSpace(text) ? null : countries.Where(s => s.StartsWith(text, StringComparison.InvariantCultureIgnoreCase)).ToList();
+        return string.IsNullOrWhiteSpace(text) ? countries : countries.Where(s => s.StartsWith(text, StringComparison.InvariantCultureIgnoreCase)).ToList();
     }
 
     private void SuggestBox_QuerySubmitted(object sender, AutoSuggestBoxQuerySubmittedEventArgs e)
