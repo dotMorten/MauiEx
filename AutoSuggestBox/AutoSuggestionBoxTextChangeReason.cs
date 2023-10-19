@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace dotMorten.Xamarin.Forms
+namespace dotMorten.Maui
 {
     /// <summary>
     /// Provides data for the <see cref="AutoSuggestBox.TextChanged"/> event.

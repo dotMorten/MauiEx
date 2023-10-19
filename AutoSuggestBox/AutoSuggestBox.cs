@@ -1,35 +1,23 @@
 ﻿using System;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using Xamarin.Forms;
 #if !NETSTANDARD2_0
 #if __ANDROID__
-using Xamarin.Forms.Platform.Android;
 #elif __IOS__
 using CoreGraphics;
-using Xamarin.Forms.Platform.iOS;
-#elif NETFX_CORE
-using Xamarin.Forms.Platform.UWP;
-using NativeAutoSuggestBox = Windows.UI.Xaml.Controls.AutoSuggestBox;
+#elif WINDOWS
+using NativeAutoSuggestBox = Microsoft.UI.Xaml.Controls.AutoSuggestBox;
 #endif
 #endif
 
-#if __ANDROID__
-[assembly: ExportRenderer(typeof(dotMorten.Xamarin.Forms.AutoSuggestBox), typeof(dotMorten.Xamarin.Forms.Platform.Android.AutoSuggestBoxRenderer))]
-#elif __IOS__
-[assembly: ExportRenderer(typeof(dotMorten.Xamarin.Forms.AutoSuggestBox), typeof(dotMorten.Xamarin.Forms.Platform.iOS.AutoSuggestBoxRenderer))]
-#elif NETFX_CORE
-[assembly: ExportRenderer(typeof(dotMorten.Xamarin.Forms.AutoSuggestBox), typeof(dotMorten.Xamarin.Forms.Platform.UWP.AutoSuggestBoxRenderer))]
-#endif
-
-namespace dotMorten.Xamarin.Forms
+namespace dotMorten.Maui
 {
     /// <summary>
     /// Represents a text control that makes suggestions to users as they type. The app is notified when text 
     /// has been changed by the user and is responsible for providing relevant suggestions for this control to display.
     /// Use the UWP Reference doc for more information: <a href="https://msdn.microsoft.com/en-us/library/windows/apps/mt280217.aspx">Link</a>
     /// </summary>
-	public partial class AutoSuggestBox : View
+	public class AutoSuggestBox : View, IAutoSuggestBox
     {
         private bool suppressTextChangedEvent;
 
@@ -38,9 +26,6 @@ namespace dotMorten.Xamarin.Forms
         /// </summary>
         public AutoSuggestBox()
         {
-            MessagingCenter.Subscribe(this, "AutoSuggestBox_" + nameof(SuggestionChosen), (AutoSuggestBox box, object selectedItem) => { if (box == this) RaiseSuggestionChosen(selectedItem); });
-            MessagingCenter.Subscribe(this, "AutoSuggestBox_" + nameof(TextChanged), (AutoSuggestBox box, (string queryText, AutoSuggestionBoxTextChangeReason reason) args) => { if (box == this) NativeControlTextChanged(args.queryText, args.reason); });
-            MessagingCenter.Subscribe(this, "AutoSuggestBox_" + nameof(QuerySubmitted), (AutoSuggestBox box, (string queryText, object chosenSuggestion) args) => { if (box == this) RaiseQuerySubmitted(args.queryText, args.chosenSuggestion); });
         }
 
         /// <summary>
@@ -70,9 +55,9 @@ namespace dotMorten.Xamarin.Forms
         /// Gets or sets the foreground color of the control
         /// </summary>
         /// <seealso cref="Text"/>
-        public global::Xamarin.Forms.Color TextColor
+        public Color TextColor
         {
-            get { return (global::Xamarin.Forms.Color )GetValue(TextColorProperty); }
+            get { return (Color)GetValue(TextColorProperty); }
             set { SetValue(TextColorProperty, value); }
         }
 
@@ -80,7 +65,7 @@ namespace dotMorten.Xamarin.Forms
         /// Identifies the <see cref="TextColor"/> bindable property.
         /// </summary>
         public static readonly BindableProperty TextColorProperty =
-            BindableProperty.Create(nameof(TextColor), typeof(global::Xamarin.Forms.Color ), typeof(AutoSuggestBox), global::Xamarin.Forms.Color.Gray, BindingMode.OneWay, null, null);
+            BindableProperty.Create(nameof(TextColor), typeof(Color ), typeof(AutoSuggestBox), Colors.Gray, BindingMode.OneWay, null, null);
 
         /// <summary>
         /// Gets or sets the PlaceholderText
@@ -102,9 +87,9 @@ namespace dotMorten.Xamarin.Forms
         /// Gets or sets the foreground color of the control
         /// </summary>
         /// <seealso cref="PlaceholderText"/>
-        public global::Xamarin.Forms.Color PlaceholderTextColor
+        public Color PlaceholderTextColor
         {
-            get { return (global::Xamarin.Forms.Color)GetValue(PlaceholderTextColorProperty); }
+            get { return (Color)GetValue(PlaceholderTextColorProperty); }
             set { SetValue(PlaceholderTextColorProperty, value); }
         }
 
@@ -112,7 +97,7 @@ namespace dotMorten.Xamarin.Forms
         /// Identifies the <see cref="PlaceholderTextColor"/> bindable property.
         /// </summary>
         public static readonly BindableProperty PlaceholderTextColorProperty =
-            BindableProperty.Create(nameof(PlaceholderTextColor), typeof(global::Xamarin.Forms.Color), typeof(AutoSuggestBox), global::Xamarin.Forms.Color.Gray, BindingMode.OneWay, null, null);
+            BindableProperty.Create(nameof(PlaceholderTextColor), typeof(Color), typeof(AutoSuggestBox), Colors.Gray, BindingMode.OneWay, null, null);
 
         /// <summary>
         /// Gets or sets the property path that is used to get the value for display in the
@@ -203,7 +188,7 @@ namespace dotMorten.Xamarin.Forms
         public static readonly BindableProperty ItemsSourceProperty =
             BindableProperty.Create(nameof(ItemsSource), typeof(System.Collections.IList), typeof(AutoSuggestBox), null, BindingMode.OneWay, null, null);
 
-        private void RaiseSuggestionChosen(object selectedItem)
+        void IAutoSuggestBox.SuggestionChosen(object selectedItem)
         {
             SuggestionChosen?.Invoke(this, new AutoSuggestBoxSuggestionChosenEventArgs(selectedItem));
         }
@@ -214,7 +199,7 @@ namespace dotMorten.Xamarin.Forms
         public event EventHandler<AutoSuggestBoxSuggestionChosenEventArgs> SuggestionChosen;
 
         // Called by the native control when users enter text
-        private void NativeControlTextChanged(string text, AutoSuggestionBoxTextChangeReason reason)
+        void IAutoSuggestBox.TextChanged(string text, AutoSuggestionBoxTextChangeReason reason)
         {
             suppressTextChangedEvent = true; //prevent loop of events raising, as setting this property will make it back into the native control
             Text = text;
@@ -227,7 +212,7 @@ namespace dotMorten.Xamarin.Forms
         /// </summary>
         public event EventHandler<AutoSuggestBoxTextChangedEventArgs> TextChanged;
 
-        private void RaiseQuerySubmitted(string queryText, object chosenSuggestion)
+        void IAutoSuggestBox.QuerySubmitted(string queryText, object chosenSuggestion)
         {
             QuerySubmitted?.Invoke(this, new AutoSuggestBoxQuerySubmittedEventArgs(queryText, chosenSuggestion));
         }

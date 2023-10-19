@@ -1,5 +1,5 @@
-# XamarinFormsControls
-A set of Xamarin.Forms controls
+# Maui Controls
+A set of .NET MAUI controls
 
 ## Sponsoring
 
