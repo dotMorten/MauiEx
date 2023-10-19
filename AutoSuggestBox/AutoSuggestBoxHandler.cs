@@ -158,7 +158,8 @@ public class AutoSuggestBoxHandler : ViewHandler<IAutoSuggestBox, NativeAutoSugg
     public static void MapText(AutoSuggestBoxHandler handler, IAutoSuggestBox autoSuggestBox)
     {
 #if WINDOWS || __ANDROID__ || __IOS__
-        handler.PlatformView.Text = autoSuggestBox.Text;
+        if (handler.PlatformView.Text != autoSuggestBox.Text)
+            handler.PlatformView.Text = autoSuggestBox.Text;
 #endif
     }
 
