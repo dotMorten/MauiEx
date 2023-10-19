@@ -1,6 +1,32 @@
 # Maui Controls
 A set of .NET MAUI controls
 
+# Usage:
+In `MauiProgram.CreateMauiApp` register the controls:
+
+```cs
+using dotMorten.MauiEx; // Include using to get extension method
+
+namespace SampleApp;
+
+public static class MauiProgram
+{
+    public static MauiApp CreateMauiApp()
+    {
+        var builder = MauiApp.CreateBuilder();
+        builder
+          .UseMauiApp<App>()
+          .ConfigureFonts(fonts =>
+          {
+              fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
+              fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+          })
+          .UseMauiEx(); //Register control library
+        return builder.Build();
+    }
+}
+```
+
 ## Sponsoring
 
 If you like this library and use it a lot, consider sponsoring me. Anything helps and encourages me to keep going.

@@ -1,22 +1,26 @@
-# AutoSuggestBox
-
-Represents a text control that makes suggestions to users as they type. The app is notified when text has been changed by the user and is responsible for providing relevant suggestions for this control to display.
-
-The control is based on UWP's AutoSuggestBox behavior, with UI adapted for native look on each platform.
-
-![autosuggestbox_ios](https://user-images.githubusercontent.com/1378165/51139691-6c226600-17f9-11e9-8f76-48a1128986ca.gif)
+# MauiEx
 
 ## NuGet
-NuGet ID: `dotMorten.Xamarin.Forms.AutoSuggestBox`
+NuGet ID: `dotMorten.MauiEx`
 
-You can get this from NuGet here: https://www.nuget.org/packages/dotMorten.Xamarin.Forms.AutoSuggestBox/
+You can get this from NuGet here: https://www.nuget.org/packages/dotMorten.MauiEx/
 
 Or use the Package Manager:
 ```
-Install-Package dotMorten.Xamarin.Forms.AutoSuggestBox 
+Install-Package dotMorten.MauiEx 
 ```
 
-## Description
+
+
+## AutoSuggestBox
+
+Represents a text control that makes suggestions to users as they type. The app is notified when text has been changed by the user and is responsible for providing relevant suggestions for this control to display.
+
+The control is based on WinUI's AutoSuggestBox behavior, with UI adapted for native look on each platform.
+
+![autosuggestbox_ios](https://user-images.githubusercontent.com/1378165/51139691-6c226600-17f9-11e9-8f76-48a1128986ca.gif)
+
+### Description
 
 Use an AutoSuggestBox to provide a list of suggestions for a user to select from as they type.
 
@@ -88,7 +92,7 @@ private void AutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBox
 }
 ```
 
-UWP:
+WinUI:
 
 ![image](https://user-images.githubusercontent.com/1378165/42106364-a65da5ae-7b88-11e8-81ce-e189ee4cdc8e.png)
 

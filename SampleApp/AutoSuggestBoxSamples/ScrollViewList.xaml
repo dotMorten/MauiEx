@@ -19,7 +19,9 @@
                            TextChanged="SuggestBox_TextChanged" 
                            QuerySubmitted="SuggestBox_QuerySubmitted" />
             <Label Text="" x:Name="status" />
-            
+            <Border BackgroundColor="LightGray" Margin="0,10" HeightRequest="500">
+                <Label Text="Some more content below" TextColor="Black" HorizontalOptions="Center" VerticalOptions="Center" />
+            </Border>
         </StackLayout>
     </ScrollView>
 </ContentPage>
