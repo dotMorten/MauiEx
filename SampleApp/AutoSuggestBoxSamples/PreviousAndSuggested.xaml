@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+  x:Class="SampleApp.Samples.AutoSuggestBoxSamples.PreviousAndSuggested"
+  xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+  xmlns:dm="clr-namespace:MauiEx;assembly=MauiEx"
+  Padding="20">
+    <StackLayout>
+        <dm:AutoSuggestBox
+            x:Name="SuggestBox1"
+            Focused="SuggestBox1_OnFocused"
+            PlaceholderText="Scan or type"
+            QuerySubmitted="SuggestBox_QuerySubmitted"
+            TextChanged="SuggestBox_TextChanged" />
+    </StackLayout>
+</ContentPage>

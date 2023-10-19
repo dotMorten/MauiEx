@@ -20,8 +20,7 @@
 - Platform Target Frameworks: <!-- All that apply -->
   - iOS:  <!-- The version of the iOS SDK you are compiling against, e.g. 11.1 -->
   - Android: <!-- The version of the Android SDK you are compiling against, e.g. 7.1 --> 
-  - UWP:  <!-- The version of the UWP SDK you are compiling against, e.g. 16299 --> 
-- Android Support Library Version: <!-- if applicable -->
+  - Windows:  <!-- The version of the Windows SDK you are compiling against, e.g. 10.0.19041 --> 
 - Nuget Packages:
 - Affected Devices:
 

@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:dm="clr-namespace:MauiEx;assembly=MauiEx"
+             x:Class="SampleApp.Samples.AutoSuggestBoxSamples.ScrollViewList"
+             Padding="20">
+    <ScrollView>        
+        <StackLayout>
+            <Label Text="Test using control in a long list of items" HorizontalOptions="Start" />
+            <Border BackgroundColor="LightGray" Margin="0,10" HeightRequest="400">
+                <Label Text="Some other content here" TextColor="Black" HorizontalOptions="Center" VerticalOptions="Center" />
+            </Border>
+            <Border BackgroundColor="LightGray" Margin="0,10" HeightRequest="300">
+                <Label Text="Some more content here" TextColor="Black" HorizontalOptions="Center" VerticalOptions="Center" />
+            </Border>
+            <dm:AutoSuggestBox x:Name="SuggestBox1" 
+                           Focused="SuggestBox_Focused"
+                           PlaceholderText="Enter a country"
+                           TextChanged="SuggestBox_TextChanged" 
+                           QuerySubmitted="SuggestBox_QuerySubmitted" />
+            <Label Text="" x:Name="status" />
+            <Border BackgroundColor="LightGray" Margin="0,10" HeightRequest="500">
+                <Label Text="Some more content below" TextColor="Black" HorizontalOptions="Center" VerticalOptions="Center" />
+            </Border>
+        </StackLayout>
+    </ScrollView>
+</ContentPage>
