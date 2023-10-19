@@ -1,4 +1,4 @@
-﻿namespace dotMorten.MauiEx
+﻿namespace MauiEx
 {
     /// <summary>
     /// AppHost builder methods for registering the controls with .NET MAUI.

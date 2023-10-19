@@ -1,4 +1,4 @@
-﻿using dotMorten.MauiEx;
+﻿using MauiEx;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -17,7 +17,7 @@ namespace SampleApp.Samples.AutoSuggestBoxSamples
             InitializeComponent();
         }
 
-        private async void SuggestBox_TextChanged(object sender, dotMorten.MauiEx.AutoSuggestBoxTextChangedEventArgs args)
+        private async void SuggestBox_TextChanged(object sender, MauiEx.AutoSuggestBoxTextChangedEventArgs args)
         {
             AutoSuggestBox box = (AutoSuggestBox)sender;
             // Only get results when it was a user typing, 

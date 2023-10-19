@@ -20,10 +20,10 @@
     <ImplicitUsings>enable</ImplicitUsings>
 
     <!-- Display name -->
-    <ApplicationTitle>SampleApp</ApplicationTitle>
+    <ApplicationTitle>MauiEx</ApplicationTitle>
 
     <!-- App Identifier -->
-    <ApplicationId>com.dotMorten.Ausampleapp</ApplicationId>
+    <ApplicationId>com.dotmorten.sampleapp</ApplicationId>
 
     <!-- Versions -->
     <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
@@ -38,7 +38,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Using Include="dotMorten.MauiEx" />
+    <Using Include="MauiEx" />
     <!-- App Icon -->
     <MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
 
@@ -74,7 +74,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MauiEx\dotMorten.MauiEx.csproj" />
+    <ProjectReference Include="..\MauiEx\MauiEx.csproj" />
   </ItemGroup>
 
   <!-- Build Properties must be defined within these property groups to ensure successful publishing

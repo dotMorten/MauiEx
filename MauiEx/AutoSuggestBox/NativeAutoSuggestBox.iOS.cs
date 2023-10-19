@@ -11,7 +11,7 @@ using Microsoft.Maui.Platform;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 
-namespace dotMorten.MauiEx.Platform.iOS
+namespace MauiEx.Platform.iOS
 {
     /// <summary>
     ///  Creates a UIView with dropdown with a similar API and behavior to UWP's AutoSuggestBox

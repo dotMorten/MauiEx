@@ -2,22 +2,22 @@
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
-using dotMorten.MauiEx;
+using MauiEx;
 using Microsoft.Maui.Handlers;
 using Microsoft.Maui.Platform;
 
 
 #if __ANDROID__
-using XAutoSuggestBoxSuggestionChosenEventArgs = dotMorten.MauiEx.AutoSuggestBoxSuggestionChosenEventArgs;
-using XAutoSuggestBoxTextChangedEventArgs = dotMorten.MauiEx.AutoSuggestBoxTextChangedEventArgs;
-using XAutoSuggestBoxQuerySubmittedEventArgs = dotMorten.MauiEx.AutoSuggestBoxQuerySubmittedEventArgs;
-using NativeAutoSuggestBox = dotMorten.MauiEx.Platform.Android.AndroidAutoSuggestBox;
+using XAutoSuggestBoxSuggestionChosenEventArgs = MauiEx.AutoSuggestBoxSuggestionChosenEventArgs;
+using XAutoSuggestBoxTextChangedEventArgs = MauiEx.AutoSuggestBoxTextChangedEventArgs;
+using XAutoSuggestBoxQuerySubmittedEventArgs = MauiEx.AutoSuggestBoxQuerySubmittedEventArgs;
+using NativeAutoSuggestBox = MauiEx.Platform.Android.AndroidAutoSuggestBox;
 #elif __IOS__
 using UIKit;
-using XAutoSuggestBoxSuggestionChosenEventArgs = dotMorten.MauiEx.AutoSuggestBoxSuggestionChosenEventArgs;
-using XAutoSuggestBoxTextChangedEventArgs = dotMorten.MauiEx.AutoSuggestBoxTextChangedEventArgs;
-using XAutoSuggestBoxQuerySubmittedEventArgs = dotMorten.MauiEx.AutoSuggestBoxQuerySubmittedEventArgs;
-using NativeAutoSuggestBox = dotMorten.MauiEx.Platform.iOS.iOSAutoSuggestBox;
+using XAutoSuggestBoxSuggestionChosenEventArgs = MauiEx.AutoSuggestBoxSuggestionChosenEventArgs;
+using XAutoSuggestBoxTextChangedEventArgs = MauiEx.AutoSuggestBoxTextChangedEventArgs;
+using XAutoSuggestBoxQuerySubmittedEventArgs = MauiEx.AutoSuggestBoxQuerySubmittedEventArgs;
+using NativeAutoSuggestBox = MauiEx.Platform.iOS.iOSAutoSuggestBox;
 #elif WINDOWS
 using Microsoft.UI.Xaml.Media;
 using NativeAutoSuggestBox = Microsoft.UI.Xaml.Controls.AutoSuggestBox;
@@ -26,7 +26,7 @@ using XAutoSuggestBoxTextChangedEventArgs = Microsoft.UI.Xaml.Controls.AutoSugge
 using XAutoSuggestBoxQuerySubmittedEventArgs = Microsoft.UI.Xaml.Controls.AutoSuggestBoxQuerySubmittedEventArgs;
 #endif
 
-namespace dotMorten.MauiEx.Handlers;
+namespace MauiEx.Handlers;
 
 /// <summary>
 /// Platform specific renderer for the <see cref="AutoSuggestBox"/>

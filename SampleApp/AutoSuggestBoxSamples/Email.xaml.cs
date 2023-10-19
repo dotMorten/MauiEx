@@ -11,7 +11,7 @@ public partial class Email : ContentPage
         InitializeComponent();
     }
 
-    private void SuggestBox_TextChanged(object sender, dotMorten.MauiEx.AutoSuggestBoxTextChangedEventArgs e)
+    private void SuggestBox_TextChanged(object sender, MauiEx.AutoSuggestBoxTextChangedEventArgs e)
     {
         AutoSuggestBox box = (AutoSuggestBox)sender;
         var text = box.Text;

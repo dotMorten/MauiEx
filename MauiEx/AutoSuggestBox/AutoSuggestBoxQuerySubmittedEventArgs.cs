@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace dotMorten.MauiEx
+namespace MauiEx
 {
     /// <summary>
     /// Provides event data for the AutoSuggestBox.QuerySubmitted event.

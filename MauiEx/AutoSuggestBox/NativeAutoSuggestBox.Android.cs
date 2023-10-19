@@ -11,7 +11,7 @@ using Android.Widget;
 using Java.Lang;
 using Microsoft.Maui.Platform;
 
-namespace dotMorten.MauiEx.Platform.Android
+namespace MauiEx.Platform.Android
 {
     /// <summary>
     ///  Extends AutoCompleteTextView to have similar APIs and behavior to UWP's AutoSuggestBox, which greatly simplifies wrapping it
