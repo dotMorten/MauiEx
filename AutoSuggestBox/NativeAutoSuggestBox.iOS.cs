@@ -194,8 +194,8 @@ namespace dotMorten.Maui.Platform.iOS
                 var viewController = InputTextField.Window?.RootViewController;
                 if (viewController == null)
                     return;
-                if (viewController.ModalViewController != null)
-                    viewController = viewController.ModalViewController;
+                if (viewController.PresentedViewController != null)
+                    viewController = viewController.PresentedViewController;
                 if (SelectionList.Superview == null)
                 {
                     viewController.Add(SelectionList);
