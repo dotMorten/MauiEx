@@ -59,7 +59,7 @@ public partial class MainPage : ContentPage
             samplelist.Children.Add(header);
             foreach (var sample in group.OrderBy(t => t.Priority))
             {
-                Button b = new Button() { Text = sample.DisplayName, HorizontalOptions = LayoutOptions.FillAndExpand };
+                Button b = new Button() { Text = sample.DisplayName, HorizontalOptions = LayoutOptions.FillAndExpand, Margin = new Thickness(10) };
                 var t = sample.PageType;
                 b.Clicked += (s, e) =>
                 {
