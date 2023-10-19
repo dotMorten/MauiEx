@@ -43,7 +43,7 @@ public partial class MainPage : ContentPage
             {
                 var name = PageType.Namespace.Substring(PageType.Namespace.LastIndexOf('.') + 1);
                 if (name.EndsWith("Samples"))
-                    name = name.Substring(0, name.Length - 7);
+                    name = name[..^7];
                 return name;
             }
         }
