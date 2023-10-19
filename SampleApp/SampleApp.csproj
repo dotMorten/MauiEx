@@ -74,7 +74,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AutoSuggestBox\dotMorten.MauiEx.csproj" />
+    <ProjectReference Include="..\MauiEx\dotMorten.MauiEx.csproj" />
   </ItemGroup>
 
   <!-- Build Properties must be defined within these property groups to ensure successful publishing
