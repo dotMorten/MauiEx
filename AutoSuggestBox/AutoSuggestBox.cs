@@ -32,9 +32,9 @@ namespace dotMorten.Maui
         /// Gets or sets the Text property
         /// </summary>
         /// <seealso cref="TextColor"/>
-        public string Text
+        public string? Text
         {
-            get { return (string)GetValue(TextProperty); }
+            get { return GetValue(TextProperty) as string; }
             set { SetValue(TextProperty, value); }
         }
 
@@ -71,9 +71,9 @@ namespace dotMorten.Maui
         /// Gets or sets the PlaceholderText
         /// </summary>
         /// <seealso cref="PlaceholderTextColor"/>
-        public string PlaceholderText
+        public string? PlaceholderText
         {
-            get { return (string)GetValue(PlaceholderTextProperty); }
+            get { return GetValue(PlaceholderTextProperty) as string; }
             set { SetValue(PlaceholderTextProperty, value); }
         }
 
@@ -107,9 +107,9 @@ namespace dotMorten.Maui
         /// The property path that is used to get the value for display in the text box portion
         /// of the AutoSuggestBox control, when an item is selected.
         /// </value>
-        public string TextMemberPath
+        public string? TextMemberPath
         {
-            get { return (string)GetValue(TextMemberPathProperty); }
+            get { return GetValue(TextMemberPathProperty) as string; }
             set { SetValue(TextMemberPathProperty, value); }
         }
 
@@ -126,9 +126,9 @@ namespace dotMorten.Maui
         /// The name or path of the property that is displayed for each the data item in
         /// the control. The default is an empty string ("").
         /// </value>
-        public string DisplayMemberPath
+        public string? DisplayMemberPath
         {
-            get { return (string)GetValue(DisplayMemberPathProperty); }
+            get { return GetValue(DisplayMemberPathProperty) as string; }
             set { SetValue(DisplayMemberPathProperty, value); }
         }
 
@@ -176,7 +176,7 @@ namespace dotMorten.Maui
         /// Gets or sets the header object for the text box portion of this control.
         /// </summary>
         /// <value>The header object for the text box portion of this control.</value>
-        public System.Collections.IList ItemsSource
+        public System.Collections.IList? ItemsSource
         {
             get { return GetValue(ItemsSourceProperty) as System.Collections.IList; }
             set { SetValue(ItemsSourceProperty, value); }
@@ -196,10 +196,10 @@ namespace dotMorten.Maui
         /// <summary>
         /// Raised before the text content of the editable control component is updated.
         /// </summary>
-        public event EventHandler<AutoSuggestBoxSuggestionChosenEventArgs> SuggestionChosen;
+        public event EventHandler<AutoSuggestBoxSuggestionChosenEventArgs>? SuggestionChosen;
 
         // Called by the native control when users enter text
-        void IAutoSuggestBox.TextChanged(string text, AutoSuggestionBoxTextChangeReason reason)
+        void IAutoSuggestBox.TextChanged(string? text, AutoSuggestionBoxTextChangeReason reason)
         {
             suppressTextChangedEvent = true; //prevent loop of events raising, as setting this property will make it back into the native control
             Text = text;
@@ -210,9 +210,9 @@ namespace dotMorten.Maui
         /// <summary>
         /// Raised after the text content of the editable control component is updated.
         /// </summary>
-        public event EventHandler<AutoSuggestBoxTextChangedEventArgs> TextChanged;
+        public event EventHandler<AutoSuggestBoxTextChangedEventArgs>? TextChanged;
 
-        void IAutoSuggestBox.QuerySubmitted(string queryText, object chosenSuggestion)
+        void IAutoSuggestBox.QuerySubmitted(string? queryText, object? chosenSuggestion)
         {
             QuerySubmitted?.Invoke(this, new AutoSuggestBoxQuerySubmittedEventArgs(queryText, chosenSuggestion));
         }
@@ -220,6 +220,6 @@ namespace dotMorten.Maui
         /// <summary>
         /// Occurs when the user submits a search query.
         /// </summary>
-        public event EventHandler<AutoSuggestBoxQuerySubmittedEventArgs> QuerySubmitted;
+        public event EventHandler<AutoSuggestBoxQuerySubmittedEventArgs>? QuerySubmitted;
     }
 }

@@ -15,22 +15,22 @@ namespace dotMorten.Maui
     public interface IAutoSuggestBox : IView
     {
         /// <inheritdoc cref="AutoSuggestBox.Text"/>
-        string Text { get; set; }
+        string? Text { get; set; }
 
         /// <inheritdoc cref="AutoSuggestBox.TextColor"/>
         Color TextColor { get; set; }
 
         /// <inheritdoc cref="AutoSuggestBox.PlaceholderText"/>
-        string PlaceholderText { get; set; }
+        string? PlaceholderText { get; set; }
 
         /// <inheritdoc cref="AutoSuggestBox.PlaceholderTextColor"/>
         Color PlaceholderTextColor { get; set; }
 
         /// <inheritdoc cref="AutoSuggestBox.TextMemberPath"/>
-        string TextMemberPath { get; set; }
+        string? TextMemberPath { get; set; }
 
         /// <inheritdoc cref="AutoSuggestBox.DisplayMemberPath"/>
-        string DisplayMemberPath { get; set; }
+        string? DisplayMemberPath { get; set; }
 
         /// <inheritdoc cref="AutoSuggestBox.IsSuggestionListOpen"/>
         bool IsSuggestionListOpen { get; set; }
@@ -39,13 +39,13 @@ namespace dotMorten.Maui
         bool UpdateTextOnSelect { get; set; }
 
         /// <inheritdoc cref="AutoSuggestBox.ItemsSource"/>
-        System.Collections.IList ItemsSource { get; set; }
+        System.Collections.IList? ItemsSource { get; set; }
 
         /// <inheritdoc cref="AutoSuggestBox.QuerySubmitted"/>
-        void QuerySubmitted(string queryText, object chosenSuggestion);
+        void QuerySubmitted(string? queryText, object? chosenSuggestion);
 
         /// <inheritdoc cref="AutoSuggestBox.TextChanged"/>
-        void TextChanged(string text, AutoSuggestionBoxTextChangeReason reason);
+        void TextChanged(string? text, AutoSuggestionBoxTextChangeReason reason);
 
         /// <inheritdoc cref="AutoSuggestBox.SuggestionChosen"/>
         void SuggestionChosen(object selectedItem);

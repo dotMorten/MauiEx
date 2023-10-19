@@ -19,9 +19,9 @@ namespace dotMorten.Maui.Platform.iOS
     public class iOSAutoSuggestBox : UIKit.UIView
     {
         private nfloat keyboardHeight;
-        private NSLayoutConstraint bottomConstraint;
-        private Func<object, string> textFunc;
-        private CoreAnimation.CALayer border;
+        private NSLayoutConstraint? bottomConstraint;
+        private Func<object, string?>? textFunc;
+        private CoreAnimation.CALayer? border;
         private bool showBottomBorder = true;
 
         /// <summary>
@@ -72,21 +72,21 @@ namespace dotMorten.Maui.Platform.iOS
             UpdateSuggestionListOpenState();
         }
 
-        private void OnEditingDidBegin(object sender, EventArgs e)
+        private void OnEditingDidBegin(object? sender, EventArgs e)
         {
             IsSuggestionListOpen = true;
             EditingDidBegin?.Invoke(this, e);
         }
 
-        private void OnEditingDidEnd(object sender, EventArgs e)
+        private void OnEditingDidEnd(object? sender, EventArgs e)
         {
             IsSuggestionListOpen = false;
             EditingDidEnd?.Invoke(this, e);
         }
 
-        internal EventHandler EditingDidBegin;
+        internal EventHandler? EditingDidBegin;
 
-        internal EventHandler EditingDidEnd;
+        internal EventHandler? EditingDidEnd;
 
         /// <inheritdoc />
         public override void LayoutSubviews()
@@ -123,13 +123,13 @@ namespace dotMorten.Maui.Platform.iOS
         /// <summary>
         /// Gets or sets the font of the <see cref="InputTextField"/>
         /// </summary>
-        public virtual UIFont Font
+        public virtual UIFont? Font
         {
             get => InputTextField.Font;
             set => InputTextField.Font = value;
         }
 
-        internal void SetItems(IEnumerable<object> items, Func<object, string> labelFunc, Func<object, string> textFunc)
+        internal void SetItems(IEnumerable<object>? items, Func<object, string?> labelFunc, Func<object, string?> textFunc)
         {
             this.textFunc = textFunc;
             if (SelectionList.Source is TableSource<object> oldSource)
@@ -138,7 +138,7 @@ namespace dotMorten.Maui.Platform.iOS
             }
             SelectionList.Source = null;
 
-            IEnumerable<object> suggestions = items?.OfType<object>();
+            IEnumerable<object>? suggestions = items?.OfType<object>();
             if (suggestions != null && suggestions.Any())
             {
                 var suggestionTableSource = new TableSource<object>(suggestions, labelFunc);
@@ -156,7 +156,7 @@ namespace dotMorten.Maui.Platform.iOS
         /// <summary>
         /// Gets or sets the placeholder text to be displayed in the <see cref="InputTextField"/>.
         /// </summary>
-        public virtual string PlaceholderText
+        public virtual string? PlaceholderText
         {
             get => InputTextField.Placeholder;
             set => InputTextField.Placeholder = value;
@@ -203,7 +203,7 @@ namespace dotMorten.Maui.Platform.iOS
                 SelectionList.TopAnchor.ConstraintEqualTo(InputTextField.BottomAnchor).Active = true;
                 SelectionList.LeftAnchor.ConstraintEqualTo(InputTextField.LeftAnchor).Active = true;
                 SelectionList.WidthAnchor.ConstraintEqualTo(InputTextField.WidthAnchor).Active = true;
-                bottomConstraint = SelectionList.BottomAnchor.ConstraintGreaterThanOrEqualTo(SelectionList.Superview.BottomAnchor, -keyboardHeight);
+                bottomConstraint = SelectionList.BottomAnchor.ConstraintGreaterThanOrEqualTo(SelectionList.Superview!.BottomAnchor, -keyboardHeight);
                 bottomConstraint.Active = true;
                 SelectionList.UpdateConstraints();
             }
@@ -219,7 +219,7 @@ namespace dotMorten.Maui.Platform.iOS
         /// </summary>
         public virtual bool UpdateTextOnSelect { get; set; } = true;
 
-        private void OnKeyboardHide(object sender, UIKeyboardEventArgs e)
+        private void OnKeyboardHide(object? sender, UIKeyboardEventArgs e)
         {
             keyboardHeight = 0;
             if (bottomConstraint != null)
@@ -229,9 +229,9 @@ namespace dotMorten.Maui.Platform.iOS
             }
         }
 
-        private void OnKeyboardShow(object sender, UIKeyboardEventArgs e)
+        private void OnKeyboardShow(object? sender, UIKeyboardEventArgs e)
         {
-            CGRect? keyboardEndFrame = DescriptionToCGRect(e.Notification.UserInfo.ValueForKey(UIKeyboard.FrameEndUserInfoKey).Description);
+            CGRect? keyboardEndFrame = DescriptionToCGRect(e.Notification.UserInfo?.ValueForKey(UIKeyboard.FrameEndUserInfoKey).Description);
             if (keyboardEndFrame is null)
                 return;
             NFloat _keyboardHeight = UIDevice.CurrentDevice.Orientation == UIDeviceOrientation.Portrait || UIDevice.CurrentDevice.Orientation == UIDeviceOrientation.PortraitUpsideDown ? keyboardEndFrame.Value.Size.Height : keyboardEndFrame.Value.Size.Width;
@@ -289,13 +289,13 @@ namespace dotMorten.Maui.Platform.iOS
         /// <inheritdoc />
         public override bool IsFirstResponder => InputTextField.IsFirstResponder;
 
-        private void SuggestionTableSource_TableRowSelected(object sender, TableRowSelectedEventArgs<object> e)
+        private void SuggestionTableSource_TableRowSelected(object? sender, TableRowSelectedEventArgs<object> e)
         {
             SelectionList.DeselectRow(e.SelectedItemIndexPath, false);
             var selection = e.SelectedItem;
             if (UpdateTextOnSelect)
             {
-                InputTextField.Text = textFunc(selection);
+                InputTextField.Text = textFunc is null ? null : textFunc(selection);
                 TextChanged?.Invoke(this, new AutoSuggestBoxTextChangedEventArgs(AutoSuggestionBoxTextChangeReason.SuggestionChosen));
             }
             SuggestionChosen?.Invoke(this, new AutoSuggestBoxSuggestionChosenEventArgs(selection));
@@ -303,7 +303,7 @@ namespace dotMorten.Maui.Platform.iOS
             IsSuggestionListOpen = false;
         }
 
-        private void InputText_EditingChanged(object sender, EventArgs e)
+        private void InputText_EditingChanged(object? sender, EventArgs e)
         {
             TextChanged?.Invoke(this, new AutoSuggestBoxTextChangedEventArgs(AutoSuggestionBoxTextChangeReason.UserInput));
             IsSuggestionListOpen = true;
@@ -312,7 +312,7 @@ namespace dotMorten.Maui.Platform.iOS
         /// <summary>
         /// Gets or sets the text displayed in the <see cref="InputTextField"/>
         /// </summary>
-        public virtual string Text
+        public virtual string? Text
         {
             get => InputTextField.Text;
             set
@@ -334,25 +334,25 @@ namespace dotMorten.Maui.Platform.iOS
         /// <summary>
         /// Raised after the text content of the editable control component is updated.
         /// </summary>
-        public event EventHandler<AutoSuggestBoxTextChangedEventArgs> TextChanged;
+        public event EventHandler<AutoSuggestBoxTextChangedEventArgs>? TextChanged;
 
         /// <summary>
         /// Occurs when the user submits a search query.
         /// </summary>
-        public event EventHandler<AutoSuggestBoxQuerySubmittedEventArgs> QuerySubmitted;
+        public event EventHandler<AutoSuggestBoxQuerySubmittedEventArgs>? QuerySubmitted;
 
         /// <summary>
         /// Raised before the text content of the editable control component is updated.
         /// </summary>
-        public event EventHandler<AutoSuggestBoxSuggestionChosenEventArgs> SuggestionChosen;
+        public event EventHandler<AutoSuggestBoxSuggestionChosenEventArgs>? SuggestionChosen;
 
         private class TableSource<T> : UITableViewSource
         {
             readonly IEnumerable<T> _items;
-            readonly Func<T, string> _labelFunc;
+            readonly Func<T, string?> _labelFunc;
             readonly string _cellIdentifier;
 
-            public TableSource(IEnumerable<T> items, Func<T, string> labelFunc)
+            public TableSource(IEnumerable<T> items, Func<T, string?> labelFunc)
             {
                 _items = items;
                 _labelFunc = labelFunc;
@@ -387,7 +387,7 @@ namespace dotMorten.Maui.Platform.iOS
                 return 30f;
             }
 
-            public event EventHandler<TableRowSelectedEventArgs<T>> TableRowSelected;
+            public event EventHandler<TableRowSelectedEventArgs<T>>? TableRowSelected;
 
             private void OnTableRowSelected(NSIndexPath itemIndexPath)
             {
@@ -399,7 +399,7 @@ namespace dotMorten.Maui.Platform.iOS
 
         private class TableRowSelectedEventArgs<T> : EventArgs
         {
-            public TableRowSelectedEventArgs(T selectedItem, string selectedItemLabel, NSIndexPath selectedItemIndexPath)
+            public TableRowSelectedEventArgs(T selectedItem, string? selectedItemLabel, NSIndexPath selectedItemIndexPath)
             {
                 SelectedItem = selectedItem;
                 SelectedItemLabel = selectedItemLabel;
@@ -407,7 +407,7 @@ namespace dotMorten.Maui.Platform.iOS
             }
 
             public T SelectedItem { get; }
-            public string SelectedItemLabel { get; }
+            public string? SelectedItemLabel { get; }
             public NSIndexPath SelectedItemIndexPath { get; }
         }
     }

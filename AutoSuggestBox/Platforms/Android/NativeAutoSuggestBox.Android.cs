@@ -19,7 +19,7 @@ namespace dotMorten.Maui.Platform.Android
     public class AndroidAutoSuggestBox : AutoCompleteTextView
     {
         private bool suppressTextChangedEvent;
-        private Func<object, string> textFunc;
+        private Func<object, string>? textFunc;
         private SuggestCompleteAdapter adapter;
 
         /// <summary>
@@ -27,11 +27,12 @@ namespace dotMorten.Maui.Platform.Android
         /// </summary>
         public AndroidAutoSuggestBox(Context context) : base(context)
         {
+            ArgumentNullException.ThrowIfNull(context, nameof(context));
             SetMaxLines(1);
             Threshold = 0;
             InputType = global::Android.Text.InputTypes.TextFlagNoSuggestions | global::Android.Text.InputTypes.TextVariationVisiblePassword; //Disables text suggestions as the auto-complete view is there to do that
             ItemClick += OnItemClick;
-            Adapter = adapter = new SuggestCompleteAdapter(Context, global::Android.Resource.Layout.SimpleDropDownItem1Line);
+            Adapter = adapter = new SuggestCompleteAdapter(context, global::Android.Resource.Layout.SimpleDropDownItem1Line);
         }
 
         /// <inheritdoc />
@@ -45,13 +46,13 @@ namespace dotMorten.Maui.Platform.Android
         }
 
         /// <inheritdoc />
-        protected override void OnFocusChanged(bool gainFocus, [GeneratedEnum] FocusSearchDirection direction, global::Android.Graphics.Rect previouslyFocusedRect)
+        protected override void OnFocusChanged(bool gainFocus, [GeneratedEnum] FocusSearchDirection direction, global::Android.Graphics.Rect? previouslyFocusedRect)
         {
             IsSuggestionListOpen = gainFocus;
             base.OnFocusChanged(gainFocus, direction, previouslyFocusedRect);
         }
 
-        internal void SetItems(IEnumerable<object> items, Func<object, string> labelFunc, Func<object, string> textFunc)
+        internal void SetItems(IEnumerable<object>? items, Func<object, string> labelFunc, Func<object, string> textFunc)
         {
             this.textFunc = textFunc;
             if (items == null)
@@ -63,7 +64,7 @@ namespace dotMorten.Maui.Platform.Android
         /// <summary>
         /// Gets or sets the text displayed in the entry field
         /// </summary>
-        public virtual new string Text
+        public virtual new string? Text
         {
             get => base.Text;
             set
@@ -87,7 +88,7 @@ namespace dotMorten.Maui.Platform.Android
         /// <summary>
         /// Gets or sets the placeholder text to be displayed in the <see cref="AutoCompleteTextView"/>
         /// </summary>
-        public virtual string PlaceholderText
+        public virtual string? PlaceholderText
         {
             set => HintFormatted = new Java.Lang.String(value as string ?? "");
         }
@@ -121,7 +122,7 @@ namespace dotMorten.Maui.Platform.Android
         public virtual bool UpdateTextOnSelect { get; set; } = true;
 
         /// <inheritdoc />
-        protected override void OnTextChanged(ICharSequence text, int start, int lengthBefore, int lengthAfter)
+        protected override void OnTextChanged(ICharSequence? text, int start, int lengthBefore, int lengthAfter)
         {
             if (!suppressTextChangedEvent)
                 this.TextChanged?.Invoke(this, new AutoSuggestBoxTextChangedEventArgs(AutoSuggestionBoxTextChangeReason.UserInput));
@@ -130,18 +131,18 @@ namespace dotMorten.Maui.Platform.Android
 
         private void DismissKeyboard()
         {
-            var imm = (global::Android.Views.InputMethods.InputMethodManager)Context.GetSystemService(Context.InputMethodService);
+            var imm = (global::Android.Views.InputMethods.InputMethodManager)Context!.GetSystemService(Context.InputMethodService)!;
             imm.HideSoftInputFromWindow(WindowToken, 0);
         }
 
-        private void OnItemClick(object sender, AdapterView.ItemClickEventArgs e)
+        private void OnItemClick(object? sender, AdapterView.ItemClickEventArgs e)
         {
             DismissKeyboard();
             var obj = adapter.GetObject(e.Position);
             if (UpdateTextOnSelect)
             {
                 suppressTextChangedEvent = true;
-                base.Text = textFunc(obj);
+                base.Text = textFunc is null ? null : textFunc(obj);
                 suppressTextChangedEvent = false;
                 TextChanged?.Invoke(this, new AutoSuggestBoxTextChangedEventArgs(AutoSuggestionBoxTextChangeReason.SuggestionChosen));
             }
@@ -163,7 +164,7 @@ namespace dotMorten.Maui.Platform.Android
         }
 
         /// <inheritdoc />
-        protected override void ReplaceText(ICharSequence text)
+        protected override void ReplaceText(ICharSequence? text)
         {
             //Override to avoid updating textbox on itemclick. We'll do this later using TextMemberPath and raise the proper TextChanged event then
         }
@@ -171,23 +172,23 @@ namespace dotMorten.Maui.Platform.Android
         /// <summary>
         /// Raised after the text content of the editable control component is updated.
         /// </summary>
-        public new event EventHandler<AutoSuggestBoxTextChangedEventArgs> TextChanged;
+        public new event EventHandler<AutoSuggestBoxTextChangedEventArgs>? TextChanged;
 
         /// <summary>
         /// Occurs when the user submits a search query.
         /// </summary>
-        public event EventHandler<AutoSuggestBoxQuerySubmittedEventArgs> QuerySubmitted;
+        public event EventHandler<AutoSuggestBoxQuerySubmittedEventArgs>? QuerySubmitted;
 
         /// <summary>
         /// Raised before the text content of the editable control component is updated.
         /// </summary>
-        public event EventHandler<AutoSuggestBoxSuggestionChosenEventArgs> SuggestionChosen;
+        public event EventHandler<AutoSuggestBoxSuggestionChosenEventArgs>? SuggestionChosen;
 
         private class SuggestCompleteAdapter : ArrayAdapter, IFilterable
         {
             private SuggestFilter filter = new SuggestFilter();
             private List<object> resultList;
-            private Func<object, string> labelFunc;
+            private Func<object, string>? labelFunc;
 
             public SuggestCompleteAdapter(Context context, int textViewResourceId) : base(context, textViewResourceId)
             {
@@ -215,7 +216,7 @@ namespace dotMorten.Maui.Platform.Android
 
             public override Java.Lang.Object GetItem(int position)
             {
-                return labelFunc(GetObject(position));
+                return labelFunc!(GetObject(position))!;
             }
 
             public object GetObject(int position)
@@ -230,7 +231,7 @@ namespace dotMorten.Maui.Platform.Android
 
             private class SuggestFilter : Filter
             {
-                private IEnumerable<string> resultList;
+                private IEnumerable<string>? resultList;
 
                 public SuggestFilter()
                 {
@@ -239,14 +240,14 @@ namespace dotMorten.Maui.Platform.Android
                 {
                     resultList = list;
                 }
-                protected override FilterResults PerformFiltering(ICharSequence constraint)
+                protected override FilterResults PerformFiltering(ICharSequence? constraint)
                 {
                     if (resultList == null)
                         return new FilterResults() { Count = 0, Values = null };
                     var arr = resultList.ToArray();
                     return new FilterResults() { Count = arr.Length, Values = arr };
                 }
-                protected override void PublishResults(ICharSequence constraint, FilterResults results)
+                protected override void PublishResults(ICharSequence? constraint, FilterResults? results)
                 {
                 }
             }

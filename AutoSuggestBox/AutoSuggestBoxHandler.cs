@@ -97,36 +97,36 @@ public class AutoSuggestBoxHandler : ViewHandler<IAutoSuggestBox, NativeAutoSugg
     }
 
 #if WINDOWS
-    private void PlatformView_Loaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    private void PlatformView_Loaded(object? sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
         // Workaround issue in WinUI where the list doesn't open if you set before load
-        if(VirtualView.IsSuggestionListOpen)
-            (sender as NativeAutoSuggestBox).IsSuggestionListOpen = true;
+        if(VirtualView.IsSuggestionListOpen && sender is NativeAutoSuggestBox box)
+            box.IsSuggestionListOpen = true;
     }
 #endif
 
 #if __IOS__
-    private void Control_EditingDidBegin(object sender, EventArgs e)
+    private void Control_EditingDidBegin(object? sender, EventArgs e)
     {
         (VirtualView as VisualElement)?.SetValue(VisualElement.IsFocusedPropertyKey, true);
     }
-    private void Control_EditingDidEnd(object sender, EventArgs e)
+    private void Control_EditingDidEnd(object? sender, EventArgs e)
     {
         (VirtualView as VisualElement)?.SetValue(VisualElement.IsFocusedPropertyKey, false);
     }
 #elif WINDOWS
-    private void Control_GotFocus(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    private void Control_GotFocus(object? sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
-            if (VirtualView?.ItemsSource?.Count > 0)
-                (sender as NativeAutoSuggestBox).IsSuggestionListOpen = true;
+            if (VirtualView?.ItemsSource?.Count > 0 && sender is NativeAutoSuggestBox box)
+                box.IsSuggestionListOpen = true;
         }
 #endif
 
-    private void AutoSuggestBox_QuerySubmitted(object sender, XAutoSuggestBoxQuerySubmittedEventArgs e) => VirtualView.QuerySubmitted(e.QueryText, e.ChosenSuggestion);
+    private void AutoSuggestBox_QuerySubmitted(object? sender, XAutoSuggestBoxQuerySubmittedEventArgs e) => VirtualView.QuerySubmitted(e.QueryText, e.ChosenSuggestion);
 
-    private void AutoSuggestBox_TextChanged(object sender, XAutoSuggestBoxTextChangedEventArgs e) => VirtualView.TextChanged(PlatformView.Text, (AutoSuggestionBoxTextChangeReason)e.Reason);
+    private void AutoSuggestBox_TextChanged(object? sender, XAutoSuggestBoxTextChangedEventArgs e) => VirtualView.TextChanged(PlatformView.Text, (AutoSuggestionBoxTextChangeReason)e.Reason);
 
-    private void AutoSuggestBox_SuggestionChosen(object sender, XAutoSuggestBoxSuggestionChosenEventArgs e) => VirtualView.SuggestionChosen(e.SelectedItem);
+    private void AutoSuggestBox_SuggestionChosen(object? sender, XAutoSuggestBoxSuggestionChosenEventArgs e) => VirtualView.SuggestionChosen(e.SelectedItem);
 
     /// <inheritdoc />
     protected override NativeAutoSuggestBox CreatePlatformView()
@@ -281,7 +281,7 @@ public class AutoSuggestBoxHandler : ViewHandler<IAutoSuggestBox, NativeAutoSugg
     }
 
 #if __ANDROID__ || __IOS__
-    private static string FormatType(object instance, string memberPath)
+    private static string FormatType(object instance, string? memberPath)
     {
         if (!string.IsNullOrEmpty(memberPath))
             return instance?.GetType().GetProperty(memberPath)?.GetValue(instance)?.ToString() ?? "";
