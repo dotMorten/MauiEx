@@ -1,13 +1,13 @@
 # MauiEx
 
 ## NuGet
-NuGet ID: `MauiEx`
+NuGet ID: `dotMorten.MauiEx`
 
 You can get this from NuGet here: https://www.nuget.org/packages/MauiEx/
 
 Or use the Package Manager:
 ```
-Install-Package MauiEx 
+Install-Package dotMorten.MauiEx
 ```
 
 

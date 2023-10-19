@@ -1,6 +1,9 @@
 # Maui Controls
 A set of .NET MAUI controls
 
+### NuGet Packages:
+  - [dotMorten.MauiEx](https://www.nuget.org/packages/dotMorten.MauiEx/)
+
 # Usage:
 In `MauiProgram.CreateMauiApp` register the controls:
 

@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>net7.0-android;net7.0-ios;net7.0-maccatalyst</TargetFrameworks>
     <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net7.0-windows10.0.19041.0</TargetFrameworks>
-
+    <PackageId>dotMorten.MauiEx</PackageId>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Copyright>Morten Nielsen</Copyright>
     <RepositoryUrl>https://github.com/dotMorten/MauiEx</RepositoryUrl>
