@@ -68,7 +68,7 @@ public partial class MainPage : ContentPage
                         var page = Activator.CreateInstance(sample.PageType) as Page;
                         _ = Navigation.PushAsync(page);
                     }
-                    catch (System.Exception)
+                    catch (Exception)
                     {
 
                     }
