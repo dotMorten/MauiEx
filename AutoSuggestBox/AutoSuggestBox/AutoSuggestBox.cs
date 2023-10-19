@@ -10,7 +10,7 @@ using NativeAutoSuggestBox = Microsoft.UI.Xaml.Controls.AutoSuggestBox;
 #endif
 #endif
 
-namespace dotMorten.Maui
+namespace dotMorten.MauiEx
 {
     /// <summary>
     /// Represents a text control that makes suggestions to users as they type. The app is notified when text 

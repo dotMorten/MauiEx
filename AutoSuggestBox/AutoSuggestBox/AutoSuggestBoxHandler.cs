@@ -2,22 +2,22 @@
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
-using dotMorten.Maui;
+using dotMorten.MauiEx;
 using Microsoft.Maui.Handlers;
 using Microsoft.Maui.Platform;
 
 
 #if __ANDROID__
-using XAutoSuggestBoxSuggestionChosenEventArgs = dotMorten.Maui.AutoSuggestBoxSuggestionChosenEventArgs;
-using XAutoSuggestBoxTextChangedEventArgs = dotMorten.Maui.AutoSuggestBoxTextChangedEventArgs;
-using XAutoSuggestBoxQuerySubmittedEventArgs = dotMorten.Maui.AutoSuggestBoxQuerySubmittedEventArgs;
-using NativeAutoSuggestBox = dotMorten.Maui.Platform.Android.AndroidAutoSuggestBox;
+using XAutoSuggestBoxSuggestionChosenEventArgs = dotMorten.MauiEx.AutoSuggestBoxSuggestionChosenEventArgs;
+using XAutoSuggestBoxTextChangedEventArgs = dotMorten.MauiEx.AutoSuggestBoxTextChangedEventArgs;
+using XAutoSuggestBoxQuerySubmittedEventArgs = dotMorten.MauiEx.AutoSuggestBoxQuerySubmittedEventArgs;
+using NativeAutoSuggestBox = dotMorten.MauiEx.Platform.Android.AndroidAutoSuggestBox;
 #elif __IOS__
 using UIKit;
-using XAutoSuggestBoxSuggestionChosenEventArgs = dotMorten.Maui.AutoSuggestBoxSuggestionChosenEventArgs;
-using XAutoSuggestBoxTextChangedEventArgs = dotMorten.Maui.AutoSuggestBoxTextChangedEventArgs;
-using XAutoSuggestBoxQuerySubmittedEventArgs = dotMorten.Maui.AutoSuggestBoxQuerySubmittedEventArgs;
-using NativeAutoSuggestBox = dotMorten.Maui.Platform.iOS.iOSAutoSuggestBox;
+using XAutoSuggestBoxSuggestionChosenEventArgs = dotMorten.MauiEx.AutoSuggestBoxSuggestionChosenEventArgs;
+using XAutoSuggestBoxTextChangedEventArgs = dotMorten.MauiEx.AutoSuggestBoxTextChangedEventArgs;
+using XAutoSuggestBoxQuerySubmittedEventArgs = dotMorten.MauiEx.AutoSuggestBoxQuerySubmittedEventArgs;
+using NativeAutoSuggestBox = dotMorten.MauiEx.Platform.iOS.iOSAutoSuggestBox;
 #elif WINDOWS
 using Microsoft.UI.Xaml.Media;
 using NativeAutoSuggestBox = Microsoft.UI.Xaml.Controls.AutoSuggestBox;
@@ -26,7 +26,7 @@ using XAutoSuggestBoxTextChangedEventArgs = Microsoft.UI.Xaml.Controls.AutoSugge
 using XAutoSuggestBoxQuerySubmittedEventArgs = Microsoft.UI.Xaml.Controls.AutoSuggestBoxQuerySubmittedEventArgs;
 #endif
 
-namespace dotMorten.Maui.Handlers;
+namespace dotMorten.MauiEx.Handlers;
 
 /// <summary>
 /// Platform specific renderer for the <see cref="AutoSuggestBox"/>

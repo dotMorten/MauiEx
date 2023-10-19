@@ -1,4 +1,4 @@
-﻿#if __ANDROID__
+﻿#if ANDROID
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +11,7 @@ using Android.Widget;
 using Java.Lang;
 using Microsoft.Maui.Platform;
 
-namespace dotMorten.Maui.Platform.Android
+namespace dotMorten.MauiEx.Platform.Android
 {
     /// <summary>
     ///  Extends AutoCompleteTextView to have similar APIs and behavior to UWP's AutoSuggestBox, which greatly simplifies wrapping it

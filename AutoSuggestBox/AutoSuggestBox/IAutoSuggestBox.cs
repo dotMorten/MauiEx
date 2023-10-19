@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace dotMorten.Maui
+namespace dotMorten.MauiEx
 {
     /// <summary>
     /// A set of AutoSuggestBox members used with the <see cref="Handlers.AutoSuggestBoxHandler"/> class.

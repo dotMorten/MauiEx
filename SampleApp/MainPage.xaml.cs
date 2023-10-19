@@ -59,7 +59,6 @@ public partial class MainPage : ContentPage
             foreach (var sample in group.OrderBy(t => t.Priority))
             {
                 Button b = new Button() { Text = sample.DisplayName, HorizontalOptions = LayoutOptions.Fill, Margin = new Thickness(10) };
-                var t = sample.PageType;
                 b.Clicked += (s, e) =>
                 {
 
@@ -68,9 +67,9 @@ public partial class MainPage : ContentPage
                         var page = Activator.CreateInstance(sample.PageType) as Page;
                         _ = Navigation.PushAsync(page);
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
-
+                        DisplayAlert("Failed to load page", ex.Message, "OK");
                     }
                 };
                 samplelist.Children.Add(b);

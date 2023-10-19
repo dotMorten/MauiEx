@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:SampleApp.Samples.AutoSuggestBoxSamples"
-             xmlns:dm="clr-namespace:dotMorten.Maui;assembly=dotMorten.Maui.AutoSuggestBox"
+             xmlns:dm="clr-namespace:dotMorten.MauiEx;assembly=dotMorten.MauiEx"
              Padding="20"
              x:Class="SampleApp.Samples.AutoSuggestBoxSamples.Dynamic">
     <ScrollView>

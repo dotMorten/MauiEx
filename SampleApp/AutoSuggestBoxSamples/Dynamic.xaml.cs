@@ -1,4 +1,4 @@
-﻿using dotMorten.Maui;
+﻿using dotMorten.MauiEx;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,13 +11,13 @@ namespace SampleApp.Samples.AutoSuggestBoxSamples
     [System.ComponentModel.Description("Dynamic data lookup")]
     [SamplePriority(2)]
     public partial class Dynamic : ContentPage
-	{
+    {
         public Dynamic()
-		{
-			InitializeComponent();
-		}
+        {
+            InitializeComponent();
+        }
 
-        private async void SuggestBox_TextChanged(object sender, dotMorten.Maui.AutoSuggestBoxTextChangedEventArgs args)
+        private async void SuggestBox_TextChanged(object sender, dotMorten.MauiEx.AutoSuggestBoxTextChangedEventArgs args)
         {
             AutoSuggestBox box = (AutoSuggestBox)sender;
             // Only get results when it was a user typing, 
@@ -71,13 +71,13 @@ namespace SampleApp.Samples.AutoSuggestBoxSamples
                 }
                 return suggestions;
             });
-            await Task.Delay(1000); //Simulate slow web service response
+            await Task.Delay(500); //Simulate slow web service response
             return result;
         }
 
         private void SuggestBox_QuerySubmitted(object sender, AutoSuggestBoxQuerySubmittedEventArgs e)
         {
-            if(e.ChosenSuggestion == null)
+            if (e.ChosenSuggestion == null)
                 status.Text = "Query submitted: " + e.QueryText;
             else
                 status.Text = "Suggestion chosen: " + e.ChosenSuggestion;

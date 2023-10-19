@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.8.34205.153
+VisualStudioVersion = 17.7.34202.233
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dotMorten.Maui.AutoSuggestBox", "AutoSuggestBox\dotMorten.Maui.AutoSuggestBox.csproj", "{7FEC4E8D-44DE-4C7E-B1DF-47599211FE5F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dotMorten.MauiEx", "AutoSuggestBox\dotMorten.MauiEx.csproj", "{7FEC4E8D-44DE-4C7E-B1DF-47599211FE5F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SampleApp", "SampleApp\SampleApp.csproj", "{D4312837-CC29-4259-864B-37FC669CDE77}"
 EndProject
