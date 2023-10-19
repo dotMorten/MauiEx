@@ -80,7 +80,7 @@ public class AutoSuggestBoxHandler : ViewHandler<IAutoSuggestBox, NativeAutoSugg
 #endif
     }
 
-    /// <inheritdoc/>       
+    /// <inheritdoc/>
     protected override void DisconnectHandler(NativeAutoSuggestBox platformView)
     {
         base.DisconnectHandler(platformView);
