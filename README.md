@@ -5,7 +5,7 @@ A set of .NET MAUI controls
 In `MauiProgram.CreateMauiApp` register the controls:
 
 ```cs
-using dotMorten.MauiEx; // Include using to get extension method
+using MauiEx; // Include using to get extension method
 
 namespace SampleApp;
 
