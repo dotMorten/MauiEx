@@ -66,22 +66,7 @@ public class AutoSuggestBoxHandler : ViewHandler<IAutoSuggestBox, NativeAutoSugg
     /// <param name="mapper">property mapper</param>
     public AutoSuggestBoxHandler(PropertyMapper? mapper = null) : base(mapper ?? AutoSuggestBoxMapper)
     {
-        // Frame = new RectangleF(0, 20, 320, 40);
     }
-
-#if __IOS__
-    static readonly int baseHeight = 10;
-    /// <inheritdoc />
-    public override Microsoft.Maui.Graphics.Size GetDesiredSize(double widthConstraint, double heightConstraint)
-    {
-        var baseResult = base.GetDesiredSize(widthConstraint, heightConstraint);
-        var testString = new Foundation.NSString("Tj");
-        var testSize = testString.GetSizeUsingAttributes(new UIStringAttributes { Font = PlatformView.Font });
-        double height = baseHeight + testSize.Height;
-        height = Math.Round(height);
-        return base.GetDesiredSize(baseResult.Width, height);
-    }
-#endif
 
     /// <inheritdoc/>
     protected override void ConnectHandler(NativeAutoSuggestBox platformView)

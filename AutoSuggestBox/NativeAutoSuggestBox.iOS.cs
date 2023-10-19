@@ -62,6 +62,8 @@ namespace dotMorten.Maui.Platform.iOS
             UIKit.UIKeyboard.Notifications.ObserveWillHide(OnKeyboardHide);
         }
 
+        public override CGSize SizeThatFits(CGSize size) => InputTextField.SizeThatFits(size);
+
         /// <inheritdoc />
         public override void MovedToWindow()
         {
