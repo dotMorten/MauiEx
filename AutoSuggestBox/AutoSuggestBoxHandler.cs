@@ -33,10 +33,6 @@ namespace dotMorten.Maui.Handlers;
 /// </summary>
 public class AutoSuggestBoxHandler : ViewHandler<IAutoSuggestBox, NativeAutoSuggestBox>
 {
-#if !WINDOWS
-    private bool suppressTextChangedEvent;
-#endif
-
     /// <summary>
     /// Property mapper for the <see cref="AutoSuggestBox"/> control.
     /// </summary>
@@ -79,7 +75,8 @@ public class AutoSuggestBoxHandler : ViewHandler<IAutoSuggestBox, NativeAutoSugg
         platformView.EditingDidBegin += Control_EditingDidBegin;
         platformView.EditingDidEnd += Control_EditingDidEnd;
 #elif WINDOWS
-            platformView.GotFocus += Control_GotFocus;
+        platformView.Loaded += PlatformView_Loaded;
+        platformView.GotFocus += Control_GotFocus;
 #endif
     }
 
@@ -94,9 +91,19 @@ public class AutoSuggestBoxHandler : ViewHandler<IAutoSuggestBox, NativeAutoSugg
         platformView.EditingDidBegin -= Control_EditingDidBegin;
         platformView.EditingDidEnd -= Control_EditingDidEnd;
 #elif WINDOWS
-            platformView.GotFocus -= Control_GotFocus;
+        platformView.Loaded -= PlatformView_Loaded;
+        platformView.GotFocus -= Control_GotFocus;
 #endif
     }
+
+#if WINDOWS
+    private void PlatformView_Loaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    {
+        // Workaround issue in WinUI where the list doesn't open if you set before load
+        if(VirtualView.IsSuggestionListOpen)
+            (sender as NativeAutoSuggestBox).IsSuggestionListOpen = true;
+    }
+#endif
 
 #if __IOS__
     private void Control_EditingDidBegin(object sender, EventArgs e)
@@ -108,7 +115,7 @@ public class AutoSuggestBoxHandler : ViewHandler<IAutoSuggestBox, NativeAutoSugg
         (VirtualView as VisualElement)?.SetValue(VisualElement.IsFocusedPropertyKey, false);
     }
 #elif WINDOWS
-        private void Control_GotFocus(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    private void Control_GotFocus(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
             if (VirtualView?.ItemsSource?.Count > 0)
                 (sender as NativeAutoSuggestBox).IsSuggestionListOpen = true;
@@ -125,11 +132,9 @@ public class AutoSuggestBoxHandler : ViewHandler<IAutoSuggestBox, NativeAutoSugg
     protected override NativeAutoSuggestBox CreatePlatformView()
     {
 #if __ANDROID__
-        return new Platform.Android.AndroidAutoSuggestBox(this.Context);
-#elif __IOS__
-        return new Platform.iOS.iOSAutoSuggestBox();
-#elif WINDOWS
-        return new Microsoft.UI.Xaml.Controls.AutoSuggestBox();
+        return new NativeAutoSuggestBox(this.Context);
+#elif __IOS__ || WINDOWS
+        return new NativeAutoSuggestBox();
 #else
         throw new NotImplementedException();
 #endif
@@ -219,16 +224,16 @@ public class AutoSuggestBoxHandler : ViewHandler<IAutoSuggestBox, NativeAutoSugg
     }
 
     /// <summary>
-    /// Maps the <see cref="IAutoSuggestBox.IsEnabled"/> property to the native AutoSuggestBox control.
+    /// Maps the <see cref="IView.IsEnabled"/> property to the native AutoSuggestBox control.
     /// </summary>
     /// <param name="handler">View handler</param>
     /// <param name="autoSuggestBox">IAutoSuggestBox instance</param>
     public static void MapIsEnabled(AutoSuggestBoxHandler handler, IAutoSuggestBox autoSuggestBox)
     {
 #if WINDOWS
-            handler.PlatformView.IsEnabled = autoSuggestBox.IsEnabled;
+        handler.PlatformView.IsEnabled = autoSuggestBox.IsEnabled;
 #elif __ANDROID__
-            handler.PlatformView.Enabled = autoSuggestBox.IsEnabled;
+        handler.PlatformView.Enabled = autoSuggestBox.IsEnabled;
 #elif __IOS__
         handler.PlatformView.UserInteractionEnabled = autoSuggestBox.IsEnabled;
 #endif
@@ -254,7 +259,10 @@ public class AutoSuggestBoxHandler : ViewHandler<IAutoSuggestBox, NativeAutoSugg
     public static void MapIsSuggestionListOpen(AutoSuggestBoxHandler handler, IAutoSuggestBox autoSuggestBox)
     {
 #if WINDOWS || __ANDROID__ || __IOS__
-        handler.PlatformView.IsSuggestionListOpen = autoSuggestBox.IsSuggestionListOpen;
+#if WINDOWS
+        if (handler.PlatformView.IsLoaded) // Delay until load
+#endif
+            handler.PlatformView.IsSuggestionListOpen = autoSuggestBox.IsSuggestionListOpen;
 #endif
     }
 
