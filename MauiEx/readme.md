@@ -3,7 +3,7 @@
 ## NuGet
 NuGet ID: `dotMorten.MauiEx`
 
-You can get this from NuGet here: https://www.nuget.org/packages/MauiEx/
+You can get this from NuGet here: https://www.nuget.org/packages/dotMorten.MauiEx/
 
 Or use the Package Manager:
 ```
